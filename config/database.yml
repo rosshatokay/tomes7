@@ -82,5 +82,6 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
+  schema_search_path: 'public'
   sslmode: require
   pool: 100
