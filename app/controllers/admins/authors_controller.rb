@@ -1,5 +1,4 @@
 class Admins::AuthorsController < Admins::BaseController
-  around_action :skip_bullet, only: [:index]
   layout "dashboard"
 
   def index

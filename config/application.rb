@@ -9,6 +9,7 @@ Bundler.require(*Rails.groups)
 module Tomes7
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
+    config.exceptions_app = self.routes
     config.load_defaults 7.2
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do

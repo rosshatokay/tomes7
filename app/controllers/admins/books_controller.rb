@@ -14,6 +14,7 @@ class Admins::BooksController < Admins::BaseController
       { label: "Books", path: admins_books_path },
       { label: "New book" },
     ]
+    @categories = Category.order(:name).pluck(:name, :id)
     @book = Book.new
   end
 
