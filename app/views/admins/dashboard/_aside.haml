@@ -1,0 +1,23 @@
+:css
+	aside .logo svg path {
+		fill: var(--color-primary)
+	}
+
+%aside{class: 'min-w-[64px] w-[64px] h-screen border-r border-outline overflow-y-auto hidden md:flex flex-col gap-10 py-4 justify-between items-center'}
+	.flex.flex-col.items-center
+		= link_to admins_root_path, class: 'mb-6 w-8 btn btn-icon rounded-lg', 'data-tippy-content': 'Home', placement: 'right' do
+			.h-5.logo
+				= show_svg 'logo-icon.svg'
+		.top
+			- admin_aside_links.each do |link|
+				- is_current = link[:path] == request.path
+				= link_to link[:path], 'data-tippy-content': link[:label], placement: 'right', class: "btn btn-icon #{is_current ? 'btn-surface' : 'btn-clear'} mb-2 w-8 rounded-lg gap-2" do
+					%i{class: "#{is_current ? 'ph-fill' : 'ph'} #{link[:icon]}"}
+	.flex.flex-col.items-center
+		= button_to session_path, 'data-tippy-content': 'Sign out', placement: 'right', class: 'btn btn-icon btn-clear mb-2 w-8 px-2 rounded-lg gap-2', data: {turbo: false}, method: :delete do
+			%i.ph.ph-sign-out
+		.flex.items-center.gap-2.px-2
+			%img{src: current_admin.get_avatar, class: 'w-7 aspect-square rounded-full object-cover'}
+			-# .flex.flex-col.gap-1
+				%div.leading-none.text-sm= current_admin.email
+				.text-xs.text-fg-secondary.leading-none= current_admin.role.humanize

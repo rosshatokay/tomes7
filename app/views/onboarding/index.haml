@@ -1,0 +1,26 @@
+- content_for(:hide_nav, true)
+
+.w-full.min-h-screen.flex-center.relative
+	%div{class: 'bg-black/60 absolute inset-0'}
+	%div{class: 'max-w-[540px] p-10 py-16 w-full bg-white rounded-2xl z-1 relative shadow-lg'}
+		.logo.h-10.w-fit.mx-auto
+			=	show_svg 'logo-icon.svg'
+		.text-center.my-6
+			%h1.text-3xl.font-semibold.mb-1 Welcome to Tomes
+			%p.text-secondary Finish setting up your profile to join the club!
+		= form_with model: current_user, url: onboarding_index_path, data: {turbo: false, controller: 'form-with-loading-submit-btn'}, html: {class: 'max-w-[400px] flex flex-col gap-4 mx-auto'} do |f|
+			%div{data: {controller: 'image-upload-preview'}}
+				=	f.label :avatar, 'Profile picture', class: 'label-field mb-2'
+				.flex.gap-2.items-center
+					.w-16.aspect-square.rounded-full.relative{'data-image-upload-preview-target': 'cover', style: "background: url(#{current_user.get_avatar(size: 100)}) center / cover;"}
+					%div{class: 'btn btn-border h-9 relative'}	
+						=	f.file_field :avatar, class: 'absolute inset-0 opacity-0 cursor-pointer', accept: 'image/png, image/jpg, image/jpeg, image/avif, image/webp', 'data-image-upload-preview-target': 'field'
+						%i.ph.ph-upload-simple
+						%span Upload an image
+				
+			%div
+				=	f.label :username, class: 'label-field mb-2'
+				= f.text_field :username, class: 'input-field h-11', placeholder: 'Enter a username'
+			
+			.cta
+				%button{type: 'submit', class: 'btn btn-secondary h-11 w-full text-m'} Continue

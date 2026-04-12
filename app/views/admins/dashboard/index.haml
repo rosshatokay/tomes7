@@ -1,0 +1,14 @@
+.contain--small
+	.dashboard-heading.flex.justify-between.items-center
+		%div
+			%h1 Welcome back
+			%p= Time.current.strftime('%A %d, %Y')
+	
+	.grid.grid-cols-3.gap-6
+		= link_to new_admins_book_path, class: 'btn btn-surface rounded-xl w-full aspect-square flex-col' do
+			%i.ph.ph-plus.text-2xl
+			%span Add book
+		= link_to new_admins_author_path, class: 'btn btn-surface rounded-xl w-full aspect-square flex-col' do
+			%i.ph.ph-user-plus.text-2xl
+			%span Add an author
+		

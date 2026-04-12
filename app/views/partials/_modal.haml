@@ -1,0 +1,12 @@
+-# locals: (title: nil, id: nil)
+
+.s-modal-overlay{id: id}
+	.s-modal{class: 'bg-white dark:bg-[#2a2a2a]'}
+		.s-modal--heading{class: "#{title.nil? ? '!border-none' : ''}"}
+			%div
+			%h3.text-center= title
+			%div.justify-end.flex
+				%button{class: 'btn btn-surface btn-icon w-8 rounded-full', 'data-micromodal-close': '', 'aria-label-close': '', 'data-tippy-content': 'Close'}
+					%i.ph.ph-x
+		.s-modal--body{class: "#{title.nil? ? '!pt-0' : ''}"}
+			= yield

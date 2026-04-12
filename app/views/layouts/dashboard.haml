@@ -1,0 +1,22 @@
+%html
+	%head
+		= render 'layouts/head_content'
+		= stylesheet_link_tag 'tailwind', "data-turbo-track": "reload"
+		= javascript_include_tag "admin", type: "module", "data-turbo-track": "reload"
+		= javascript_include_tag 'theme'
+	%body
+
+		%div{class: "grid md:grid-cols-[64px_1fr] grid-cols-1 w-full h-screen overflow-hidden"}
+			= render "admins/dashboard/aside"
+			.w-full.h-full.overflow-y-auto
+				- if @breadcrumbs
+					.p-4
+						=	render 'partials/breadcrumbs'
+				.pt-12
+				=	yield
+				%div{class: 'pb-16'}
+
+		- if flash.any?
+			.flash-wrapper{data: {flashes: flash.to_json.html_safe, controller: 'flashes'}}
+
+		= yield(:scripts)

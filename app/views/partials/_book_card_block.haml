@@ -1,0 +1,30 @@
+-#  locals: (book:, small: false, hide_category: false, edit: false, progress: nil, hide_rating: false)
+
+.-m-2.flex.flex-1
+	.w-full.flex.flex-col.p-2{class: 'hover:bg-surface transition relative rounded-xl h-full'}
+		=	link_to '', edit ? edit_admins_book_path(book.hashid) : book_path(book.slug), class: 'absolute inset-0 z-2', data: {turbo: false}
+		.relative
+			=	ik_image_tag(book.cover, class: 'rounded-xl w-full')
+			- if progress.present?
+				-	percent = (progress * 100).round(0)
+				.absolute.pointer-events-none.top-2.left-2.flex-center.gap-1{class: 'bg-black/60 backdrop-blur-md text-white font-medium p-2 py-[3px] rounded-md'}
+					%i.text-sm.opacity-50{class: "#{percent == 100 ? 'ph ph-check-circle' : 'ph ph-circle'}"}
+					%p{class: 'text-[11px]'} #{percent}%
+		.pt-4.flex.flex-col.h-full
+			-	unless hide_category
+				-	if small
+					.text-xs.bg-surface.w-fit{class: 'py-0.5 px-1 rounded-sm text-secondary mb-1'}= book.category.name
+				- else
+					.bg-surface.mb-1.px-2.rounded-md.w-fit{class: 'text-[13px] py-0.5 text-secondary'}= book.category.name
+			%h3.font-medium{class: "#{small ? 'text-base leading-[1.25] line-clamp-2' : 'text-xl line-clamp-3'}"}= book.title
+			%p.text-secondary.mb-1{class: "#{small ? 'text-sm line-clamp-1' : 'text-base line-clamp-2'}"}= book.author_names
+			- unless hide_rating
+				.flex.items-center.gap-1.text-secondary.mt-auto.pt-1
+					.flex
+						-	book.average_rating.to_i.times do
+							%i.ph-fill.ph-star.text-amber-500{class: "#{small ? 'text-sm' : 'text-[15px]'}"}
+						-	(5 - book.average_rating.to_i).times do
+							%i.ph-fill.ph-star.text-secondary.opacity-30{class: "#{small ? 'text-sm' : 'text-[15px]'}"}
+					%p{class: "#{small ? 'text-xs' : 'text-sm'}"} (#{book.ratings_count})
+						
+					

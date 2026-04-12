@@ -1,0 +1,73 @@
+.landing-scene.opacity-0
+	%div{class: 'pt-[100px] h-[1200px] overflow-hidden relative'}
+		.absolute.pointer-events-none.w-full{class: 'h-[600px] z-2 bg-linear-to-t from-[var(--color-background)] to-transparent bottom-0 left-0'}
+		%div#splash-text-container{class: 'max-w-[880px] w-full mx-auto text-center flex flex-col items-center'}
+			%h1#splash-h1{class: 'text-[80px] w-full font-semibold leading-[0.9] mb-4'}= title "Read the greatest books of all time. For free."
+			%p.text-secondary.text-xl#splash-p{class: 'max-w-[420px] mb-8'} Access timeless classics for free. In one beautiful reading app.
+			%div#splash-search-bar{class: 'w-[480px] relative', data: {controller: 'app-search-bar'}}
+				%i.ph.ph-magnifying-glass.text-xl.text-secondary{class: 'absolute top-1/2 -translate-y-1/2 left-5'}
+				%input{type: 'text', id: 'search', autocomplete: 'off', placeholder: 'Search books, authors', class: 'input-field h-12 pl-12 pr-12 text-base rounded-full'}
+				.loading-spinner{class: 'w-5 h-5 !border-2 absolute top-1/2 -translate-1/2 opacity-50 right-4 !hidden'}
+				-# %span.text-secondary Search for books, authors, genres...
+
+		.relative.pointer-events-none
+			%div{class: 'w-[calc(100%+((100vw/7)))] flex gap-6 absolute left-1/2 -translate-x-1/2'}
+				- books = @featured_books
+				%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
+					= ik_image_tag(books[0].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[8].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
+					= ik_image_tag(books[1].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[7].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
+					= ik_image_tag(books[2].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[10].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				%div.splash-g-1{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[144px]'}
+					= ik_image_tag(books[6].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[9].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
+					= ik_image_tag(books[4].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[11].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
+					= ik_image_tag(books[3].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[13].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
+					= ik_image_tag(books[5].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					= ik_image_tag(books[12].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+
+%div{class: 'pt-[200px] contain mx-auto'}
+	.text-center.flex.flex-col.items-center.mb-16
+		%h2{class: 'text-[64px] font-semibold leading-none max-w-[800px] mb-6'} From beloved masterpieces to hidden gems
+		.text-2xl{class: 'max-w-[480px] text-secondary'} Explore the works that shaped literature. Available instantly, anywhere.
+
+	.grid.grid-cols-5.gap-4
+		-	@featured_books.take(5).each do |book|
+			=	render 'partials/book_card_block', book: book, small: true
+
+	%div{class: 'pt-[200px]'}
+		.text-center.flex.flex-col.items-center
+			%h2{class: 'text-[64px] font-semibold leading-none max-w-[600px] mb-6'} Built for eBook lovers
+			.text-2xl{class: 'max-w-[480px] text-secondary'} Tomes makes makes reading effortless and enjoyable. Packed with useful feature.
+		-	@features.each_with_index do |feature, i|
+			%div{class: 'grid grid-cols-2 pt-[100px]'}
+				.flex-center{class: "#{i.odd? ? "order-1" : "order-0"}"}
+					%div{class: 'max-w-[500px] flex flex-col gap-6'}
+						.border.border-outline.uppercase.w-fit.p-2.px-4.font-medium.rounded-full.text-sm= feature[:badge_label]
+						%h3{class: 'text-[54px] leading-none font-semibold'}= feature[:heading]
+						%p.text-secondary.text-xl= feature[:description]
+						=	link_to 'Join for free', new_registration_path, class: 'btn btn-secondary h-12 text-base px-6 mt-4'
+				%div{class: "#{!i.odd? ? "pl-16 order-1" : "pr-16 order-0"}"}
+					%div{class: 'w-full h-[600px] bg-surface rounded-xl', style: "background: url(#{asset_path("feature_#{i + 1}.png")}) center / cover;"}
+
+	%div{class: 'py-[200px]'}
+		.flex.justify-center.items-center.gap-16
+			- @stats.each_with_index do |stat, i|
+				.flex-center.flex-col.text-center{class: 'max-w-[280px]'}
+					%i.ph{class: "#{stat[:icon]} text-4xl mb-6"}
+					%h3.font-semibold.text-5xl.mb-3= stat[:heading]
+					%p.text-lg.text-secondary= stat[:description]
+				- if i < @stats.length - 1
+					.w-px.h-20{class: 'bg-black/10 dark:bg-white/10'}
+
+
+	= render 'partials/footers/bottom'

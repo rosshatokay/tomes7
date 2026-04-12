@@ -1,0 +1,74 @@
+- content_for(:hide_footer, true)
+- content_for(:hide_nav, true)
+
+:css
+	.t-logo svg {
+		width: 100%;
+		height: 100%;
+	}
+
+.w-full.h-screen{class: 'grid grid-cols-2'}
+	.h-full.overflow-y-auto.justify-center{class: 'pt-[100px] pb-16 relative'}
+		.absolute.top-6.left-6
+			.logo.h-6.logo-full
+				= show_svg 'logo.svg'
+		%div{class: 'max-w-[420px] mx-auto w-full flex flex-col gap-6'}
+			-	if @invited_by.present?
+				.flex.items-center
+					.w-14.aspect-square.rounded-full.bg-surface{style: "background: url(#{@invited_by.get_avatar}) center / cover;"}
+					.w-6.aspect-square.rounded-full.shadow-lg.flex-center.z-3.bg-background{class: '-mx-2'}
+						%i.ph.ph-plus.text-lg.text-secondary
+					.w-14.aspect-square.rounded-full.flex-center{class: 'z-2 bg-primary'}
+						.t-logo.h-6
+							= show_svg 'logo-icon.svg'
+			%div
+				- if @invited_by.present?
+					%h1.text-3xl.font-semibold.mb-4{class: 'leading-[1.1]'} You've been invited to Tomes by #{@invited_by.username}
+				- else
+					%h1.text-3xl.font-semibold.mb-4{class: 'leading-[1.1]'} Welcome to Tomes
+				%p.text-secondary Read timless classics, review books, and follow your friends. All in one free platform. 
+			- if @user.errors.any?
+				= render 'partials/errors_card', errors: ['Some errors prevented you from signing up']
+
+				
+			=	link_to authorize_oauth_path, class: 'btn btn-surface w-full min-h-11 h-11 rounded-xl text-[15px] gap-2', tabindex: "4" do
+				.w-5
+					=	show_svg 'socials/google.svg'
+				%span Continue with Google
+
+			.flex.items-center.gap-4
+				.border-b.border-outline.w-full
+				%p.text-sm.text-secondary or
+				.border-b.border-outline.w-full
+				
+			%div
+				= form_with model: @user, url: registration_path, html: {class: 'flex flex-col gap-5'}, data: {turbo: false, controller: 'form-with-loading-submit-btn'} do |f|
+					%div
+						= f.label :email_address, class: 'label-field mb-2'
+						= f.email_field :email_address, required: true, autofocus: true, autocomplete: "email", tabindex: "1", placeholder: "Enter your email address", class: "input-field h-11"
+						= input_error_label(@user.errors[:email_address])
+						-# - if @user.errors[:email_address].present?
+						-# 	%p{class: ''}= @user.errors[:email_address].join(', ')
+					%div
+						= f.label :username, class: 'label-field mb-2'
+						= f.text_field :username, required: true, autocomplete: "username", tabindex: "1", placeholder: "Choose a username", class: "input-field h-11"
+						= input_error_label(@user.errors[:username])
+					%div
+						= f.label :password, class: 'label-field mb-2'
+						= f.password_field :password, required: true, autocomplete: 'off', tabindex: "1", placeholder: "Enter a password", class: "input-field h-11"
+						= input_error_label(@user.errors[:password])
+
+					%div.checkbox-field
+						%input{type: 'checkbox', id: 'accept-tos', required: 'true'}
+						%label{for: "accept-tos"}
+							%span I agree to Tomes' #{link_to 'Terms of Use', '', class: 'underline'} and #{link_to 'Privacy Policy', '', class: 'underline'}.
+							
+					.cta
+						%button.btn.btn-primary.h-10.px-6.rounded-xl.w-full{class: 'text-[15px]'} Create a free account
+
+			%p.text-sm.text-secondary Already have an account? #{link_to "Sign in", new_session_path, class: 'text-[var(--color-on-background)] underline'}
+			
+
+			
+			
+	.w-full.h-full{style: "background: url(auth-splash.png) center / cover;"}

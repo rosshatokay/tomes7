@@ -1,0 +1,42 @@
+- selected_ids = []
+
+.contain.py-6.pb-16.flex.flex-col.gap-16
+	%section 
+		%h2.font-medium.text-xl.mb-5 Browse categories
+		.grid.grid-cols-4.gap-4
+			-	Category.all.take(8).each do |c|
+				.btn.relative.w-full.flex.bg-surface.items-end.justify-start.p-6.rounded-xl.overflow-hidden{class: 'h-[150px] hover:bg-black/10 dark:hover:bg-white/15 transition' }
+					=	link_to '', category_path(c.slug), class: 'absolute inset-0 z-2'
+					.relative.z-1
+						%span.text-2xl= category_emoji(c.slug)
+						%h3.font-semibold.text-lg.mt-2{class: 'text'}= c.name
+
+	%section 
+		.flex.gap-2.items-center.mb-5
+			%h2.font-medium.text-xl Trending
+			.btn.btn-surface.btn-icon.w-6
+				%i.ph.ph-caret-right.text-base
+		.grid.grid-cols-5.gap-4
+			- Book.with_attached_cover.published.take(2).each do |book|
+				=	render 'partials/book_card_block', book: book, small: true
+				- selected_ids << book.id
+		
+
+	-	Category.includes(books: [:authors, cover_attachment: :blob]).all.select {|c| c.books.any? }.each do |c|
+		%section.varousel-container
+			.flex.justify-between.items-center.mb-2
+				=	link_to category_path(c.slug), class: 'flex gap-2 items-center group' do
+					%h2.font-medium.text-xl Popular in #{c.name}
+					%i.ph.ph-caret-right.text-base{class: 'opacity-50 group-hover:opacity-100'}
+				.flex.gap-2
+					%button{type: 'button', class: 'btn btn-icon btn-surface w-8 shadow-md'}
+						%i.ph.ph-caret-left.text-secondary
+					%button{type: 'button', class: 'btn btn-icon btn-surface w-8 shadow-md'}
+						%i.ph.ph-caret-right.text-secondary
+				
+			.relative.mx-2
+				.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
+					- c.books.reject { |b| selected_ids.include?(b.id) }.take(7).each do |book|
+						%div{class: 'w-[calc((100%/5)_-_14px)] min-w-[calc((100%/5)_-_14px)] flex'}
+							=	render 'partials/book_card_block', book: book, small: true
+				

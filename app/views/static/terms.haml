@@ -1,0 +1,7 @@
+%article.contain.contain--extra-small.static.pt-8
+	%h1.text-4xl.font-semibold= title "Terms of Service"
+	%p.text-secondary.mt-3 Last updated at #{Time.parse("11-04-2026").strftime('%d %B, %Y')}
+	.border-b.border-outline.my-8
+	.text-justify
+		=	render_markdown(@markdown_file)
+

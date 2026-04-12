@@ -1,0 +1,31 @@
+- link_class = 'btn btn-clear h-8 w-full rounded-md px-3 font-normal justify-start gap-2'
+
+.action-menu
+	%div{class: 'toggler btn btn-clear btn-icon w-10'}
+		%div{class: 'min-w-8 w-8 aspect-square rounded-full bg-surface', style: "background: url(#{current_user.get_avatar}) center / cover;"}
+	.hidden
+		%div{class: 'context w-[240px] !rounded-lg'}
+			%div{class: 'p-1 gap-0.5 border-b border-outline'}
+				= link_to profile_path(current_user.username), class: link_class do
+					%i.ph.ph-user
+					%span Profile
+				= link_to profile_path(current_user.username), class: link_class do
+					%i.ph.ph-heart
+					%span Saved
+				-# = link_to profile_path(current_user.username), class: link_class do
+					%i.ph.ph-envelope
+					%span Request a book
+				%button{type: 'button', class: link_class, 'data-micromodal-trigger': 'invite-modal', 'data-close-popup': 'true'}
+					%i.ph.ph-envelope.pointer-events-none
+					%span.pointer-events-none Invite a friend
+			-# %div{class: 'p-1 gap-0.5 border-b border-outline'}
+			-# 	%span.text-sm.text-secondary.px-2 Appearance
+			%div{class: 'p-1 gap-0.5'}
+				= link_to settings_path, class: link_class do
+					%i.ph.ph-gear
+					%span Settigns
+				= button_to logout_path, class: link_class, data: {turbo: false}, method: :delete do
+					%i.ph.ph-sign-out
+					%span Log out
+				
+= render 'partials/invite_modal'

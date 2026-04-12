@@ -1,0 +1,32 @@
+-# locals: (for_current_user:false)
+
+.flex.flex-col.gap-8
+	%div
+		.font-medium.text-lg.mb-4 Activity
+		- unless @activities.empty?
+			.flex.flex-col.gap-4
+				-	if for_current_user
+					- unless current_user.followees(User).exists?
+						.bg-surface.p-6.rounded-lg.flex-center.flex-col.gap-2
+							%i.ph.ph-info.text-xl.text-secondary
+							%p.text-sm You aren't following anyone
+							.btn.btn-primary.text-xs.h-8 Invite friends
+				- @activities.each do |act|
+					-	bg_icon = activity_bg_icon(action: act.action)
+					- unless !bg_icon
+						.flex.items-start.gap-3
+							.relative
+								%img{src: act.user.get_avatar(size: 48), class: 'min-w-8 w-8 aspect-square bg-surface rounded-full'}
+								.absolute.rounded-full.aspect-square.w-5.flex-center{class: "-right-2 -bottom-2 border-2 border-[var(--color-background)] #{bg_icon[:bg]}"}
+									%i.text-xs.ph-fill{class: bg_icon[:icon]}
+
+							%div
+								%p{class: 'text-[15px] leading-[1.3]'}
+									%span.font-medium= act.user.username
+									%span.text-secondary= act.humanize_action
+									%span.font-medium= act.subject.title
+								%p.text-secondary.opacity-75{class: 'text-[13px]'} #{time_ago_in_words(act.created_at)} ago
+		- else
+			.bg-surface.p-4.rounded-lg.flex-center.text-secondary.text-m No activity yet
+
+	= render 'partials/footers/aside'	

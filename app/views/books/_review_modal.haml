@@ -1,0 +1,14 @@
+= render 'partials/modal', id: 'review-modal' do
+	=	ik_image_tag(@book.cover, class: 'w-20 aspect-book bg-surface rounded-lg mx-auto', transformation: [{width: 200}])
+	.font-semibold.text-2xl.text-center.mt-6 How would you rate this book?
+
+	=	form_with model: Rating.new, url: ratings_path, method: :post, data: {turbo_stream: true}, html: { id: "review-form ", class: '!block'} do |f|
+		=	f.hidden_field :book_id, value: @book.hashid
+		=	f.hidden_field :score
+
+		.rating-slider-container.mt-2.mb-6
+		-# .flex.justify-center.gap-1.mt-2.mb-6{data: {controller: 'rating-slider'}}
+			- 5.times do |i|
+				%i.ph-fill.ph-star.text-secondary.opacity-25.text-2xl.star.cursor-pointer{'data-index': i + 1}
+
+		=	f.text_area :body, class: 'input-field p-4 h-[150px] resize-none', placeholder: "Describe the reading experience (optional)"

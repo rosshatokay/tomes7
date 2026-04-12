@@ -1,0 +1,20 @@
+.contain.contain--yield
+	= render 'header'
+	
+	%div{class: 'grid grid-cols-[1fr_300px] gap-16'}
+		%div
+			%h3.text-lg.font-medium.mb-2	
+				%span.font-medium.pr-1 Currently reading
+				%span.number-badge.text-sm #{@user.currently_reading.size}
+			-	if @user.currently_reading.any?
+				.relative.w-full
+					.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
+						- @user.currently_reading.last(8).each do |user_book|
+							-	book = user_book.book
+							%div{class: 'w-[calc((100%/4)_-_14px)] min-w-[calc((100%/4)_-_14px)] flex'}
+								= render 'partials/book_card_block', book: book, small: true
+			- else
+				= render 'partials/empty_state', title: "Nothing here", description: @user == current_user ? "You haven't started reading any books yet." : "#{@user.username} isn't reading a book for now."
+		%div
+			=	render 'feeds/activity_aside'
+	

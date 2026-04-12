@@ -1,0 +1,19 @@
+:css
+	#reviews {
+		scroll-margin-top: 124px
+	}
+
+%section#reviews
+	%h3.text-lg.font-semibold.mb-4 Reviews
+	-	if @ratings.empty?
+		#empty_reviews
+			=	render 'partials/empty_state', title: "No reviews yet", description: "No one has left a review for this book. Be the first!" do
+				.btn.btn-primary.h-9{'data-micromodal-trigger': 'review-modal'} Add a review
+	
+	= turbo_frame_tag "reviews" do
+		#reviews_list{ data: { reviews_container: true } }
+			-	@ratings.each do |review|
+				= render "ratings/review", review: review
+			.mt-6
+			- if @pagy.pages > 1
+				=raw @pagy.series_nav

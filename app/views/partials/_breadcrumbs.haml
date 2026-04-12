@@ -1,0 +1,8 @@
+- if @breadcrumbs&.any?
+	.items-center.gap-1.text-sm{class: 'md:flex hidden'}
+		- @breadcrumbs.each_with_index do |bc, index|
+			-	notLast = index < @breadcrumbs.size - 1
+			= link_to bc[:label], bc[:path], class: "#{notLast ? '!text-secondary md:block hidden' : ''} hover:!text-[var(--color-on-background)]"
+			-	if notLast
+				%i.ph.ph-caret-right.text-secondary{class: 'md:block hidden'}
+			-# %div= @source.name

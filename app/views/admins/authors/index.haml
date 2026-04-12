@@ -1,0 +1,17 @@
+.contain--small
+	.dashboard-heading.flex.justify-between.items-center
+		%div
+			%h1 Authors
+			%p #{@authors.count} authors
+		= link_to new_admins_author_path, class: 'btn btn-surface h-9' do
+			%i.ph.ph-plus
+			%span Add author
+		
+	= render 'partials/table', headings: ['Author', '# Books'] do
+		- @authors.each_with_index do |author, index|
+			%tr{class: "cursor-pointer transition hover:bg-black/10 dark:hover:bg-white/10 #{index == @authors.size - 1 ? 'relative' : 'border-b border-outline relative'}", onclick: "location.href = '#{edit_admins_author_path(author.hashid)}'"}
+				%td.p-3.pl-0
+					.flex.items-center.gap-2
+						=	ik_image_tag(author.avatar, transformation: [{width: 100, height: 100}], class: 'rounded-full w-10 min-w-10')
+						%span= author.full_name
+				%td.p-3= author.books_count

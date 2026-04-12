@@ -1,0 +1,18 @@
+%div{class: 'md:w-[270px] md:min-w-[270px] w-full md:pl-12 md:pb-0 pb-16 flex flex-col gap-8'}
+	%aside
+		%h3.text-lg.leading-none.font-semibold.mb-4 Support
+		.flex.flex-col.gap-4
+			= link_to 'mailto:hey@tomes.club', class: 'flex items-center gap-2 group w-fit' do
+				%i.ph.ph-at.text-lg.text-secondary
+				%p.leading-none{class: 'group-hover:underline'} Contact us
+			%button{class: 'cursor-pointer flex items-center gap-2 group w-fit', 'data-micromodal-trigger': 'request-book-modal'}
+				%i.ph.ph-git-pull-request.text-lg.text-secondary
+				%p.leading-none{class: 'group-hover:underline'} Request a book
+			= link_to about_path, class: 'flex items-center gap-2 group w-fit' do
+				%i.ph.ph-info.text-lg.text-secondary
+				%p.leading-none{class: 'group-hover:underline'} Learn about Tomes
+			-# = link_to '', class: 'flex items-center gap-2 group w-fit' do
+				%i.ph.ph-flag.text-lg.text-secondary
+				%p.leading-none{class: 'group-hover:underline'} Report this book
+		.text-sm.text-secondary.mt-6 Published #{@book.created_at.strftime('%B %d, %Y')}
+	= render 'partials/footers/aside'

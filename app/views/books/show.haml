@@ -1,0 +1,10 @@
+=	render 'jsonld'
+%div{data: {controller: 'book-page'}}
+	%div{class: 'contain contain--yield flex flex-col md:flex-row'}
+		= render 'cover_aside'
+		=	render 'body'
+		= render 'aside'
+
+	= render 'review_modal'
+	=	render 'request_book_modal'
+				

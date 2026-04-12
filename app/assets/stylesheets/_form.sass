@@ -1,0 +1,48 @@
+.checkbox-field
+	position: relative
+	display: flex
+	--box-width: 36px
+	--box-height: 20px
+	input
+		position: absolute
+		opacity: 0
+	label
+		padding-left: calc(var(--box-width) + 10px)
+		cursor: pointer
+		span
+			font-size: 14px
+		&::before
+			content: ""
+			width: var(--box-width)
+			height: var(--box-height)
+			position: absolute
+			top: 0
+			left: 0
+			border-radius: 999px
+			background: var(--color-surface)
+			transition: .2s var(--transition)
+		&::after
+			content: ""
+			position: absolute
+			top: 2px
+			left: 2px
+			width: calc(var(--box-height) - 4px)
+			aspect-ratio: 1 / 1
+			background: white
+			transition: .2s var(--transition)
+			border-radius: 100%
+	input:checked+label
+		&:before
+			background: var(--color-primary)
+		&:after
+			transform: translateX(100%)
+
+.select-field
+	position: relative
+	select
+		width: 100%
+		height: 100%
+		position: absolute
+		inset: 0
+		cursor: pointer
+		opacity: 0

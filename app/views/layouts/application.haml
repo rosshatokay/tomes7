@@ -1,0 +1,33 @@
+%html
+	%head
+		= render 'layouts/head_content'
+		= stylesheet_link_tag 'tailwind', "data-turbo-track": "reload"
+		= javascript_include_tag "application", type: "module", "data-turbo-track": "reload"
+		= javascript_include_tag 'theme'
+		- if !user_signed_in?
+			%script(src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js") 
+			=	javascript_include_tag 'landing', "data-turbo-track": "reload"
+	%body
+
+		=	render 'navs/top' unless yield(:hide_nav) == "true"
+		
+		.yield-wrapper
+			- if @breadcrumbs.present?
+				.contain.mt-2
+					=	render 'partials/breadcrumbs'
+			=	yield
+
+			- if !user_signed_in?
+				-	unless yield(:hide_footer) == 'true'
+					.contain
+						=	render 'partials/footers/bottom'
+
+		- if flash.any?
+			.flash-wrapper{data: {flashes: flash.to_json.html_safe, controller: 'flashes'}}
+			
+		= yield(:scripts)
+
+		- if authenticated?
+			:javascript
+				window.current_user = #{Current.user.slice(:username,:email_address).merge({avatar: Current.user.get_avatar}).to_json}
+			

@@ -1,0 +1,43 @@
+- content_for(:hide_nav, true)
+- content_for(:hide_footer, true)
+
+.w-full.h-screen.items-center
+	.w-full.px-4{class: 'max-w-[420px] mx-auto py-20'}
+
+		=	link_to root_path, class: 'block logo h-10 mb-12 mx-auto w-fit' do
+			=	show_svg 'logo-icon.svg'
+
+		.mb-6
+			%h1.font-bold.text-3xl.mb-1 Welcome back
+			%p.text-secondary Sign in to your account
+
+		- if alert = flash[:alert]
+			%p{class: "w-full py-2 px-3 bg-red-50 mb-5 text-red-500 text-sm rounded-lg inline-block", id: "alert"}= alert
+		- if notice = flash[:notice]
+			%p{class: "w-full py-2 px-3 bg-green-50 mb-5 text-green-500 text-sm rounded-lg inline-block", id: "notice"}= notice
+			
+		= form_with url: session_url, class: "contents", html: {class: 'flex flex-col gap-5'}, data: {turbo: false, controller: 'form-with-loading-submit-btn'} do |f|
+			=	f.hidden_field :return_to, value: params[:return_to] unless params[:return_to].nil?
+			%div
+				= f.label :email_address, class: 'label-field mb-2'
+				= f.email_field :email_address, required: true, autofocus: true, autocomplete: "username", tabindex: "1", placeholder: "Enter your email address", value: params[:email_address], class: "input-field h-11"
+			%div
+				.flex.justify-between
+					= f.label :password, class: 'label-field mb-2'
+					= link_to "Forgot password?", new_password_path, class: "text-secondary text-sm underline", tabindex: "5"
+				= f.password_field :password, required: true, autocomplete: "current-password", tabindex: "2", placeholder: "Enter your password", maxlength: 72, class: "input-field h-11"
+			.cta
+				= f.button "Sign in", class: "btn btn-primary h-11 w-full rounded-xl text-[15px]", tabindex: "3"
+		
+		%p.text-sm.text-secondary.my-6 Don't have an account? #{link_to "Join for free", new_registration_path, class: 'text-link underline'}
+
+		.flex.items-center.gap-4.my-6
+			.border-b.border-outline.w-full
+			%p.text-sm.text-secondary or
+			.border-b.border-outline.w-full
+		=	link_to authorize_oauth_path, class: 'btn btn-surface w-full h-11 rounded-xl text-[15px] gap-2', tabindex: "4" do
+			.w-5
+				=	show_svg 'socials/google.svg'
+			%span Continue with Google
+
+		.text-sm.text-secondary.mt-6 By signing in or creating an account, you agree to our #{link_to("Terms of service", terms_path, class: 'underline')} and #{link_to("Privacy policy", privacy_path, class: 'underline')}.

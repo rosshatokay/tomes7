@@ -1,0 +1,21 @@
+- content_for(:hide_nav, true)
+
+.w-full.h-screen.items-center
+	.w-full.px-4{class: 'max-w-[420px] mx-auto pt-16'}
+		.logo.h-6.mb-16.mx-auto.w-fit
+			=	show_svg 'logo.svg'
+
+		%h1.font-bold.text-3xl.mb-2 Reset password
+		%p.text-secondary Enter your email address to receieve password reset instructions.
+
+		- if alert = flash[:alert]
+			%p{class: "py-2 px-3 bg-red-50 mb-5 text-red-500 text-sm w-full rounded-lg inline-block"}= alert
+
+		= form_with url: passwords_path, class: "contents" do |form|
+			.my-5
+				=	form.label :email_address, class: 'label-field mb-2'
+				= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input-field h-11"
+
+				= form.submit "Email reset instructions", class: "btn btn-primary h-11 mt-6 w-full text-[15px]"
+
+		=	link_to 'Back to sign in', new_session_path, class: 'text-secondary text-sm hover:underline'

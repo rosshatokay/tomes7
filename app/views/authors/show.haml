@@ -1,0 +1,38 @@
+.contain.contain--yield
+	%div{class: 'flex justify-between'}
+		.flex.gap-6.items-start
+			=	ik_image_tag(@author.avatar, transformation: [{width: 200, height: 200}], class: "w-25 mb-4 rounded-full apsect-square object-cover")
+			.pt-2
+				%h1.font-semibold{class: 'text-[28px] leading-none mb-4'}= @author.full_name
+				-# %p.text-secondary
+					%span= pluralize(@author.books_count, "book")
+				%p.mt-2.max-w-lg.text-secondary.line-clamp-3= @author.bio
+				- if @author.wiki_url.present?
+					%p.text-sm.text-secondary.mt-2 Read more on #{link_to 'Wikipedia', @author.wiki_url, target: '_blank', class: 'font-medium text-on-background'}.
+		.flex.gap-2
+			-	if current_user&.admin?
+				= link_to 'Edit page', edit_admins_author_path(@author.hashid), class: 'btn btn-border h-9'
+			.btn.btn-surface.h-9 
+				%i.ph.ph-share-fat
+				%span Share
+
+	.border-b.border-outline.mt-12.mb-6
+
+	%div
+		%h3.text-xl.font-medium.flex.items-center.mb-3
+			%span.font-medium.pr-2 Books
+			%span.number-badge.text-sm= @author.books_count
+		-	if @books.any?
+			=	turbo_frame_tag "pagination", class: 'scroll-mt-[124px]' do
+				.relative.w-full.grid.grid-cols-5.gap-4.gap-y-6
+					- @books.each do |book|
+						= render 'partials/book_card_block', book: book, small: true
+				- if @pagy.pages > 1
+					.mt-12.flex-center
+						=raw	@pagy.series_nav
+		- else
+			= render 'partials/empty_state', title: "Nothing here", description: "We haven't added any books by #{@author.full_name} yet. Check back again soon."
+		-# %div 
+		-# 	%h3.text-lg.font-medium.mb-2 Biography
+		-# 	%p.text-m.max-w-md.text-secondary= @author.bio
+		-# 	%p.text-sm.text-secondary.mt-2 Read more on #{link_to 'Wikipedia', '', class: 'font-medium text-on-background'}.

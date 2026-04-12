@@ -1,0 +1,29 @@
+-# - tabs = [['Profile', profile_path(@user.username)], ['Reviews', reviews_profile_path(@user.username)], ['Saved', saved_profile_path(@user.username)]]
+- tabs = [['Profile', profile_path(@user.username)], ['Saved', saved_profile_path(@user.username)]]
+
+.flex.items-start.gap-6.justify-between
+	.flex.gap-6.flex-col
+		%img{src: @user.get_avatar(size: 200), alt: "#{@user.username}'s profile picture", class: 'w-22 rounded-full aspect-square object-cover'}
+		%div
+			%h1.font-semibold{class: 'text-[28px] leading-none mb-0.5'}= @user.username
+			%h3.text-m.mb-1.text-secondary= @user.handle
+			- if @user.bio.present?
+				%p.text-m.opacity-80= @user.bio
+			.mt-4.flex.gap-8
+				%div
+					%h3.font-medium= @user.followers_count
+					%p.text-sm.text-secondary= "Follower".pluralize(@user.followers_count)
+				%div
+					%h3.font-medium= @user.followees_count
+					%p.text-sm.text-secondary= "Following".pluralize(@user.followees_count)
+	- if @user == current_user
+		= link_to settings_path, class: 'btn btn-surface h-9' do
+			%i.ph.ph-pencil
+			%span Edit profile
+	- else
+		=	render "follow_button", user: @user
+
+.flex.gap-6.border-b.border-outline.mt-8.mb-6
+	-	tabs.each do |tab|
+		-	current = request.path == tab[1]
+		=	link_to tab[0], tab[1], class: "text-m pb-3 transition #{current ? 'font-medium border-b-2 border-black dark:border-white' : 'opacity-60 hover:opacity-100'}"

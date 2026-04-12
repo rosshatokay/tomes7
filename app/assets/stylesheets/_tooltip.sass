@@ -1,0 +1,60 @@
+[data-tippy-root]
+	z-index: 99999
+
+.s-tooltip
+	background-color: #444
+	color: white
+	font-size: 13px
+	padding: 6px 10px
+	border-radius: 8px
+	box-shadow: 0px 4px 12px rgba(1,1,1,.1)
+	line-height: 20px
+	font-weight: 500
+	pointer-events: none
+	white-space: nowrap
+	transition: .2s var(--transition)
+	display: flex
+	align-items: center
+	gap: 4px
+	&--separator
+		color: rgba(255,255,255,.4)
+		font-size: 8px
+		padding: 0 2px
+	&--icon
+		background: (--color-on-background--subtle)
+		width: 20px
+		height: 20px
+		font-weight: 600
+		display: flex
+		align-items: center
+		justify-content: center
+		border-radius: 4px
+		i
+			font-size: 16px
+
+html.light
+	.s-tooltip
+		background: #111
+		color: white
+		&--icon
+			background: rgba(255,255,255,0.2)
+	
+.s-tooltip[data-state="hidden"]
+	transform: scale(.95)
+	opacity: 0
+
+.s-tooltip[data-state="visible"]
+	transform: scale(1)
+	opacity: 1
+	
+[data-popper-placement="right"]
+	.s-tooltip
+		transform-origin: left
+	
+.s-tooltip
+	.katex
+		font-size: 2.2em
+
+@media (max-width: 640px)
+	.s-tooltip
+		display: none

@@ -1,0 +1,33 @@
+.contain--small
+	.dashboard-heading.flex.justify-between.items-center
+		%div
+			%h1 Books
+		= link_to new_admins_book_path, class: 'btn btn-primary h-9' do
+			%i.ph.ph-plus
+			%span Add book
+
+	-	if @books.size > 0
+		=	turbo_frame_tag "books" do
+			.border.border-outline.rounded-lg
+				- @books.each_with_index do |book, i|
+					.flex.items-center.gap-5.p-5.justify-between.relative{class: "hover:bg-surface transition #{i < @books.size - 1 ? 'border-b border-outline' : ''}"}
+						=	link_to '', edit_admins_book_path(book.hashid), class: 'absolute inset-0', data: {turbo: false}
+						.flex.items-center.gap-5
+							= ik_image_tag(book.cover, transformation: [{width: 100}], class: 'aspect-book w-11 rounded-sm')
+							%div 
+								.font-medium= book.title
+								.text-secondary.text-sm= book.author_names
+						.flex.gap-2
+							.bg-surface.text-sm.px-3.h-7.flex-center.rounded-full.gap-2.text-secondary
+								%span= book.published? ? 'Published' : 'Not published'
+							.bg-surface.text-sm.px-3.h-7.flex-center.rounded-full.gap-2.text-secondary
+								%i.ph.ph-books.text-base.-ml-1
+								%span= book.category.name
+			.mt-6
+			=raw @pagy.series_nav(anchor_string: 'data-turbo-action="advance"')
+	- else
+		nothing here
+
+	-# .grid.grid-cols-4.gap-4.gap-y-8
+		-	@books.each do |book|
+			=	render 'partials/book_card_block', book: book, small: true, edit: true

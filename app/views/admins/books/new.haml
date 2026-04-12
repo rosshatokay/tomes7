@@ -1,0 +1,22 @@
+- @is_edit = @book.persisted?
+- chapters_tab = params[:tab] == "chapters"
+
+.contain--small.max-w-3xl
+	.dashboard-heading
+		=	render 'partials/breadcrumbs'
+		.mt-1
+		%h1= @is_edit ? 'Edit book' : 'New book'
+
+	.flex.gap-6.mb-8.border-b.border-outline
+		=	link_to 'Overview', @is_edit ? edit_admins_book_path(@book.hashid) : new_admins_book_path, class: "pb-2 #{!chapters_tab ? 'border-b-2 border-[var(--color-on-background)]' : 'text-secondary hover:text-[var(--color-on-background)]'}"
+		- if @is_edit
+			=	link_to 'Chapters', edit_admins_book_path(@book.hashid, tab: 'chapters'), class: "pb-2 #{chapters_tab ? 'border-b-2 border-[var(--color-on-background)]' : 'text-secondary hover:text-[var(--color-on-background)]'}"
+		- else
+			%div{class: "pb-2 text-secondary", 'data-tippy-content': 'Create book first'} Chapters
+
+
+
+	-	if chapters_tab
+		= render 'chapters_tab'
+	- else
+		= render 'form'

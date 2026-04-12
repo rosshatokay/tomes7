@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+	--color-primary: #E89105;
+}
+
+::placeholder {
+	color: var(--color-on-background) !important;
+	opacity: .4 !important;
+}
+
+@theme {
+	--color-primary: var(--color-primary): 
+}
+
+@utility contain {
+	@apply max-w-7xl px-5 mx-auto w-full;
+}
+
+@utility contain--small {
+	@apply max-w-4xl mx-auto;
+}
+
+@utility contain--extra-small {
+	@apply max-w-2xl mx-auto;
+}
+
+@utility contain--yield {
+	@apply pt-10 pb-16
+}
+
+@utility badge-warning {
+	@apply bg-orange-500/10 text-orange-600
+}
+
+@utility bg-surface {
+	@apply bg-[rgba(1,1,1,.03)] dark:bg-white/5;
+}
+
+@utility text-secondary {
+	color: var(--color-on-background--subtle);
+}
+
+@utility border-outline {
+	border-color: var(--color-outline);
+}
+
+@utility text-link {
+	@apply dark:text-white text-black;
+}
+
+@utility text-m {
+	@apply text-[15px]
+}
+
+@utility btn {
+	@apply font-medium px-4 cursor-pointer transition px-4 flex items-center justify-center rounded-full text-sm active:scale-[0.99] active:!shadow-none gap-1.5 whitespace-nowrap w-fit;
+	i	 {
+		@apply text-base -ml-1;
+	}
+	svg {
+		height: auto;
+		width: 100%;
+	}
+}
+
+@utility btn-primary {
+	@apply dark:bg-white dark:text-black bg-primary text-white;
+}
+
+@utility btn-secondary {
+	@apply dark:bg-white dark:text-black bg-black text-white;
+}
+
+@utility btn-border {
+	@apply border-outline border shadow-[0px_4px_6px_rgba(1,1,1,.05)] hover:border-[rgba(1,1,1,.5)] dark:hover:!border-white/30;
+}
+
+@utility btn-icon {
+	@apply !p-0 aspect-square;
+
+	i {
+		font-size: 20px !important;
+		margin: 0px !important;
+	}
+}
+
+@utility btn-surface {
+	@apply bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20
+}
+
+@utility btn-clear {
+	@apply hover:bg-black/5 active:bg-black/10 text-gray-500 dark:text-gray-300 dark:hover:text-gray-100 hover:text-gray-800 dark:hover:bg-white/10 dark:active:bg-white/15;
+}
+
+@utility btn-disabled {
+	@apply dark:!bg-white/5 dark:!text-white/60 !pointer-events-none !bg-black/5 !text-black/40 border-none;
+}
+
+@utility text-on-background {
+	@apply text-[var(--color-on-background)]
+}
+
+@utility bg-background {
+	@apply bg-[var(--color-background)]
+}
+
+@utility bg-on-background {
+	@apply bg-[var(--color-on-background)]
+}
+
+@layer components {
+	.aspect-book {
+		aspect-ratio: 1 / 1.6;
+	}
+
+	.border-outline {
+		@apply border-[rgba(1,1,1,.1)] dark:border-white/10
+	}
+
+	.label-field {
+		@apply text-[15px] text-neutral-700 dark:text-neutral-400 w-fit cursor-pointer inline-block
+	}
+
+	.input-field {
+		@apply flex items-center text-[15px] !font-normal rounded-xl border-2 w-full border-transparent bg-black/5 hover:bg-black/10 transition focus:!border-[var(--color-on-background)] focus:bg-transparent font-normal px-4 dark:bg-white/10 dark:hover:bg-white/15 dark:focus:bg-transparent;
+		box-shadow: none !important;
+		outline: none;
+	}
+
+	.dashboard-heading {
+		@apply mb-6;
+		h1 {
+			@apply text-2xl font-semibold mb-1
+		}
+		p {
+			@apply text-[var(--color-on-background--subtle)] text-[15px]
+		}
+	}
+	.input-field--border {
+		@apply !bg-transparent !border-outline hover:!border-[rgba(1,1,1,.5)] !shadow-sm
+	}
+
+	select {
+		@apply text-[15px] !font-normal rounded-lg border-transparent bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15 transition h-full
+	}
+
+	/* .choices {
+		.choices__inner {
+			@apply !bg-black/5 hover:!bg-black/10 dark:!bg-white/10 dark:hover:!bg-white/15;
+		}
+		.choices__list.choices__list--dropdown {
+			@apply !bg-white dark:!bg-[#333]
+		}
+		.choices__item
+	} */
+	
+	.headline {
+		font-family: 'Amiri';
+		letter-spacing: -0.04em;
+		line-height: 0.9;
+	}
+
+	.flex-center {
+		@apply flex items-center justify-center
+	}
+
+	nav.pagy.series-nav {
+		@apply flex gap-1;
+		a {
+			@apply btn btn-surface btn-icon w-9
+		}
+		a[aria-current="page"] {
+			@apply !btn-secondary
+		}
+		a[aria-disabled="true"][aria-label="Previous"], a[aria-disabled="true"][aria-label="Next"]{
+			@apply btn-disabled
+		}
+	}
+}

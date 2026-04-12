@@ -1,0 +1,66 @@
+.toastify
+	padding: 10px 16px
+	display: flex
+	align-items: center
+	column-gap: 8px
+	border-radius: 12px
+	font-size: 14px
+	z-index: 999999
+	background: var(--color-on-background)
+	position: fixed
+	color: var(--color-background)
+	box-shadow: 0px 8px 16px rgba(0,0,0,0.1)
+	animation: fadeOut .2s var(--transition) forwards
+	left: 50%
+	transform: translateX(-50%)
+	max-width: -moz-fit-content
+	white-space: nowrap
+	span
+		white-space: nowrap
+	&.for-admin
+		left: 50%
+		margin-left: 0
+	i
+		font-size: 20px
+	&.on
+		animation: fadeIn .2s var(--transition) forwards
+
+@keyframes fadeIn
+	0%
+		transform: translate(-50%, 16px) scale(0.97)
+		opacity: 0
+	100%
+		transform: translate(-50%, 0px) scale(1)
+		opacity: 1
+
+@keyframes fadeOut
+	0%
+		transform: translate(-50%, 0px)
+		opacity: 1
+	100%
+		transform: translate(-50%, -16px)
+		opacity: 0
+
+@media (max-width: 768px)
+	.toastify
+		left: 50%
+	@keyframes fadeIn
+		0%
+			transform: translate(-50%, 16px) scale(0.97)
+			opacity: 0
+		100%
+			transform: translate(-50%, 0px) scale(1)
+			opacity: 1
+
+	@keyframes fadeOut
+		0%
+			transform: translate(-50%, 0px)
+			opacity: 1
+		100%
+			transform: translate(-50%, -16px)
+			opacity: 0
+
+html[dir="rtl"]
+	.toastify
+		right: initial
+		left: 24px

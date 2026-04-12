@@ -1,0 +1,60 @@
+class BooksController < ApplicationController
+  allow_unauthenticated_access
+
+  include Pagy::Method
+
+  def show
+    @book = Book.with_attached_cover.includes(:category, authors: :avatar_attachment).friendly.find(params[:id])
+    @seo_image_url = @book.cover.service.url(@book.cover.blob.key, transformation: [{ width: 600 }])
+    @toc = @book.toc
+    @pagy, @ratings = pagy(@book.ratings.includes(user: { avatar_attachment: :blob }).order(created_at: :desc), limit: 5)
+
+    @breadcrumbs = [
+      { label: "Home", path: root_path },
+      { label: "Books", path: explore_index_path },
+      { label: @book.category.name, path: root_path },
+      { label: @book.title },
+    ]
+
+    set_meta_tags(
+      title: "#{@book.title} by #{@book.authors.first.full_name}",
+      description: "Read #{@book.title} by #{@book.authors.first.full_name} for free, on Tomes.",
+      site: false,
+      og: {
+        title: :title,
+        description: :description,
+        type: "book.book",
+        site_name: "Tomes",
+        url: book_url(@book.slug),
+        image: @seo_image_url,
+      },
+      twitter: {
+        title: :title,
+        description: :description,
+        image: @seo_image_url,
+        card: "summary",
+      },
+    )
+  end
+
+  def read
+    @book = Book.friendly.find(params[:id])
+
+    if user_signed_in?
+      unless current_user.books.include?(@book)
+        current_user.books << @book
+        Activities::Logger.started_reading(user: current_user, book: @book)
+      end
+    end
+  end
+
+  def epub
+    @book = Book.friendly.find(params[:id])
+
+    if @book.epub.attached?
+      redirect_to rails_public_blob_url(@book.epub, disposition: "inline"), allow_other_host: true
+    else
+      render plain: "Book not found", status: :not_found
+    end
+  end
+end

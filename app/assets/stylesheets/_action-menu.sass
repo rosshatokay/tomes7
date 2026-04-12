@@ -1,0 +1,106 @@
+$menuSpacing: 8px
+$dividerCalc: calc(100% + 16px)
+$rowGap: 2px
+
+.action-menu .toggler
+	cursor: pointer
+	i
+		transition: .2s var(--transition)
+
+.toggler[aria-expanded="true"]
+	i.rotatable
+		transform: rotate(180deg)
+
+.context
+	max-height: 80vh
+	display: flex
+	flex-direction: column
+	min-width: 200px
+	background: var(--color-background)
+	// margin: 8px 0
+	border: 1px solid var(--color-outline)
+	border-radius: 12px
+	box-shadow: rgba(0,0,0,.2) 0px 14px 28px -6px,rgba(0,0,0,.12) 0px 2px 4px -1px,hsla(0,0%,100%,.094) 0px 0px 0px 0px
+	z-index: 2
+	overflow-y: auto
+	transform: scale(.97)
+	transition: .1s var(--transition)
+	&.menu
+		overflow: visible
+	ul
+		list-style-type: none
+		display: -webkit-flex
+		display: -ms-flex
+		display: flex
+		padding: 4px
+		gap: 1px
+		border-bottom: 1px solid var(--color-outline)
+		flex-direction: column
+		&:last-child
+			border: none
+		li
+			&.spacer
+				font-size: 13px
+				padding: 8px 16px
+				padding-bottom: 4px
+				color: hsl(var(--color-fg-secondary))
+		a, button, .context-item
+			font-size: 15px
+			display: -webkit-flex
+			display: -ms-flex
+			display: flex
+			width: 100%
+			cursor: pointer
+			align-items: center
+			border-radius: 8px
+			padding: 0 12px
+			height: 32px
+			font-weight: 400
+			color: var(--color-on-background)
+			transition: .1s var(--transition)
+			column-gap: 12px
+			&:hover
+				background: var(--color-surface)
+			&.flex-start
+				justify-content: start
+			i
+				font-size: 18px !important
+				// color: hsl(var(--color-fg-secondary))
+				opacity: .8
+	
+[data-popper-placement="bottom-start"]
+	.context
+		transform-origin: top left
+
+[data-popper-placement="bottom-end"]
+	.context
+		transform-origin: top right
+
+[data-popper-placement="left"]
+	.context
+		transform-origin: top right
+
+[data-popper-placement="top"]
+	.context
+		transform-origin: center bottom
+
+[data-popper-placement="bottom"]
+	.context
+		transform-origin: center top
+
+[data-popper-placement="right"]
+	.context
+		transform-origin: left
+		
+.context[data-state="hidden"]
+	pointer-events: none
+	opacity: 0
+
+.context[data-state="visible"]
+	transform: scale(1)
+	opacity: 1
+
+
+html.dark
+	.context
+		background: #333

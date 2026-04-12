@@ -1,0 +1,25 @@
+<%- content_for(:jsonld) do %>
+<script type="application/ld+json">
+<%= {
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": @book.title,
+	"bookFormat": "https://schema.org/EBook",
+  "image": @book.cover.service.url(@book.cover.blob.key, transformation: [{ width: 600 }]),
+  "author": @book.authors.map { |a|
+    {
+      "@type": "Person",
+      "name": a.full_name,
+      "url": root_url
+    }
+  },
+  "description": @book.description,
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": @book.average_rating,
+    "ratingCount": @book.ratings_count,
+    "reviewCount": @book.ratings_count
+  }
+}.to_json.html_safe %>
+</script>
+<% end %>

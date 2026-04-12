@@ -1,0 +1,15 @@
+.contain--extra-small.pt-6
+	%h1.font-semibold.text-3xl Notifications
+
+	-	10.times do
+		.flex.items-center.justify-between.py-6.border-b.border-outline
+			.flex.items-center.gap-3
+				.bg-surface.w-12.rounded-full.aspect-square
+				%div 
+					%p 
+						%span.font-medium CarlosDill2025
+						%span.text-secondary started following you
+					%p.text-sm.text-secondary 2 days ago
+			.btn.btn-clear.h-9
+				%i.ph.ph-plus
+				%span Follow
