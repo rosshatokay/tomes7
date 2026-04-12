@@ -60,7 +60,6 @@
 					%i.ph.ph-image.mb-2.text-xl
 					%span.text-sm Upload a cover
 
-- if @book.persisted?
-	:javascript
-		const prefillAuthors = #{@book.authors.map{|a| { selected: true, id: a.hashid, full_name: a.full_name}}.to_json}
-		const prefillTags = #{@book.tags.select(:id, :name).map{|t| {id: t.id, name: t.name, selected: true}}.to_json}
+:javascript
+	const prefillAuthors = #{@book.persisted? ? @book.authors.map{|a| { selected: true, id: a.hashid, full_name: a.full_name}}.to_json : []}
+	const prefillTags = #{@book.persisted? ? @book.tags.select(:id, :name).map{|t| {id: t.id, name: t.name, selected: true}}.to_json : []}
