@@ -78,8 +78,7 @@ const Theme = (() => {
 				triggerThemeLoaded(storedTheme)
 			}, 50)
     } else {
-			setTheme('light')
-      // setByPreference()
+      setByPreference()
     }
 
 		listenToSysPref()
