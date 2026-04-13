@@ -1,7 +1,11 @@
 .contain.contain--yield
 	%div{class: 'flex justify-between'}
-		.flex.gap-6.items-start
-			=	ik_image_tag(@author.avatar, transformation: [{width: 200, height: 200}], class: "w-25 mb-4 rounded-full apsect-square object-cover")
+		.flex.items-start{class: 'md:flex-row flex-col md:gap-6 gap-2'}
+			-	if @author_avatar.present?
+				%img{src: @author_avatar, class: "min-w-25 w-25 mb-4 rounded-full apsect-square object-cover", alt: "#{@author.full_name}'s image"}
+			- else
+				%div{class: "min-w-25 w-25 mb-4 rounded-full aspect-square bg-surface flex-center"}
+					%i.ph.ph-image.text-3xl
 			.pt-2
 				%h1.font-semibold{class: 'text-[28px] leading-none mb-4'}= @author.full_name
 				-# %p.text-secondary
@@ -12,7 +16,7 @@
 		.flex.gap-2
 			-	if current_user&.admin?
 				= link_to 'Edit page', edit_admins_author_path(@author.hashid), class: 'btn btn-border h-9'
-			.btn.btn-surface.h-9 
+			%button.btn.btn-surface.h-9{'data-share-trigger': '', 'data-share-url': author_url(@author.slug), 'data-share-title': @author.full_name, 'data-share-description': "Read #{@author.full_name}'s books on Tomes for free!"}
 				%i.ph.ph-share-fat
 				%span Share
 

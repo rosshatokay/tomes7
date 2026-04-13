@@ -56,7 +56,7 @@ class SearchService
         },
         type: "author",
         score: score_match(author.full_name),
-        permalink: Rails.application.routes.url_helpers.author_path(author.id),
+        permalink: Rails.application.routes.url_helpers.author_path(author.slug),
       }
     end
   end

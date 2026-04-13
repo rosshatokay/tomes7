@@ -16,7 +16,7 @@
 }
 
 @utility contain {
-	@apply max-w-7xl md:px-5 px-4 mx-auto w-full;
+	@apply max-w-7xl px-5 mx-auto w-full;
 }
 
 @utility contain--small {
@@ -28,7 +28,7 @@
 }
 
 @utility contain--yield {
-	@apply pt-10 pb-16
+	@apply md:pt-10 pb-16 pt-6
 }
 
 @utility badge-warning {

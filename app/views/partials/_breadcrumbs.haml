@@ -1,5 +1,5 @@
 - if @breadcrumbs&.any?
-	.items-center.gap-1.text-sm{class: 'md:flex hidden'}
+	.items-center.gap-1.text-sm{class: 'flex'}
 		- @breadcrumbs.each_with_index do |bc, index|
 			-	notLast = index < @breadcrumbs.size - 1
 			= link_to bc[:label], bc[:path], class: "#{notLast ? '!text-secondary md:block hidden' : ''} hover:!text-[var(--color-on-background)]"

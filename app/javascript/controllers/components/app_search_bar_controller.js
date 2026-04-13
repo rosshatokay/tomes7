@@ -79,7 +79,7 @@ class AppSearchBar extends Search {
 		const formatted = (type) => {
 			switch (type) {
 				case 'book':
-					return {label: result.book?.author_names, html: div({ class: 'w-10 aspect-book rounded-lg', style: `background: url(${result.book.cover}) center / cover;` })}
+					return {label: result.book?.author_names, html: div({ class: 'w-10 aspect-book rounded-sm', style: `background: url(${result.book.cover}) center / cover;` })}
 				case 'author':
 					return {label: 'Author', html: div({ class: 'w-10 aspect-square rounded-full', style: `background: url(${result.author.avatar}) center / cover;` })}
 				case 'category':

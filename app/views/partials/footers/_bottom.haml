@@ -2,8 +2,8 @@
 	-	if !user_signed_in?
 		.w-full.bg-surface.rounded-2xl.flex-center.flex-col{class: 'md:text-center md:p-16 p-10'}
 			%h2{class: 'md:text-5xl text-3xl font-semibold max-w-[500px]'} Your next book awaits for you to read
-			%p.mt-4.text-lg{class: 'max-w-[400px]'} Tomes is free to join and open to everyone. Sign up today and start reading ebooks.
-			.mt-6.btn.btn-primary.h-12.text-base.px-6{class: 'md:w-fit w-full'} Join now for free
+			%p.mt-4.text-lg.text-secondary{class: 'max-w-[400px]'} Tomes is free to join and open to everyone. Sign up today and start reading ebooks.
+			=	link_to 'Join now for free', new_registration_path, class: 'mt-6 btn btn-primary md:h-12 h-11 md:text-base text-m px-6 md:w-fit w-full'
 	%div.py-12
 		%div{class: 'md:grid grid-cols-12 flex flex-col md:gap-6 gap-10'}
 			.col-span-4.flex.flex-col{class: 'md:order-[1] order-[2]'}

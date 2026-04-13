@@ -21,7 +21,7 @@
 					%i.ph.ph-heart.text-lg.text-secondary.icon
 					%span.label Save
 			.border-l.border-outline.h-4{class: 'md:block hidden'}
-			%button{type: 'button', 'data-share-trigger': '', 'data-share-url': book_url(@book.slug), 'data-share-title': @book.title, 'data-share-description': "Read #{@book.title} ", class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5'}
+			%button{type: 'button', 'data-share-trigger': '', 'data-share-url': book_url(@book.slug), 'data-share-title': @book.title, 'data-share-description': "Read #{@book.title} on Tomes for free!", class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5'}
 				%i.ph.ph-share-fat.text-lg.text-secondary
 				%span Share
 			- if current_user&.admin?

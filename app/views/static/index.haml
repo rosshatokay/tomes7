@@ -1,7 +1,7 @@
 .landing-scene.opacity-0
 	%div{class: 'md:pt-[100px] pt-16 md:h-[1200px] h-[800px] overflow-hidden relative'}
 		.absolute.pointer-events-none.w-full{class: 'h-[600px] z-2 bg-linear-to-t from-[var(--color-background)] to-transparent bottom-0 left-0'}
-		%div#splash-text-container{class: 'md:w-full mb-12 relative z-2 contain max-w-[900px] w-full mx-auto md:text-center flex flex-col items-center'}
+		%div#splash-text-container{class: 'md:w-full mb-12 relative z-2 contain max-w-[900px] w-full md:mx-auto md:text-center md:flex flex-col items-center'}
 			%h1#splash-h1{class: 'md:text-[74px] text-[42px] w-full font-semibold  leading-[1] mb-4'}= title "Read the greatest books of all time. For free."
 			%p.text-secondary#splash-p{class: 'md:text-xl text-base max-w-[420px] md:mb-8 mb-6'} Access timeless classics for free. In one beautiful reading app.
 			%div#splash-search-bar{class: 'max-w-[480px] w-full relative z-3', data: {controller: 'app-search-bar'}}
@@ -38,16 +38,16 @@
 		%h2{class: 'md:text-[60px] text-4xl font-semibold leading-none max-w-[800px] md:mb-6 mb-4'} From beloved masterpieces to hidden gems
 		%div{class: 'max-w-[480px] md:text-xl text-lg text-secondary'} Explore the works that shaped literature. Available instantly, anywhere.
 
-	.grid.gap-4{class: 'md:grid-cols-5 grid-cols-2'}
+	.grid{class: 'md:grid-cols-5 grid-cols-2 md:gap-x-4 gap-x-6 md:gap-y-6'}
 		-	@featured_books.take(5).each do |book|
 			=	render 'partials/book_card_block', book: book, small: true
 
 	%div{class: 'pt-[200px]'}
 		.flex.flex-col.mb-16{class: 'md:items-center md:text-center'}
-			%h2{class: 'md:text-[64px] text-4xl font-semibold leading-none max-w-[800px] md:mb-6 mb-4'} Built especially for book lovers
+			%h2{class: 'md:text-[60px] text-4xl font-semibold leading-none max-w-[600px] md:mb-6 mb-4'} Built especially for book lovers
 			.text-2xl{class: 'max-w-[480px] md:text-xl text-lg text-secondary'} Tomes makes makes reading effortless and enjoyable. Packed with useful feature.
 		-	@features.each_with_index do |feature, i|
-			%div{class: "md:grid grid-cols-2 md:gap-0 #{i == 0 ? 'md:pt-[100px]' : 'md:pt-[100px] pt-20'} flex flex-col gap-6"}
+			%div{class: "md:grid grid-cols-2 md:gap-0 #{i == 0 ? 'md:pt-16' : 'md:pt-25 pt-20'} flex flex-col gap-6"}
 				.flex-center{class: "#{i.odd? ? "md:order-1 order-2" : "md:order-0 order-2"}"}
 					%div{class: 'md:max-w-[500px] flex flex-col md:gap-6 gap-4'}
 						.border.border-outline.uppercase.w-fit.font-medium.rounded-full{class: 'md:p-2 md:px-4 p-1.5 px-3 md:text-sm text-[11px]'}= feature[:badge_label]

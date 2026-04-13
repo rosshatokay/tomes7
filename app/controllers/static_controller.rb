@@ -22,7 +22,7 @@ class StaticController < ApplicationController
     @stats = [
       {
         icon: "ph-books",
-        heading: "75K+",
+        heading: Book.all.size,
         description: "Free books spanning dozens of genres, eras, and cultures.",
       },
       {
