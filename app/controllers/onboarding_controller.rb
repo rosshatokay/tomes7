@@ -1,6 +1,10 @@
 class OnboardingController < ApplicationController
+  skip_before_action :check_onboarding
+
   def index
-    redirect_to root_path current_user.onboarded_at.present?
+    if current_user.onboarded?
+      redirect_to root_path and return
+    end
   end
 
   def update

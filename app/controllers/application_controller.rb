@@ -10,7 +10,8 @@ class ApplicationController < ActionController::Base
   before_action :check_onboarding
 
   def check_onboarding
-    if authenticated? && !current_user.onboarded? && controller_name != "onboarding"
+    # Only redirect if they are logged in and haven't finished onboarding
+    if authenticated? && !current_user.onboarded?
       redirect_to onboarding_index_path
     end
   end
