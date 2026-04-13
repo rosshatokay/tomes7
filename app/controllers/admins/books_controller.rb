@@ -35,7 +35,7 @@ class Admins::BooksController < Admins::BaseController
 
     if @book.save
       flash[:success] = "Book created"
-      redirect_to admins_books_path
+      # redirect_to admins_books_path
     else
       flash[:error] = "Something went wrong"
       render :new

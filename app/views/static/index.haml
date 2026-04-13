@@ -2,7 +2,7 @@
 	%div{class: 'pt-[100px] h-[1200px] overflow-hidden relative'}
 		.absolute.pointer-events-none.w-full{class: 'h-[600px] z-2 bg-linear-to-t from-[var(--color-background)] to-transparent bottom-0 left-0'}
 		%div#splash-text-container{class: 'max-w-[880px] w-full mx-auto text-center flex flex-col items-center'}
-			%h1#splash-h1{class: 'text-[80px] w-full font-semibold leading-[0.9] mb-4'}= title "Read the greatest books of all time. For free."
+			%h1#splash-h1{class: 'sm:text-[80px] text-[42px] w-full font-semibold leading-[0.9] mb-4'}= title "Read the greatest books of all time. For free."
 			%p.text-secondary.text-xl#splash-p{class: 'max-w-[420px] mb-8'} Access timeless classics for free. In one beautiful reading app.
 			%div#splash-search-bar{class: 'w-[480px] relative', data: {controller: 'app-search-bar'}}
 				%i.ph.ph-magnifying-glass.text-xl.text-secondary{class: 'absolute top-1/2 -translate-y-1/2 left-5'}
@@ -13,27 +13,28 @@
 		.relative.pointer-events-none
 			%div{class: 'w-[calc(100%+((100vw/7)))] flex gap-6 absolute left-1/2 -translate-x-1/2'}
 				- books = @featured_books
-				%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
-					= ik_image_tag(books[0].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[8].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-				%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
-					= ik_image_tag(books[1].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[7].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-				%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
-					= ik_image_tag(books[2].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[10].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-				%div.splash-g-1{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[144px]'}
-					= ik_image_tag(books[6].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[9].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-				%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
-					= ik_image_tag(books[4].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[11].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-				%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
-					= ik_image_tag(books[3].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[13].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-				%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
-					= ik_image_tag(books[5].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					= ik_image_tag(books[12].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+				- if books&.size > 14
+					%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
+						= ik_image_tag(books[0].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[8].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
+						= ik_image_tag(books[1].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[7].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
+						= ik_image_tag(books[2].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[10].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					%div.splash-g-1{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[144px]'}
+						= ik_image_tag(books[6].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[9].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
+						= ik_image_tag(books[4].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[11].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
+						= ik_image_tag(books[3].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[13].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+					%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
+						= ik_image_tag(books[5].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+						= ik_image_tag(books[12].cover, transformation: [{width: 1000}], class: 'rounded-lg')
 
 %div{class: 'pt-[200px] contain mx-auto'}
 	.text-center.flex.flex-col.items-center.mb-16
@@ -69,5 +70,3 @@
 				- if i < @stats.length - 1
 					.w-px.h-20{class: 'bg-black/10 dark:bg-white/10'}
 
-
-	= render 'partials/footers/bottom'
