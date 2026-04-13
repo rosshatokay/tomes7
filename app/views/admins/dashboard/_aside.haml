@@ -14,7 +14,7 @@
 				= link_to link[:path], 'data-tippy-content': link[:label], placement: 'right', class: "btn btn-icon #{is_current ? 'btn-surface' : 'btn-clear'} mb-2 w-8 rounded-lg gap-2" do
 					%i{class: "#{is_current ? 'ph-fill' : 'ph'} #{link[:icon]}"}
 	.flex.flex-col.items-center
-		= button_to session_path, 'data-tippy-content': 'Sign out', placement: 'right', class: 'btn btn-icon btn-clear mb-2 w-8 px-2 rounded-lg gap-2', data: {turbo: false}, method: :delete do
+		= button_to logout_path, 'data-tippy-content': 'Sign out', placement: 'right', class: 'btn btn-icon btn-clear mb-2 w-8 px-2 rounded-lg gap-2', data: {turbo: false}, method: :delete do
 			%i.ph.ph-sign-out
 		.flex.items-center.gap-2.px-2
 			%img{src: current_admin.get_avatar, class: 'w-7 aspect-square rounded-full object-cover'}
