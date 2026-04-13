@@ -61,7 +61,7 @@
 					%div.checkbox-field
 						%input{type: 'checkbox', id: 'accept-tos', required: 'true'}
 						%label{for: "accept-tos"}
-							%span I agree to Tomes' #{link_to 'Terms of Use', '', class: 'underline'} and #{link_to 'Privacy Policy', '', class: 'underline'}.
+							%span I agree to Tomes' #{link_to 'Terms of Use', terms_path, class: 'underline'} and #{link_to 'Privacy Policy', privacy_path, class: 'underline'}.
 							
 					.cta
 						%button.btn.btn-primary.h-10.px-6.rounded-xl.w-full{class: 'text-[15px]'} Create a free account
