@@ -9,6 +9,8 @@
 			%h1.text-3xl.font-semibold.mb-1 Welcome to Tomes
 			%p.text-secondary Finish setting up your profile to join the club!
 		= form_with model: current_user, url: onboarding_index_path, data: {turbo: false, controller: 'form-with-loading-submit-btn'}, html: {class: 'max-w-[400px] flex flex-col gap-4 mx-auto'} do |f|
+			- if current_user.errors.any?
+				=	render 'partials/errors_card', errors: ["Couldn't finish onboarding"]
 			%div{data: {controller: 'image-upload-preview'}}
 				=	f.label :avatar, 'Profile picture', class: 'label-field mb-2'
 				.flex.gap-2.items-center
@@ -17,10 +19,12 @@
 						=	f.file_field :avatar, class: 'absolute inset-0 opacity-0 cursor-pointer', accept: 'image/png, image/jpg, image/jpeg, image/avif, image/webp', 'data-image-upload-preview-target': 'field'
 						%i.ph.ph-upload-simple
 						%span Upload an image
+				= input_error_label(current_user.errors[:avatar])
 				
 			%div
 				=	f.label :username, class: 'label-field mb-2'
 				= f.text_field :username, class: 'input-field h-11', placeholder: 'Enter a username'
+				= input_error_label(current_user.errors[:username])
 			
 			.cta
 				%button{type: 'submit', class: 'btn btn-secondary h-11 w-full text-m'} Continue

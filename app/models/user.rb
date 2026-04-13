@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include Hashid::Rails
 
+  ONBOARDING_STEP = :onboarding
   BLACKLISTED_USERNAMES = File.readlines(Rails.root.join("config", "blacklist.txt")).map do |line|
     line.strip.downcase
   end.reject { |line| line.empty? || line.start_with?("#") }.freeze
@@ -35,14 +36,14 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true
   validates :username,
-            presence: true,
+            presence: { on: ONBOARDING_STEP },
             uniqueness: true,
-            allow_blank: true,
-            format: { with: /\A[\w]+\z/, message: "only allows letters, numbers, and underscores" },
+            format: { with: /\A[\w]+\z/, message: "only allows letters, numbers, and underscores", allow_blank: true },
             length: {
               minimum: 3,
               maximum: 20,
               message: "must be between 3 and 20 characters",
+              allow_blank: true,
             },
             exclusion: {
               in: BLACKLISTED_USERNAMES,

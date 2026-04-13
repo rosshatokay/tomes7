@@ -8,16 +8,24 @@ class OnboardingController < ApplicationController
   end
 
   def update
-    return if current_user.onboarded_at.present?
+    # Guard clause to prevent re-onboarding
+    return redirect_to root_path if current_user.onboarded?
 
-    if current_user.update(onboarding_params)
+    # 1. Assign the params without saving yet
+    current_user.assign_attributes(onboarding_params)
+
+    # 2. Set the timestamp (it will be saved along with the username)
+    current_user.onboarded_at = Time.current
+
+    # 3. Save using the :onboarding context to trigger the username presence check
+    if current_user.save(context: :onboarding)
       socialize_friends(session[:referrer_id], current_user)
-      current_user.update(onboarded_at: Time.now)
       flash[:success] = "You are all set!"
       redirect_to root_path
     else
-      flash[:error] = "Something went wrong"
-      render :index
+      # flash[:error] isn't strictly necessary if you display @user.errors in your view
+      flash.now[:error] = "Please fix the errors below"
+      render :index, status: :unprocessable_entity
     end
   end
 
