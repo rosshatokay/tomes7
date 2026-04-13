@@ -5,7 +5,7 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.with_attached_cover.includes(:category, authors: :avatar_attachment).friendly.find(params[:id])
-    @seo_image_url = @book.cover.service.url(@book.cover.blob.key, transformation: [{ width: 600 }])
+    @seo_image_url = @book.cover.attached? ? @book.cover.service.url(@book.cover.blob.key, transformation: [{ width: 600 }]) : nil
     @toc = @book.toc
     @pagy, @ratings = pagy(@book.ratings.includes(user: { avatar_attachment: :blob }).order(created_at: :desc), limit: 5)
 

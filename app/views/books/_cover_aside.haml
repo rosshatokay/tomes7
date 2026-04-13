@@ -1,31 +1,41 @@
 - rated = @book.rated_by?(current_user)
 
-%div{class: 'md:w-[320px] md:min-w-[320px] w-3/4 mx-auto md:pr-12 md:pb-8'}
+%div{class: 'md:w-[320px] md:min-w-[320px] md:mx-0 w-3/4 mx-auto md:pr-12 md:pb-8'}
 	.sticky.top-20
-		=	ik_image_tag(@book.cover, class: 'w-full aspect-book rounded-xl max-h-[700px]', transformation: [{width: 1000}])
+		-	if Rails.env.production?
+			=	ik_image_tag(@book.cover, class: 'w-full aspect-book rounded-xl max-h-[700px]', transformation: [{width: 1000}])
+		- else
+			.bg-surface.w-full.w-full.aspect-book
 		%div{class: 'md:block hidden'}
 			.grid.grid-cols-3.gap-2.mt-4
 				=	link_to read_book_path(@book.slug), class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white', data: {turbo: false} do
 					%i.ph.ph-book-open{class: '!text-xl leading-none'}
 					%span{class: 'text-[13px]'} Read
-				%button.save-btn{class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white', data: {controller: 'save-button', 'book-id': @book.hashid, 'is-liked': current_user&.likes?(@book) ? 'true' : 'false'}}
-					%i.ph.ph-heart.icon{class: '!text-xl leading-none'}
-					%span.label{class: 'text-[13px]'} Save
-				%div{class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white'}
+				- if user_signed_in?
+					%button.save-btn{class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white', data: {controller: 'save-button', 'book-id': @book.hashid, 'is-liked': current_user&.likes?(@book) ? 'true' : 'false'}}
+						%i.ph.ph-heart.icon{class: '!text-xl leading-none'}
+						%span.label{class: 'text-[13px]'} Save
+				- else
+					= link_to new_session_path(return_to: book_path(@book.slug)), class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white' do
+						%i.ph.ph-heart.icon{class: '!text-xl leading-none'}
+						%span.label{class: 'text-[13px]'} Save
+					
+				%button{class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white', 'data-share-trigger': '', 'data-share-url': book_url(@book.slug), 'data-share-title': @book.title, 'data-share-description': "Read #{@book.title} "}
 					%i.ph.ph-share-fat{class: '!text-xl leading-none'}
 					%span{class: 'text-[13px]'} Share
 		.my-6{class: 'md:block hidden'}
 			.flex.flex-col.items-center
-				- if !rated
-					.rating-slider-container{'data-micromodal-trigger': 'review-modal'}
-				- else
-					.flex.justify-center.gap-1.mb-1
-						-	user_rating_score = @book.rating_by(current_user).score
-						- user_rating_score.times do |i|
-							%i.ph-fill.ph-star.text-amber-500.text-2xl.star
-						- (5 - user_rating_score).times do
-							%i.ph-fill.ph-star.text-secondary.opacity-25.text-2xl.star
-				- if rated
-					%i.text-secondary{class: 'text-[13px]'} You've rated this book
-				- else
-					%span.text-secondary{class: 'text-[13px]'} How would you rate this book?
+				-	if user_signed_in?
+					- if !rated
+						.rating-slider-container{'data-micromodal-trigger': 'review-modal'}
+					- else
+						.flex.justify-center.gap-1.mb-1
+							-	user_rating_score = @book.rating_by(current_user).score
+							- user_rating_score.times do |i|
+								%i.ph-fill.ph-star.text-amber-500.text-2xl.star
+							- (5 - user_rating_score).times do
+								%i.ph-fill.ph-star.text-secondary.opacity-25.text-2xl.star
+					- if rated
+						%i.text-secondary{class: 'text-[13px]'} You've rated this book
+					- else
+						%span.text-secondary{class: 'text-[13px]'} How would you rate this book?

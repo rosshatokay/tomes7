@@ -1,4 +1,4 @@
-.flex.flex-col.gap-12.pb-16{class: 'md:pt-4 pt-6'}
+.w-full.flex.flex-col.gap-12.pb-16{class: 'md:pt-4 pt-6'}
 	%section
 		%h1.font-semibold.leading-none{class: 'md:text-[40px] md:mb-2 mb-3 text-3xl'}= @book.title
 		%h2.leading-none{class: 'md:text-lg'}
@@ -12,11 +12,16 @@
 				%span= @book.average_rating
 				%span.text-secondary (#{@book.ratings_count} reviews)
 			.border-l.border-outline.h-4{class: 'md:block hidden'}
-			%button.save-btn{type: 'button', class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5', data: {controller: 'save-button', 'book-id': @book.hashid, 'is-liked': current_user&.likes?(@book) ? 'true' : 'false'}}
-				%i.ph.ph-heart.text-lg.text-secondary.icon
-				%span.label Save
+			-	if user_signed_in?
+				%button.save-btn{type: 'button', class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5', data: {controller: 'save-button', 'book-id': @book.hashid, 'is-liked': current_user&.likes?(@book) ? 'true' : 'false'}}
+					%i.ph.ph-heart.text-lg.text-secondary.icon
+					%span.label Save
+			- else
+				= link_to new_session_path(return_to: book_path(@book.slug)), type: 'button', class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5' do
+					%i.ph.ph-heart.text-lg.text-secondary.icon
+					%span.label Save
 			.border-l.border-outline.h-4{class: 'md:block hidden'}
-			%button{type: 'button', class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5'}
+			%button{type: 'button', 'data-share-trigger': '', 'data-share-url': book_url(@book.slug), 'data-share-title': @book.title, 'data-share-description': "Read #{@book.title} ", class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5'}
 				%i.ph.ph-share-fat.text-lg.text-secondary
 				%span Share
 			- if current_user&.admin?
@@ -56,7 +61,7 @@
 			-	@book.authors.each do |author|
 				%div
 					= link_to author_path(author.slug), class: 'flex items-center gap-3 mb-3 group w-fit' do
-						-# = ik_image_tag(author.avatar, transformation: [{width: 48, height: 48}], class: 'w-8 aspect-square rounded-full')
+						= ik_image_tag(author.avatar, transformation: [{width: 48, height: 48}], class: 'w-8 aspect-square rounded-full')
 						%p.font-medium{class: 'group-hover:underline'}= author.full_name
 					%p= author.bio
 					-	if author.wiki_url.present?

@@ -49,21 +49,43 @@ function bindCopyInviteLinkBtn() {
 	})
 }
 
+function bindShareTriggerBtns() {
+	const btns = document.querySelectorAll('button[data-share-trigger]')
+	btns.forEach(btn => btn.addEventListener('click', () => share(btn.dataset)))
+
+	async function share(dataset) {
+		let shareData = {}
+
+		dataset.shareTitle ? shareData.title = dataset.shareTitle : null
+		dataset.shareDescription ? shareData.description = dataset.shareDescription : null
+		dataset.shareUrl ? shareData.url = dataset.shareUrl : null
+		
+		if (!navigator.share) {
+			copyToClipboard(url)
+			toast({ message: "URL copied" })
+			return
+		}
+
+		try {
+			await navigator.share(shareData)
+		} catch (error) {
+			console.error('Error sharing content:', error)
+		}
+	}
+}
+
 document.addEventListener('turbo:load', () => {
 	requestAnimationFrame(() => {
 		TippyHandler.bind()
 	})
-	MicroModal.init({ disableScroll: true })
+	MicroModal.init({ disableScroll: true, disableFocus: true })
 	bindCarousels()
 	smoothScrollSnap()
 	bindMenus()
 	bindCopyInviteLinkBtn()
+	bindShareTriggerBtns()
 })
 
 document.addEventListener("turbo:frame-load", (e) => {
-	console.log(e.target);
-	
-	// if (e.target.id == 'reviews') {
-		e.target.scrollIntoView({ behavior: "smooth" })
-	// }
+	e.target.scrollIntoView({ behavior: "smooth" })
 })

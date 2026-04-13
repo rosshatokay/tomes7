@@ -5,7 +5,7 @@
   "@type": "Book",
   "name": @book.title,
 	"bookFormat": "https://schema.org/EBook",
-  "image": @book.cover.service.url(@book.cover.blob.key, transformation: [{ width: 600 }]),
+  "image": @seo_image_url,
   "author": @book.authors.map { |a|
     {
       "@type": "Person",
