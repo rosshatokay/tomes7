@@ -36,6 +36,7 @@ class AppSearchBar extends Search {
 		this.spinnerElm = container.querySelector('.loading-spinner')
 
 		this.#bindAddBookBtn()
+		this.#focusStateToggler()
 		this.on('search:loading', () => this.spinnerElm.classList.remove('!hidden'))
 		this.on('search:empty', () => this.spinnerElm.classList.add('!hidden'))
 		this.on('search:success', (data) => {
@@ -44,6 +45,25 @@ class AppSearchBar extends Search {
 		})
 	}
 
+	#focusStateToggler() {
+		const isFocused = van.state(false)
+		const secToHide = document.querySelectorAll('.on-focus-hide')
+		const gridWrapper = document.querySelector('.nav-grid')
+		
+		this.config.inputElm.addEventListener('focus', () => isFocused.val = true)
+		this.config.inputElm.addEventListener('blur', () => isFocused.val = false)
+
+		van.derive(() => {
+			if (isFocused.val) {
+				secToHide.forEach(sec => sec.classList.add('hidden'))
+				gridWrapper.classList.remove('md:grid-cols-[1fr_1.2fr_1fr]', 'grid-cols-[24px_1fr_24px]')
+			} else {
+				secToHide.forEach(sec => sec.classList.remove('hidden'))
+				gridWrapper.classList.add('md:grid-cols-[1fr_1.2fr_1fr]', 'grid-cols-[24px_1fr_24px]')
+			}
+		})
+	}
+	
 	#bindAddBookBtn() {
 		const btn = document.getElementById('focus-search-bar-btn')
 

@@ -4,7 +4,7 @@
 			%h1 Welcome back
 			%p= Time.current.strftime('%A %d, %Y')
 	
-	.grid.grid-cols-3.gap-6
+	%div{class: 'grid md:grid-cols-3 grid-cols-2 md:gap-6 gap-4'}
 		= link_to new_admins_book_path, class: 'btn btn-surface rounded-xl w-full aspect-square flex-col' do
 			%i.ph.ph-plus.text-2xl
 			%span Add book

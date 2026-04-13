@@ -1,72 +1,69 @@
 .landing-scene.opacity-0
-	%div{class: 'pt-[100px] h-[1200px] overflow-hidden relative'}
+	%div{class: 'md:pt-[100px] pt-16 md:h-[1200px] h-[800px] overflow-hidden relative'}
 		.absolute.pointer-events-none.w-full{class: 'h-[600px] z-2 bg-linear-to-t from-[var(--color-background)] to-transparent bottom-0 left-0'}
-		%div#splash-text-container{class: 'max-w-[880px] w-full mx-auto text-center flex flex-col items-center'}
-			%h1#splash-h1{class: 'sm:text-[80px] text-[42px] w-full font-semibold leading-[0.9] mb-4'}= title "Read the greatest books of all time. For free."
-			%p.text-secondary.text-xl#splash-p{class: 'max-w-[420px] mb-8'} Access timeless classics for free. In one beautiful reading app.
-			%div#splash-search-bar{class: 'w-[480px] relative', data: {controller: 'app-search-bar'}}
+		%div#splash-text-container{class: 'md:w-full mb-12 contain max-w-[900px] w-full mx-auto md:text-center flex flex-col items-center'}
+			%h1#splash-h1{class: 'md:text-[80px] text-[42px] w-full font-semibold md:leading-[0.9] leading-[1] mb-4'}= title "Read the greatest books of all time. For free."
+			%p.text-secondary#splash-p{class: 'md:text-xl text-base max-w-[420px] md:mb-8 mb-6'} Access timeless classics for free. In one beautiful reading app.
+			%div#splash-search-bar{class: 'max-w-[480px] w-full relative', data: {controller: 'app-search-bar'}}
 				%i.ph.ph-magnifying-glass.text-xl.text-secondary{class: 'absolute top-1/2 -translate-y-1/2 left-5'}
 				%input{type: 'text', id: 'search', autocomplete: 'off', placeholder: 'Search books, authors', class: 'input-field h-12 pl-12 pr-12 text-base rounded-full'}
 				.loading-spinner{class: 'w-5 h-5 !border-2 absolute top-1/2 -translate-1/2 opacity-50 right-4 !hidden'}
-				-# %span.text-secondary Search for books, authors, genres...
 
 		.relative.pointer-events-none
-			%div{class: 'w-[calc(100%+((100vw/7)))] flex gap-6 absolute left-1/2 -translate-x-1/2'}
-				- books = @featured_books
-				- if books&.size > 14
-					%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
-						= ik_image_tag(books[0].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[8].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
-						= ik_image_tag(books[1].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[7].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
-						= ik_image_tag(books[2].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[10].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					%div.splash-g-1{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[144px]'}
-						= ik_image_tag(books[6].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[9].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					%div.splash-g-2{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[96px]'}
-						= ik_image_tag(books[4].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[11].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					%div.splash-g-3{class: 'w-[calc(100%_/_7)] flex flex-col gap-6 mt-[48px]'}
-						= ik_image_tag(books[3].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[13].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-					%div.splash-g-4{class: 'w-[calc(100%_/_7)] flex flex-col gap-6'}
-						= ik_image_tag(books[5].cover, transformation: [{width: 1000}], class: 'rounded-lg')
-						= ik_image_tag(books[12].cover, transformation: [{width: 1000}], class: 'rounded-lg')
+			%div{class: 'md:w-[calc(100%+((100vw/7)))] w-[calc(100%+((100vw)))] flex md:gap-6 gap-2 absolute left-1/2 -translate-x-1/2'}
+				%div.splash-g-4{class: 'flex flex-col gap-6'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/v0fjqqnzg0mi10g6bwqmws1i3uj1?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/vddj1o01qmjwlrsty8rqqf55ew3o?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+				%div.splash-g-3{class: 'flex flex-col gap-6 md:mt-[48px] mt-2'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/y66id8u2gi9mko65bihfu5pwph8i?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/j2ezfw8rbknolfzq1nsye6q7o3o6?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+				%div.splash-g-2{class: 'flex flex-col gap-6 md:mt-[96px] mt-4'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/4i4b6nsr6jkhpywiibwml3hugbcn?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/qy6ic8l4wufmwaj37mf9k1y76u24?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+				%div.splash-g-1{class: 'flex flex-col gap-6 md:mt-[144px] mt-6'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/wqojc98crukiw0mjryb0r34t2edz?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/wv482vi7jsexty0abh95ijqt9090?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+				%div.splash-g-2{class: 'flex flex-col gap-6 md:mt-[96px] mt-4'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/d5psgyhhve5hghx6qkcdxtvr2vhf?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/hanbexxqrd8n4a6uo2yf6im7nfqr?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+				%div.splash-g-3{class: 'flex flex-col gap-6 md:mt-[48px] mt-2'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/l7x59ij1e8ruoczw6dy4rsu6mkcl?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/hr5bjpjc9pl52wajyc15dctnwdnl?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+				%div.splash-g-4{class: 'flex flex-col gap-6'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/i38awsouq23u6hha9wcx3iyjdin0?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
+					%img{src: 'https://ik.imagekit.io/tomes/books/covers/3nw4f9kykomuo3ii9lfzzkgds1ua?tr=w-1000:w-3840,c-at_max', class: 'md:rounded-lg rounded-md'}
 
-%div{class: 'pt-[200px] contain mx-auto'}
-	.text-center.flex.flex-col.items-center.mb-16
-		%h2{class: 'text-[64px] font-semibold leading-none max-w-[800px] mb-6'} From beloved masterpieces to hidden gems
-		.text-2xl{class: 'max-w-[480px] text-secondary'} Explore the works that shaped literature. Available instantly, anywhere.
+%div{class: 'md:pt-[200px] pt-25 contain mx-auto'}
+	.flex.flex-col.mb-16{class: 'md:items-center md:text-center'}
+		%h2{class: 'md:text-[64px] text-4xl font-semibold leading-none max-w-[800px] md:mb-6 mb-4'} From beloved masterpieces to hidden gems
+		%div{class: 'max-w-[480px] md:text-2xl text-lg text-secondary'} Explore the works that shaped literature. Available instantly, anywhere.
 
-	.grid.grid-cols-5.gap-4
+	.grid.gap-4{class: 'md:grid-cols-5 grid-cols-2'}
 		-	@featured_books.take(5).each do |book|
 			=	render 'partials/book_card_block', book: book, small: true
 
 	%div{class: 'pt-[200px]'}
-		.text-center.flex.flex-col.items-center
-			%h2{class: 'text-[64px] font-semibold leading-none max-w-[600px] mb-6'} Built for eBook lovers
-			.text-2xl{class: 'max-w-[480px] text-secondary'} Tomes makes makes reading effortless and enjoyable. Packed with useful feature.
+		.flex.flex-col.mb-16{class: 'md:items-center md:text-center'}
+			%h2{class: 'md:text-[64px] text-4xl font-semibold leading-none max-w-[800px] md:mb-6 mb-4'} Built especially for book lovers
+			.text-2xl{class: 'max-w-[480px] md:text-2xl text-lg text-secondary'} Tomes makes makes reading effortless and enjoyable. Packed with useful feature.
 		-	@features.each_with_index do |feature, i|
-			%div{class: 'grid grid-cols-2 pt-[100px]'}
-				.flex-center{class: "#{i.odd? ? "order-1" : "order-0"}"}
-					%div{class: 'max-w-[500px] flex flex-col gap-6'}
-						.border.border-outline.uppercase.w-fit.p-2.px-4.font-medium.rounded-full.text-sm= feature[:badge_label]
-						%h3{class: 'text-[54px] leading-none font-semibold'}= feature[:heading]
-						%p.text-secondary.text-xl= feature[:description]
-						=	link_to 'Join for free', new_registration_path, class: 'btn btn-secondary h-12 text-base px-6 mt-4'
-				%div{class: "#{!i.odd? ? "pl-16 order-1" : "pr-16 order-0"}"}
-					%div{class: 'w-full h-[600px] bg-surface rounded-xl', style: "background: url(#{asset_path("feature_#{i + 1}.png")}) center / cover;"}
+			%div{class: "md:grid grid-cols-2 md:gap-0 #{i == 0 ? 'md:pt-[100px]' : 'md:pt-[100px] pt-20'} flex flex-col gap-6"}
+				.flex-center{class: "#{i.odd? ? "md:order-1 order-2" : "md:order-0 order-2"}"}
+					%div{class: 'md:max-w-[500px] flex flex-col md:gap-6 gap-4'}
+						.border.border-outline.uppercase.w-fit.font-medium.rounded-full{class: 'md:p-2 md:px-4 p-1.5 px-3 md:text-sm text-[11px]'}= feature[:badge_label]
+						%h3{class: 'md:text-[54px] text-2xl md:leading-none leading-[1.2] font-semibold'}= feature[:heading]
+						%p.text-secondary{class: 'md:text-xl text-lg leading-[1.3]'}= feature[:description]
+						=	link_to 'Join for free', new_registration_path, class: 'btn btn-secondary md:h-12 h-11 md:text-base px-6 mt-4'
+				%div{class: "#{!i.odd? ? "md:pl-16 md:order-1 order-1" : "md:pr-16 md:order-0 order-1"}"}
+					%div{class: 'w-full h-[400px] md:h-[600px] bg-surface rounded-xl', style: "background: url(#{asset_path("feature_#{i + 1}.png")}) center / cover;"}
 
-	%div{class: 'py-[200px]'}
-		.flex.justify-center.items-center.gap-16
+	%div{class: 'md:py-[200px] py-25'}
+		.flex.justify-center.items-center{class: 'md:flex-row flex-col md:gap-16 gap-12'}
 			- @stats.each_with_index do |stat, i|
 				.flex-center.flex-col.text-center{class: 'max-w-[280px]'}
-					%i.ph{class: "#{stat[:icon]} text-4xl mb-6"}
-					%h3.font-semibold.text-5xl.mb-3= stat[:heading]
+					%i.ph{class: "#{stat[:icon]} md:text-4xl text-3xl mb-6"}
+					%h3.font-semibold{class: "md:text-5xl text-4xl mb-3"}= stat[:heading]
 					%p.text-lg.text-secondary= stat[:description]
 				- if i < @stats.length - 1
-					.w-px.h-20{class: 'bg-black/10 dark:bg-white/10'}
+					%div{class: 'md:w-px md:h-20 w-20 h-px bg-black/10 dark:bg-white/10'}
 

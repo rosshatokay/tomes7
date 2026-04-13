@@ -1,5 +1,5 @@
 .contain.contain--yield
-	%div{class: 'grid grid-cols-[1fr_320px] gap-16'}
+	%div{class: 'md:grid grid-cols-[1fr_320px] flex flex-col gap-16'}
 		.flex.flex-col.gap-12
 			%div.varousel-container
 				.flex.items-center.justify-between.mb-2
@@ -12,9 +12,9 @@
 						-	if @collection.any?
 							- @collection.each do |user_book|
 								-	book = user_book.book
-								%div{class: 'w-[calc((100%/4)_-_14px)] min-w-[calc((100%/4)_-_14px)] flex'}
+								%div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
 									= render 'partials/book_card_block', book: book, small: true, progress: user_book.progress
-						%div{class: 'w-[calc((100%/4)_-_14px)] min-w-[calc((100%/4)_-_14px)] flex'}
+						%div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
 							.w-full
 								%button#focus-search-bar-btn.cursor-pointer.rounded-xl.p-6.border-2.border-outline.border-dashed.aspect-book.w-full.flex-center.flex-col.gap-2{class: 'text-secondary hover:border-black hover:text-black dark:hover:text-white dark:hover:border-white transition'}
 									%i.ph.ph-plus.text-xl
@@ -32,7 +32,7 @@
 				.relative
 					.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
 						- @recently_added_books.each do |book|
-							%div{class: 'w-[calc((100%/4)_-_14px)] min-w-[calc((100%/4)_-_14px)] flex'}
+							%div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
 								= render 'partials/book_card_block', book: book, small: true
 
 		= render 'activity_aside'

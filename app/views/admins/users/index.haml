@@ -1,0 +1,10 @@
+%h1.text-3xl.font-semibold Users
+
+.mt-6
+	.flex.flex-col.gap-4
+		- @users.each do |user|
+			.p-4.border.border-outline.rounded-xl.flex.items-center.gap-3
+				%img{src: user.get_avatar, class: 'w-10 rounded-full object-cover aspect-square'}
+				%div
+					%h1.font-semibold= user.username
+					%p.text-secondary.text-sm Joined #{time_ago_in_words(user.created_at)} ago

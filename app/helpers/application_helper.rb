@@ -46,7 +46,7 @@ module ApplicationHelper
         icon: "ph-chat",
       },
       {
-        path: "/s",
+        path: admins_users_path,
         label: "Users",
         icon: "ph-users-four",
       },

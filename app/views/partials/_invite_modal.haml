@@ -6,9 +6,9 @@
 			%p.text-secondary.text-center Share your invitation link with friends. Once they join with the link, you'll follow each other.
 	%div
 		%div.label-field.mb-2 Share your invitation link	
-		.flex.gap-2
+		.flex.gap-2{class: 'md:flex-row flex-col'}
 			%div{class: 'input-field h-11 rounded-full min-w-0 pr-10'}
 				%span.truncate= new_registration_url(invited_by: current_user.username)
-			%button#link-btn{type: 'button', class: 'btn btn-secondary h-11', 'data-link': new_registration_url(invited_by: current_user.username)}
+			%button#link-btn{type: 'button', class: 'btn btn-secondary h-11 md:w-fit w-full', 'data-link': new_registration_url(invited_by: current_user.username)}
 				%i.ph.ph-copy.pointer-events-none{class: '!text-xl'}
 				%span.pointer-events-none Copy link

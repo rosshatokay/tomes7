@@ -54,6 +54,7 @@ Rails.application.routes.draw do
   namespace :admins do
     root "dashboard#index"
 
+    resources :users
     resources :feedbacks
     resources :authors
     resources :books

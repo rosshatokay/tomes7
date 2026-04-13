@@ -51,6 +51,7 @@ document.addEventListener('turbo:load', () => {
 	
 	requestAnimationFrame(() => {
 		sceneWrapper.classList.remove('opacity-0')
+		if (window.innerWidth < 600) return
 		animateLandingPage()
 	})
 })

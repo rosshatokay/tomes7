@@ -6,10 +6,14 @@
 	.hidden
 		%div{class: 'context w-[240px] !rounded-lg'}
 			%div{class: 'p-1 gap-0.5 border-b border-outline'}
+				- if current_user.admin?
+					= link_to admins_root_path, class: link_class do
+						%i.ph.ph-squares-four
+						%span Dashboard
 				= link_to profile_path(current_user.username), class: link_class do
 					%i.ph.ph-user
 					%span Profile
-				= link_to profile_path(current_user.username), class: link_class do
+				= link_to saved_profile_path(current_user.username), class: link_class do
 					%i.ph.ph-heart
 					%span Saved
 				-# = link_to profile_path(current_user.username), class: link_class do

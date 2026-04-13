@@ -1,8 +1,8 @@
 - content_for(:hide_nav, true)
 - content_for(:hide_footer, true)
 
-.w-full.h-screen.items-center
-	.w-full.px-4{class: 'max-w-[420px] mx-auto py-20'}
+.w-full.h-screen{class: 'md:items-center'}
+	.w-full.px-4{class: 'max-w-[420px] mx-auto md:py-20 py-16'}
 
 		=	link_to root_path, class: 'block logo h-10 mb-12 mx-auto w-fit' do
 			=	show_svg 'logo-icon.svg'

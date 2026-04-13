@@ -1,8 +1,8 @@
 - content_for(:hide_nav, true)
 
 .w-full.h-16.fixed.top-0.left-0.flex-center#static-nav{class: 'bg-white/95 dark:bg-[#181819e0] backdrop-blur-lg z-10', 'data-turbo-permanent': true}
-	.contain.h-8.w-full.grid.grid-cols-3
-		.flex.items-center.gap-6
+	.contain.h-8.w-full{class: 'md:grid md:grid-cols-3 flex justify-between'}
+		.items-center.gap-6{class: 'md:flex hidden'}
 			=	link_to 'Explore', explore_index_path, class: 'font-medium text-m'
 			=	link_to 'About', explore_index_path, class: 'font-medium text-m'
 		.flex-center
@@ -13,5 +13,5 @@
 				%div{'data-tippy-content': 'Notifications', data: {controller: "notifications-menu"}}
 				=	render 'partials/user_dropdown'
 			- else
-				=	link_to 'Sign in', new_session_path, class: 'btn btn-surface h-9'
+				=	link_to 'Sign in', new_session_path, class: 'btn btn-surface h-9 md:flex hidden'
 				=	link_to 'Join for free', new_session_path, class: 'btn btn-primary h-9'

@@ -1,12 +1,32 @@
 class RegistrationsController < ApplicationController
   allow_unauthenticated_access
-  # rate_limit to: 10, within: 5.minutes, only: :create, with: -> { redirect_to new_registration_path, alert: "Try again later." }
+  rate_limit to: 10, within: 5.minutes, only: :create, with: -> { redirect_to new_registration_path, alert: "Try again later." }
 
   def new
     redirect_to root_path, alert: "Already signed in" if user_signed_in?
     @user = User.new
     @invited_by = User.find_by(username: params[:invited_by]) if params[:invited_by].present?
     session[:referrer_id] = @invited_by ? @invited_by.hashid : nil
+
+    @seo_image_url = "/auth-splash.png"
+    set_meta_tags(
+      title: @invited_by ? "You've been invited to Tomes by #{@invited_by.username}" : "Join for free",
+      description: @invited_by ? "You've been invited to Tomes by #{@invited_by.username} to read and review books for free." : "Join the Tomes Club for free to read and review books for free.",
+      og: {
+        title: :title,
+        description: :description,
+        site_name: "Tomes",
+        url: new_registration_url,
+        image: @seo_image_url,
+      },
+      twitter: {
+        title: :title,
+        description: :description,
+        image: @seo_image_url,
+        card: "summary",
+      },
+      reverse: true,
+    )
   end
 
   def verify
