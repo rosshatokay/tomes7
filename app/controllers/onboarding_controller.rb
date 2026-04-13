@@ -1,5 +1,6 @@
 class OnboardingController < ApplicationController
   def index
+    redirect_to root_path current_user.onboarded_at.present?
   end
 
   def update
