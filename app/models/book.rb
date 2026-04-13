@@ -97,13 +97,13 @@ class Book < ApplicationRecord
 
   def increment_author_books_count
     self.authorships.map { |a|
-      Author.increment_counter(:books_count, self.a.id)
+      Author.increment_counter(:books_count, a.id)
     }
   end
 
   def decrement_author_books_count
     self.authorships.map { |a|
-      Author.decrement_counter(:books_count, self.a.id)
+      Author.decrement_counter(:books_count, a.id)
     }
   end
 
