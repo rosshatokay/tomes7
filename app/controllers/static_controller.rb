@@ -11,11 +11,11 @@ class StaticController < ApplicationController
       {
         badge_label: "Digital library",
         heading: "A personalized beautiful reading experience",
-        description: "Bookmark pages, save your favorite eBooks, and pick up right where you left off—on any device. Build your own personal reading space.",
+        description: "Bookmark pages, save your favorite books, and pick up right where you left off—on any device. Build your own personal reading space.",
       },
       {
         badge_label: "Digital library",
-        heading: "Share your voice and make your mark on every eBook",
+        heading: "Share your voice and mark on every book",
         description: "Write reviews, rate books, and discover what others are saying before you dive in. Join a community of readers and help others find their next great read.",
       },
     ]
@@ -23,7 +23,7 @@ class StaticController < ApplicationController
       {
         icon: "ph-books",
         heading: "75K+",
-        description: "Free eBooks spanning dozens of genres, eras, and cultures.",
+        description: "Free books spanning dozens of genres, eras, and cultures.",
       },
       {
         icon: "ph-flower-tulip",
