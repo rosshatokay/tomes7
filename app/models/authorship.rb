@@ -1,6 +1,6 @@
 class Authorship < ApplicationRecord
   belongs_to :book
-  belongs_to :author, counter_cache: :books_count
+  belongs_to :author
 
   # So the same author can't be added twice
   validates :author_id, uniqueness: { scope: :book_id }

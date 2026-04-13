@@ -28,6 +28,8 @@ class Book < ApplicationRecord
   scope :published, -> { includes(:category, :cover_attachment, :authors).where(published: true) }
 
   before_save :set_cover_path, if: -> { cover.attached? && cover.attachment.blob.key.exclude?("/") }
+  after_save :increment_author_books_count
+  after_destroy :decrement_author_books_count
 
   def author_names
     authors.map { |a| a.full_name }.join(", ")
@@ -92,6 +94,18 @@ class Book < ApplicationRecord
   end
 
   private
+
+  def increment_author_books_count
+    self.authorships.map { |a|
+      Author.increment_counter(:books_count, self.a.id)
+    }
+  end
+
+  def decrement_author_books_count
+    self.authorships.map { |a|
+      Author.decrement_counter(:books_count, self.a.id)
+    }
+  end
 
   def set_cover_path
     # We prepend the folder structure to the existing random key
