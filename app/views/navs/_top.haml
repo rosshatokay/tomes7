@@ -1,7 +1,7 @@
 - links = [{label: 'Home', path: root_path}, {label: 'Explore', path: explore_index_path}]
 
 - if user_signed_in?
-	.fixed.top-0.left-0.w-full.z-10{class: 'md:h-16 h-14 bg-white/95 dark:bg-[#181819e0] backdrop-blur-lg'}
+	.fixed.top-0.left-0.w-full.z-10{class: "md:h-16 h-14 bg-white/95 dark:bg-[#181819e0] backdrop-blur-lg #{yield(:has_back_to_btn).present? ? 'md:block hidden' : ''}"}
 		.nav-grid.contain.grid.h-full.items-center{class: 'md:grid-cols-[1fr_1.2fr_1fr] grid-cols-[24px_1fr_24px] gap-6'}
 			.flex.items-center.gap-8{class: 'on-focus-hide'}
 				=	link_to root_path, class: 'logo md:h-7 h-6' do
@@ -33,6 +33,8 @@
 				- else
 					=	link_to 'Sign in', new_session_path, class: 'btn btn-surface h-9'
 					=	link_to 'Join for free', new_registration_path, class: 'btn btn-primary h-9'
+	- if yield(:has_back_to_btn).present?
+		= render 'navs/top-back'
 - else
 	=	render 'static/top'
 

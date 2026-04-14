@@ -9,10 +9,8 @@
 			-	if @user.currently_reading.any?
 				.relative.w-full
 					.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
-						- @user.currently_reading.last(8).each do |user_book|
-							-	book = user_book.book
-							%div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
-								= render 'partials/book_card_block', book: book, small: true
+						= render partial: 'partials/book_card_block', collection: @user.currently_reading.last(8), as: :user_book, locals: {small: true, wrapper_class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
+						-# %div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
 			- else
 				= render 'partials/empty_state', title: "Nothing here", description: @user == current_user ? "You haven't started reading any books yet." : "#{@user.username} isn't reading a book for now."
 		%div

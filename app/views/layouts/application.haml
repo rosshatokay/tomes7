@@ -13,10 +13,12 @@
 		
 		.yield-wrapper
 			- if @breadcrumbs.present?
-				.contain.mt-2
+				.contain.mt-2{class: 'md:block hidden'}
 					=	render 'partials/breadcrumbs'
 			=	yield
-
+			
+			=	render 'navs/bottom' unless yield(:hide_bottom_nav) == "true" || yield(:has_back_to_btn).present?
+			
 			- if !user_signed_in?
 				-	unless yield(:hide_footer) == 'true'
 					.contain

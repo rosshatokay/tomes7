@@ -15,8 +15,7 @@
 	
 	= turbo_frame_tag "reviews" do
 		#reviews_list{ data: { reviews_container: true } }
-			-	@ratings.each do |review|
-				= render "ratings/review", review: review
+			= render partial: "ratings/review", collection: @ratings, as: :review
 			.mt-6
 			- if @pagy.pages > 1
 				=raw @pagy.series_nav

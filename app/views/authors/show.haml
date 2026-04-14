@@ -28,9 +28,8 @@
 			%span.number-badge.text-sm= @author.books_count
 		-	if @books.any?
 			=	turbo_frame_tag "pagination", class: 'scroll-mt-[124px]' do
-				.relative.w-full.grid.grid-cols-5.gap-4.gap-y-6
-					- @books.each do |book|
-						= render 'partials/book_card_block', book: book, small: true
+				.relative.w-full.grid.gap-4.gap-y-6{class: 'md:grid-cols-5 grid-cols-2'}
+					= render partial: 'partials/book_card_block', collection: @books, as: :book, locals: {small: true}
 				- if @pagy.pages > 1
 					.mt-12.flex-center
 						=raw	@pagy.series_nav

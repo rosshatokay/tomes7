@@ -104,3 +104,58 @@ $rowGap: 2px
 html.dark
 	.context
 		background: #333
+
+
+.drawer
+	width: 100%
+	height: 100%
+	position: absolute !important
+	transform: initial !important
+	pointer-events: none
+	&.shown
+		pointer-events: auto
+		&::before
+			opacity: 1
+		.sheet
+			transform: translateY(0%)
+	&::before
+		background: rgba(1,1,1,.5)
+		content: ''
+		position: fixed
+		opacity: 0
+		transition: 0.3s var(--transition)
+		inset: 0
+	.sheet
+		position: fixed
+		width: 100%
+		border: 1px solid var(--color-outline)
+		bottom: 0
+		border-top-left-radius: 12px
+		border-top-right-radius: 12px
+		left: 0
+		transition: 0.3s var(--transition)
+		overflow-y: auto
+		max-height: 28rem
+		background: var(--color-surface-opaque)
+		transform: translateY(100%)
+		z-index: 2
+	
+// @media (max-width: 48rem)
+	
+	// [data-tippy-root]
+	// 	background: blue
+	// 	width: 100%
+	// 	height: 100%
+	// 	position: absolute !important
+	// 	transform: initial !important
+	// .context
+	// 	position: fixed
+	// 	bottom: 0
+	// 	overflow-y: auto
+	// 	left: 0
+	// 	width: 100%
+	// 	height: 100%
+	// 	background: red
+	// 	z-index: 10
+	// 	border-bottom-left-radius: 0px
+	// 	border-bottom-right-radius: 0px

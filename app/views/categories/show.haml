@@ -1,6 +1,6 @@
 .contain.contain--yield
-	.flex.justify-between.items-center.mb-6
-		%h1.text-3xl.font-semibold= @category.name
+	.flex.mb-6{class: 'md:justify-between md:items-center md:flex-row flex-col'}
+		%h1.text-3xl.font-semibold{class: 'md:mb-0 mb-2'}= @category.name
 		-	if @books.any?
 			.flex.gap-2
 				.select-field.btn.btn-clear{class: 'h-8 rounded-md px-2', data: {controller: 'select-field'}}
@@ -25,9 +25,8 @@
 	- if !@books.any?
 		=	render 'partials/empty_state', title: "Nothing here", description: "We haven't added any #{@category.name} books yet. Check back again soon."
 	- else
-		.grid.grid-cols-5.gap-4.gap-y-6#books_grid
-			- @books.each do |book|
-				= render partial: 'partials/book_card_block', locals: { book: book, small: true, hide_category: true }
+		.grid.gap-4.gap-y-6#books_grid{class: 'md:grid-cols-5 grid-cols-2'}
+			= render partial: 'partials/book_card_block', collection: @books.each, as: :book, locals: { small: true, hide_category: true }
 		= turbo_frame_tag "pagination" do
 			- if @pagy.next
 				= turbo_frame_tag "pagination", src: category_path(@category.slug, page: @pagy.next, format: :turbo_stream), loading: :lazy do

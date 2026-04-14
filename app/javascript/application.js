@@ -52,8 +52,15 @@ function bindCopyInviteLinkBtn() {
 }
 
 function bindShareTriggerBtns() {
-	const btns = document.querySelectorAll('button[data-share-trigger]')
-	btns.forEach(btn => btn.addEventListener('click', () => share(btn.dataset)))
+	// const btns = document.querySelectorAll('button[data-share-trigger]')
+	// btns.forEach(btn => btn.addEventListener('click', () => share(btn.dataset)))
+	document.addEventListener('click', (e) => {
+		const selector = e.target.closest('[data-share-trigger]')
+
+		if (selector) {
+			share(selector.dataset)
+		}
+	})
 
 	async function share(dataset) {
 		let shareData = {}
@@ -92,7 +99,13 @@ document.addEventListener('turbo:load', () => {
 function bindTippyCloser() {
 	document.body.addEventListener('click', (e) => {
 		if (e.target.dataset?.closePopup == 'true') {
+			console.log('hide');
+			
 			hideAll()
+		}
+
+		if (e.target._tippy?.reference.classList.contains('is-sheet')) {
+			e.target._tippy.hide()
 		}
 	})
 }

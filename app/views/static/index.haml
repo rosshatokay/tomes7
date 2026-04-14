@@ -38,9 +38,8 @@
 		%h2{class: 'md:text-[60px] text-4xl font-semibold leading-none max-w-[800px] md:mb-6 mb-4'} From beloved masterpieces to hidden gems
 		%div{class: 'max-w-[480px] md:text-xl text-lg text-secondary'} Explore the works that shaped literature. Available instantly, anywhere.
 
-	.grid{class: 'md:grid-cols-5 grid-cols-2 md:gap-x-4 gap-x-6 md:gap-y-6'}
-		-	@featured_books.take(5).each do |book|
-			=	render 'partials/book_card_block', book: book, small: true
+	.grid{class: 'md:grid-cols-5 grid-cols-2 md:gap-x-4 gap-x-6 md:gap-y-6 gap-y-6'}
+		=	render partial: 'partials/book_card_block', collection: @featured_books, as: :book, locals: {small: true}
 
 	%div{class: 'pt-[200px]'}
 		.flex.flex-col.mb-16{class: 'md:items-center md:text-center'}

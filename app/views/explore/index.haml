@@ -3,24 +3,25 @@
 .contain.py-6.pb-16.flex.flex-col.gap-16
 	%section 
 		%h2.font-medium.text-xl.mb-5 Browse categories
-		.grid.grid-cols-4.gap-4
+		.grid{class: 'md:grid-cols-4 grid-cols-2 md:gap-4 gap-2'}
 			-	Category.all.take(8).each do |c|
-				.btn.relative.w-full.flex.bg-surface.items-end.justify-start.p-6.rounded-xl.overflow-hidden{class: 'h-[150px] hover:bg-black/10 dark:hover:bg-white/15 transition' }
+				.btn.relative.w-full.flex.bg-surface.justify-start.p-6.rounded-xl.overflow-hidden{class: 'h-[150px] hover:bg-black/10 dark:hover:bg-white/15 transition md:items-end items-start' }
 					=	link_to '', category_path(c.slug), class: 'absolute inset-0 z-2'
 					.relative.z-1
 						%span.text-2xl= category_emoji(c.slug)
-						%h3.font-semibold.text-lg.mt-2{class: 'text'}= c.name
+						%h3.font-semibold.text-lg.mt-2{class: 'whitespace-break-spaces leading-[1.2]'}= c.name
 
 	%section 
 		.flex.gap-2.items-center.mb-5
 			=	link_to trending_explore_index_path, class: 'flex gap-2 items-center group' do
 				%h2.font-medium.text-xl Trending
 				%i.ph.ph-caret-right.text-base{class: 'opacity-50 group-hover:opacity-100'}
-		.grid.grid-cols-5.gap-4
-			- Book.with_attached_cover.published.take(2).each do |book|
-				=	render 'partials/book_card_block', book: book, small: true
-				- selected_ids << book.id
-		
+		%section.varousel-container
+			.relative
+				.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
+					=	render partial: 'partials/book_card_block', collection: Book.with_attached_cover.published.take(8), as: :book, locals: { wrapper_class: 'md:w-[calc((100%/5)_-_14px)] md:min-w-[calc((100%/5)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex', small: true }
+					=	render partial: 'partials/book_card_block', collection: Book.with_attached_cover.published.take(8), as: :book, locals: { wrapper_class: 'md:w-[calc((100%/5)_-_14px)] md:min-w-[calc((100%/5)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex', small: true }
+					=	render partial: 'partials/book_card_block', collection: Book.with_attached_cover.published.take(8), as: :book, locals: { wrapper_class: 'md:w-[calc((100%/5)_-_14px)] md:min-w-[calc((100%/5)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex', small: true }
 
 	-	Category.includes(books: [:authors, cover_attachment: :blob]).all.select {|c| c.books.any? }.each do |c|
 		%section.varousel-container
@@ -34,9 +35,7 @@
 					%button{type: 'button', class: 'btn btn-icon btn-surface w-8'}
 						%i.ph.ph-caret-right.text-secondary
 				
-			.relative.mx-2
+			.relative
 				.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
-					- c.books.reject { |b| selected_ids.include?(b.id) }.take(7).each do |book|
-						%div{class: 'w-[calc((100%/5)_-_14px)] min-w-[calc((100%/5)_-_14px)] flex'}
-							=	render 'partials/book_card_block', book: book, small: true
+					=	render partial: 'partials/book_card_block', collection: c.books.published.reject { |b| selected_ids.include?(b.id) }.take(7), as: :book, locals: { wrapper_class: 'md:w-[calc((100%/5)_-_14px)] md:min-w-[calc((100%/5)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex', small: true }
 				

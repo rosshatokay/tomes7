@@ -30,7 +30,7 @@
 					%i.ph.ph-pencil
 					%span Edit
 		.flex.flex-col.gap-4.mt-6
-			= simple_format @book.description.strip
+			= simple_format @book.description&.strip
 		%p.text-secondary.text-sm.mt-2 Read more on #{link_to 'Wikipedia', @book.wiki_url, class: 'text-[var(--color-on-background)] font-medium hover:underline', target: '_blank'}.
 
 		.flex.flex-wrap.mt-6{class: 'gap-2.5'}
@@ -71,8 +71,7 @@
 	%section
 		%h3.text-lg.font-semibold.mb-4 Readers also enjoyed
 		.grid.gap-4{class: 'md:grid-cols-4 grid-cols-2'}
-			- @book.similar_books.take(4).each do |book|
-				=	render 'partials/book_card_block', book: book, small: true, hide_category: true
+			=	render partial: 'partials/book_card_block', collection: @book.similar_books.take(4), as: :book, locals: {small: true, hide_category: true}
 		
 	= render 'ratings/reviews'
 		

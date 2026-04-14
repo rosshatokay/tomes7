@@ -4,26 +4,28 @@
 	--choices-border-radius: 10px
 
 html.dark
-	--color-background: #181819;
-	--color-on-background: #FCFAF8;
-	--color-on-background--subtle: rgba(255,255,255,.6);
-	// --color-primary: #FFFFFF;
-	// --color-on-primary: #000000;
-	--color-backdrop: rgba(1,1,1,.6);
+	--color-background: #181819
+	--color-on-background: #FCFAF8
+	--color-on-background--subtle: rgba(255,255,255,.6)
+	--color-backdrop: rgba(1,1,1,.6)
 	--color-outline: rgba(255,255,255,.1)
 	--color-surface: rgba(255,255,255,.1)
 	--choices-bg-color-dropdown: #333333
 	--choices-bg-color: rgba(255,255,255,.1)
 	--choices-highlighted-color: rgba(255,255,255,.1)
+	--color-surface-opaque: #232323
 
 html.light
-	--color-background: #FFFFFF;
-	--color-on-background: #181819;
-	--color-on-background--subtle: rgba(1,1,1,.6);
-	// --color-primary: #000000;
-	--color-backdrop: rgba(1,1,1,.6);
+	--color-background: #FFFFFF
+	--color-on-background: #181819
+	--color-on-background--subtle: rgba(1,1,1,.6)
+	--color-backdrop: rgba(1,1,1,.6)
 	--color-outline: rgba(1,1,1,.1)
 	--color-surface: rgba(1,1,1,.07)
+	--choices-bg-color-dropdown: white
+	--choices-bg-color: rgba(1,1,1,.1)
+	--choices-highlighted-color: rgba(1,1,1,.1)
+	--color-surface-opaque: #FAFAFA
 
 body
 	height: 100%
@@ -123,6 +125,21 @@ html.dark
 	scrollbar-color: rgba(1,1,1,.3) transparent
 	scrollbar-width: thin
 	
+.varousel-container
+	scrollbar-color: transparent transparent
+	&:hover
+		scrollbar-color: rgba(1,1,1,.3) transparent
+	.overflow-x-auto
+		scrollbar-color: inherit !important
+
+[data-close-popup] *
+	pointer-events: none
+
+	
 html.dark
 	.overflow-x-auto, .overflow-y-auto
 		scrollbar-color: rgba(255,255,255,.3) transparent
+	.varousel-container
+		scrollbar-color: transparent transparent
+		&:hover
+			scrollbar-color: rgba(255,255,255,.3) transparent

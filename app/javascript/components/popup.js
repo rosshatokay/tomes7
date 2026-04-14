@@ -31,21 +31,40 @@ function Popup(element, options = {}) {
 			]
 		},
 		onHide(instance) {
-			instance.popper.querySelector('.context').setAttribute('data-state', 'hidden')
+			instance.popper.querySelector('.context')?.setAttribute('data-state', 'hidden')
+			instance.popper.querySelector('.sheet')?.setAttribute('data-state', 'hidden')
+			instance.popper.classList.remove('shown')
 
+			console.log(instance.reference.dataset);
+			
+			if (instance.reference.dataset.disableScroll == 'on') {
+				document.body.style.overflow = 'auto'
+			}
+			
 			setTimeout(() => {
-				if (options.preventUnmount != true) {
+				if (options.preventUnmount != true && !instance.popper.classList.contains('drawer')) {
 					requestAnimationFrame(instance.unmount)
 				}
 			}, 150);
 		},
+		onShow(instance) {
+			if (instance.reference.dataset.disableScroll == 'on') {
+				document.body.style.overflow = 'hidden'
+			}
+		},
 		onMount(instance) {
-			instance.popper.querySelector('.context').setAttribute('data-state', 'visible')
+			instance.popper.classList.add('shown')
+			instance.popper.querySelector('.context')?.setAttribute('data-state', 'visible')
+			instance.popper.querySelector('.sheet')?.setAttribute('data-state', 'visible')
 		},
 		render() {
 			const popper = document.createElement('div')
-			const contextHTML = element.querySelector('.context')
+			const contextHTML = element.querySelector('.context') || element.querySelector('.sheet')
 
+			if (element.classList.contains('is-sheet')) {
+				popper.classList.add('drawer')
+			}
+			
 			if (!contextHTML) throw new Error('Context missing for dropdown')
 
 			contextHTML.setAttribute('data-state', 'hidden')

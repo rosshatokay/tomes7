@@ -1,0 +1,4 @@
+.fixed.items-center.justify-between.px-5.top-0.left-0.w-full.z-10{class: "md:h-16 h-14 pl-3 bg-white/95 dark:bg-[#181819e0] backdrop-blur-lg #{yield(:has_back_to_btn) ? 'md:hidden flex' : ''}"}
+	=	link_to :back, class: 'btn btn-clear btn-icon w-9', data: {turbo: false} do
+		%i.ph.ph-caret-left.text-2xl
+	= yield(:back_to_actions)

@@ -14,6 +14,7 @@ class Reader {
 	#book
 	#rendition
 	#elms = {
+		topNav: document.getElementById('top-nav'),
 		chapterLabel: document.getElementById('chapter-label'),
 		pagesLeftLabel: document.getElementById('pages-left-label'),
 		spinner: document.getElementById('spinner'),
@@ -21,10 +22,6 @@ class Reader {
 		prevPage: document.getElementById('prev-page'),
 		nextPage: document.getElementById('next-page'),
 	}
-	/**
-	 * @type {boolean}
-	 */
-	#hasRestored
 	#darkTheme = {
 		body: {
 			"font-family": "Crimson Text !important",
@@ -43,6 +40,9 @@ class Reader {
 	#bookSlug = document.querySelector('[data-slug]').dataset.slug
 	#bookId = document.querySelector('[data-book-id]').dataset.bookId
 	#epubEndpoint = `/books/${this.#bookSlug}/epub`
+	#inactivityTimer
+	#inactivityLimit = 3000
+	#uiIsVisible = true
 
 	constructor() {
 		this.initialize()
@@ -65,7 +65,7 @@ class Reader {
 			success: (res) => this.#bookLocation = res.current_position
 		})
 	}
-	
+
 	// to correctly load the last saved location, we need this... otherwise it doesn't work
 	async #renderBook() {
 		if (this.#bookLocation) {
@@ -83,6 +83,7 @@ class Reader {
 				// Passing the buffer directly tells epub.js exactly what it's looking at
 				this.#book = ePub(data)
 				this.createReader()
+				this.bindMouseListeners(document)
 			})
 	}
 
@@ -111,6 +112,37 @@ class Reader {
 		this.bindProgress()
 	}
 
+	hideUI() {
+		this.#elms.topNav.classList.add('opacity-0')
+		this.#elms.pagesLeftLabel.classList.add('opacity-0')
+
+		this.#uiIsVisible = false;
+	}
+
+	showUI() {
+		this.#elms.topNav.classList.remove('opacity-0')
+		this.#elms.pagesLeftLabel.classList.remove('opacity-0')
+		
+
+		this.#uiIsVisible = true;
+	}
+
+	bindMouseListeners(doc) {
+		// Start the initial timer
+		this.#inactivityTimer = setTimeout(() => this.hideUI(), this.#inactivityLimit);
+
+		doc.addEventListener('mousemove', () => {
+			// 1. Only call showUI if it's currently hidden
+			if (!this.#uiIsVisible) {
+				this.showUI();
+			}
+
+			// 2. Always reset the timer so it doesn't hide while moving
+			clearTimeout(this.#inactivityTimer);
+			this.#inactivityTimer = setTimeout(() => this.hideUI(), this.#inactivityLimit);
+		});
+	}
+
 	bindProgress() {
 		van.add(this.#elms.progressIndicator,
 			() => this.#locationsLoaded.val ? div({ class: 'text-secondary text-sm px-2' }, () => `${this.#currentPercent.val}%`) : div({ class: 'loading-spinner w-4 h-4 !border-1' })
@@ -129,8 +161,6 @@ class Reader {
 
 		if (!cfi) return
 
-		console.log(cfi);
-		
 		ajax({
 			url: `/api/v1/users/books/${this.#bookId}/update-progress`,
 			skipAutoErrorRender: true,
@@ -139,8 +169,8 @@ class Reader {
 				progress: whole / 100,
 				current_position: cfi
 			},
-			success: (res) => console.log(res),
-			error: (res) => console.log(res)
+			success: (res) => {},
+			error: (res) => console.error(res)
 		})
 	}
 
@@ -154,11 +184,9 @@ class Reader {
 	}
 
 	bindEvents() {
-		// this.#rendition.on('started', () => console.log('starting render'))
 		this.#rendition.on('relocated', _.debounce((loc) => {
 			const percent = this.#book.locations.percentageFromCfi(loc.end.cfi)
 
-			
 			this.saveCurrentPosition(percent, loc.end.cfi)
 		}, 700))
 	}
@@ -193,7 +221,6 @@ class Reader {
 			}
 
 			this.updatePagination(loc)
-			// localStorage.setItem(`book-location:${this.#bookId}`, loc.end.cfi)
 
 			setTimeout(() => {
 				document.getElementById('pages-area').classList.remove('opacity-0')
@@ -221,6 +248,7 @@ class Reader {
 			addCustomFont(contents)
 			addStyleToReader(contents)
 			this.bindDocListeners(contents.document)
+			this.bindMouseListeners(contents.document)
 		})
 	}
 
@@ -229,8 +257,6 @@ class Reader {
 
 		this.#rendition.themes.register("dark", this.#darkTheme)
 		this.#rendition.themes.register("light", this.#lightTheme)
-
-
 		this.#rendition.themes.select(Theme.getTheme() == 'system' ? (isDarkMode ? 'dark' : 'light') : Theme.getTheme())
 		this.#rendition.themes.fontSize("125%")
 	}

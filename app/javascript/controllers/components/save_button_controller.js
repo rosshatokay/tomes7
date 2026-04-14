@@ -4,10 +4,13 @@ import van from "vanjs-core";
 import toast from "../../components/toast";
 
 export default class extends Controller {
+	initialize() {
+		this.element.addEventListener('click', () => this.#saveBook())
+	}
+
 	connect() {
 		this.isLiked = van.state(this.element.dataset.isLiked == 'true')
 		this.bookId = this.element.dataset.bookId
-		this.element.addEventListener('click', () => this.#saveBook())
 		
 		this.#update()
 	}

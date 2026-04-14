@@ -1,0 +1,7 @@
+%div{class: 'md:hidden h-14'}
+.fixed.bottom-0.left-0.bg-background.h-14.w-full.z-4.grid.grid-cols-4{class: 'shadow-[0px_0px_8px_rgba(1,1,1,.1)] md:hidden'}
+	- bottom_user_nav_links.each do |link|
+		-	is_current = request.path == link[:path]
+		=	link_to link[:path], class: "#{is_current ? '' : 'opacity-50'} flex-center flex-col" do
+			%i.text-2xl{class: "#{link[:icon]} #{is_current ? 'ph-fill' : 'ph'}"}
+			%span.text-xs.text-secondary= link[:label]

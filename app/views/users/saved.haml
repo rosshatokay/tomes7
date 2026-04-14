@@ -5,9 +5,8 @@
 	- if !@saved_books.any?
 		=	render 'partials/empty_state', title: "Nothing here", description: @user == current_user ? "You haven't saved any books yet." : "#{@user.username} hasn't saved any books yet."
 	- else
-		.grid.grid-cols-5.gap-4.gap-y-6#books_grid
-			- @saved_books.each do |book|
-				= render partial: 'partials/book_card_block', locals: { book: book, small: true, hide_category: true }
+		.grid.gap-4.gap-y-6#books_grid{class: 'md:grid-cols-5 grid-cols-2'}
+			= render partial: 'partials/book_card_block', collection: @saved_books, as: :book, locals: { small: true, hide_category: true }
 			= turbo_frame_tag "pagination" do
 				- if @pagy.next
 					= turbo_frame_tag "pagination", src: saved_profile_path(@user.username, page: @pagy.next, format: :turbo_stream), loading: :lazy do
