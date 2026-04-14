@@ -19,9 +19,6 @@ export default class extends Controller {
 		const flashes = this.element.dataset.flashes
 		const parsed = JSON.parse(flashes)
 
-		console.log(flashes);
-		
-
 		parsed.map(f => toast({
 			message: f[1],
 			type: this.getType(f[0])

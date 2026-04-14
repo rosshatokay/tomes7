@@ -7,4 +7,9 @@ class ExploreController < ApplicationController
       { label: "Explore", path: explore_index_path },
     ]
   end
+
+  def trending
+    @breadcrumbs = [{ label: "Home", path: root_path }, { label: "Explore", path: explore_index_path }, { label: "Trending" }]
+    @books = Book.all.order(readers_count: :desc).first(10)
+  end
 end

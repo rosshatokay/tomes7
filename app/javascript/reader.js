@@ -16,6 +16,7 @@ class Reader {
 	#elms = {
 		chapterLabel: document.getElementById('chapter-label'),
 		pagesLeftLabel: document.getElementById('pages-left-label'),
+		spinner: document.getElementById('spinner'),
 		progressIndicator: document.getElementById('progress-indicator'),
 		prevPage: document.getElementById('prev-page'),
 		nextPage: document.getElementById('next-page'),
@@ -43,18 +44,28 @@ class Reader {
 	#bookId = document.querySelector('[data-book-id]').dataset.bookId
 	#epubEndpoint = `/books/${this.#bookSlug}/epub`
 
-
 	constructor() {
-		this.#bookLocation = localStorage.getItem(`book-location:${this.#bookId}`)
 		this.initialize()
 	}
 
 	async initialize() {
+		await this.#getCurrentPosition()
 		await this.getBook()
 		this.#renderBook()
 		this.chaptersMenu = new ChaptersMenu(this)
 	}
 
+	async #getCurrentPosition() {
+		await ajax({
+			url: '/api/v1/users/books/current-position',
+			method: 'GET',
+			data: {
+				book_id: this.#bookId
+			},
+			success: (res) => this.#bookLocation = res.current_position
+		})
+	}
+	
 	// to correctly load the last saved location, we need this... otherwise it doesn't work
 	async #renderBook() {
 		if (this.#bookLocation) {
@@ -109,20 +120,24 @@ class Reader {
 	/**
 	 * Save percent locally and in db
 	 * @param {number} percent - Float percent
+	 * @param {string} cfi - Current book location (CFI)
 	 */
-	savePercent(percent) {
+	saveCurrentPosition(percent, cfi) {
 		const whole = Math.ceil(percent * 100)
 
 		this.#currentPercent.val = Math.ceil(whole)
 
-		if (percent == 0) return
+		if (!cfi) return
 
+		console.log(cfi);
+		
 		ajax({
 			url: `/api/v1/users/books/${this.#bookId}/update-progress`,
 			skipAutoErrorRender: true,
 			method: 'PATCH',
 			data: {
-				progress: whole / 100
+				progress: whole / 100,
+				current_position: cfi
 			},
 			success: (res) => console.log(res),
 			error: (res) => console.log(res)
@@ -134,7 +149,7 @@ class Reader {
 			const cfi = this.#rendition.currentLocation().end.cfi
 			const percent = this.#book.locations.percentageFromCfi(cfi)
 			this.#locationsLoaded.val = true
-			this.savePercent(percent)
+			this.saveCurrentPosition(percent, cfi)
 		})
 	}
 
@@ -142,7 +157,9 @@ class Reader {
 		// this.#rendition.on('started', () => console.log('starting render'))
 		this.#rendition.on('relocated', _.debounce((loc) => {
 			const percent = this.#book.locations.percentageFromCfi(loc.end.cfi)
-			this.savePercent(percent)
+
+			
+			this.saveCurrentPosition(percent, loc.end.cfi)
 		}, 700))
 	}
 
@@ -157,6 +174,7 @@ class Reader {
 		const numOfPagesLeft = (totalPagesInChap - currPageInChap) + 1
 
 		this.#elms.pagesLeftLabel.classList.toggle('opacity-0', totalPagesInChap <= 2)
+		this.#elms.spinner.remove()
 
 		if (numOfPagesLeft == 1) {
 			this.#elms.pagesLeftLabel.textContent = `Last page in chapter`
@@ -175,7 +193,7 @@ class Reader {
 			}
 
 			this.updatePagination(loc)
-			localStorage.setItem(`book-location:${this.#bookId}`, loc.end.cfi)
+			// localStorage.setItem(`book-location:${this.#bookId}`, loc.end.cfi)
 
 			setTimeout(() => {
 				document.getElementById('pages-area').classList.remove('opacity-0')
@@ -258,6 +276,7 @@ class ChaptersMenu {
 	#tocButton(chapter) {
 		return button({
 			class: 'btn btn-clear h-9 !p-2 !px-4 h-[initial] text-sm rounded-lg w-full justify-between',
+			'data-close-popup': 'true',
 			onclick: () => this.reader.goTo(chapter.href)
 		},
 			span({ class: 'whitespace-break-spaces text-left' }, chapter.label),

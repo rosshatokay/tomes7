@@ -18,6 +18,8 @@ import timeAgo from "../../utils/timeago";
 const { div, button, i, span, img, a } = van.tags
 
 export default class extends Controller {
+	#notifsBadge = span({id: 'unread-notifs-badge', class: 'w-1.5 h-1.5 hidden rounded-full block bg-red-500 dark:bg-red-400 top-1.5 right-1.5 absolute'})
+	
 	initialize() {
 		this.menu = this.#createMenu()
 
@@ -85,10 +87,10 @@ export default class extends Controller {
 		}
 
 		return a({ href: notif.permalink, class: `flex items-start gap-3 hover:bg-surface active:bg-black/10 dark:active:bg-white/10 transition p-3 px-2 rounded-lg` },
-			div({class: 'relative'},
+			div({ class: 'relative' },
 				img({ class: 'w-9 aspect-square rounded-full bg-surface', src: notif.notifier.avatar }),
-				div({class: `absolute rounded-full aspect-square w-5 flex-center -right-2 -bottom-2 border-2 border-[var(--color-background)] ${formattedKind.bg}`},
-					i({class: `ph text-xs ${formattedKind.icon}`, style: 'color: inherit'})
+				div({ class: `absolute rounded-full aspect-square w-5 flex-center -right-2 -bottom-2 border-2 border-[var(--color-background)] ${formattedKind.bg}` },
+					i({ class: `ph text-xs ${formattedKind.icon}`, style: 'color: inherit' })
 				)
 			),
 			div(
@@ -104,13 +106,14 @@ export default class extends Controller {
 	 */
 	#render(notifs) {
 		this.container.innerHTML = ''
+		this.#notifsBadge.classList.add('hidden')
 
 		if (!notifs?.length) {
 			van.add(this.container,
 				div({ class: 'flex flex-col items-center p-6 text-center' },
 					i({ class: 'ph ph-bell-slash text-2xl mb-2 text-secondary' }),
 					div({ class: 'font-medium mb-1' }, 'Nothing here'),
-					div({ class: 'text-sm text-secondary' }, 'Looks like you have\'t received any notifications yet.')
+					div({ class: 'text-sm text-secondary px-4' }, 'Looks like you have\'t received any notifications yet.')
 				)
 			)
 			return
@@ -123,7 +126,10 @@ export default class extends Controller {
 
 	#createMenu() {
 		return div({ class: 'action-menu' },
-			div({ class: 'toggler' }, button({ class: 'btn btn-icon w-9 btn-clear' }, i({ class: 'ph ph-bell' }))),
+			div({ class: 'toggler' }, button({ class: 'btn btn-icon w-9 btn-clear relative' },
+				i({ class: 'ph ph-bell' }),
+				this.#notifsBadge
+			)),
 			div({ class: 'context w-[360px] !max-h-[350px] p-1' })
 		)
 	}

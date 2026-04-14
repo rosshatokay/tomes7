@@ -2,6 +2,7 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 
+import "./channels"
 import TippyHandler from "./components/tippyHandler"
 import MicroModal from "micromodal"
 import CarouselScroller from "./utils/carouselScroller"

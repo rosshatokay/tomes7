@@ -18,6 +18,6 @@ class Api::V1::NotificationsController < ApplicationController
   private
 
   def get_permalink_based_on_kind(n)
-    profile_path(n.notifiable.username) if n.kind == "user_followed"
+    profile_path(n.notifiable.username) if n.kind == "user_followed" || n.kind == "accepted_invite"
   end
 end

@@ -8,8 +8,9 @@ class Notifications::Notifier
       kind: "user_followed",
       notifiable: follower, # who triggered it
       user: followed,
-
     )
+
+    ActionCable.server.broadcast("notifications_#{followed.id}", { unread_messages: true })
   end
 
   def self.accepted_invite(inviter:, new_user:)
@@ -18,5 +19,7 @@ class Notifications::Notifier
       notifiable: new_user,
       user: inviter,
     )
+
+    ActionCable.server.broadcast("notifications_#{inviter.id}", { unread_messages: true })
   end
 end

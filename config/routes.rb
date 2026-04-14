@@ -26,6 +26,7 @@ Rails.application.routes.draw do
         resources :books, only: [] do
           collection do
             post :save
+            get "current-position"
           end
           member do
             patch "update-progress"
@@ -89,6 +90,7 @@ Rails.application.routes.draw do
   resources :explore, only: [] do
     collection do
       get :index
+      get :trending
     end
   end
 

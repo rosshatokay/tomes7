@@ -1,0 +1,7 @@
+.contain.contain--yield
+	.flex.justify-between.items-center.mb-6
+		%h1.text-3xl.font-semibold Trending
+
+	.grid.grid-cols-5.gap-4.gap-y-6#books_grid
+		- @books.each do |book|
+			= render partial: 'partials/book_card_block', locals: { book: book, small: true, hide_category: true }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_12_140038) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_14_102559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -87,6 +87,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_12_140038) do
     t.integer "ratings_count", default: 0
     t.integer "sum_of_scores", default: 0
     t.boolean "published", default: false
+    t.integer "readers_count", default: 0
     t.index ["category_id"], name: "index_books_on_category_id"
     t.index ["slug"], name: "index_books_on_slug_unique", unique: true
     t.index ["title"], name: "index_books_on_title", opclass: :gin_trgm_ops, using: :gin
@@ -219,6 +220,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_12_140038) do
     t.decimal "progress", precision: 5, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "current_position"
     t.index ["book_id"], name: "index_user_books_on_book_id"
     t.index ["user_id", "book_id"], name: "index_user_books_on_user_id_and_book_id", unique: true
     t.index ["user_id"], name: "index_user_books_on_user_id"

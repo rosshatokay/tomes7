@@ -13,9 +13,9 @@
 
 	%section 
 		.flex.gap-2.items-center.mb-5
-			%h2.font-medium.text-xl Trending
-			.btn.btn-surface.btn-icon.w-6
-				%i.ph.ph-caret-right.text-base
+			=	link_to trending_explore_index_path, class: 'flex gap-2 items-center group' do
+				%h2.font-medium.text-xl Trending
+				%i.ph.ph-caret-right.text-base{class: 'opacity-50 group-hover:opacity-100'}
 		.grid.grid-cols-5.gap-4
 			- Book.with_attached_cover.published.take(2).each do |book|
 				=	render 'partials/book_card_block', book: book, small: true
@@ -29,9 +29,9 @@
 					%h2.font-medium.text-xl Popular in #{c.name}
 					%i.ph.ph-caret-right.text-base{class: 'opacity-50 group-hover:opacity-100'}
 				.flex.gap-2
-					%button{type: 'button', class: 'btn btn-icon btn-surface w-8 shadow-md'}
+					%button{type: 'button', class: 'btn btn-icon btn-surface w-8'}
 						%i.ph.ph-caret-left.text-secondary
-					%button{type: 'button', class: 'btn btn-icon btn-surface w-8 shadow-md'}
+					%button{type: 'button', class: 'btn btn-icon btn-surface w-8'}
 						%i.ph.ph-caret-right.text-secondary
 				
 			.relative.mx-2

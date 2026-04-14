@@ -40,11 +40,12 @@ class BooksController < ApplicationController
   def read
     @book = Book.friendly.find(params[:id])
 
-    if user_signed_in?
-      unless current_user.books.include?(@book)
-        current_user.books << @book
-        Activities::Logger.started_reading(user: current_user, book: @book)
-      end
+    return unless user_signed_in?
+
+    user_book = current_user.user_books.find_or_create_by(book: @book)
+
+    if user_book.previously_new_record?
+      Activities::Logger.started_reading(user: current_user, book: @book)
     end
   end
 
