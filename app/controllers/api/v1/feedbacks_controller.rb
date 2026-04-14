@@ -1,10 +1,11 @@
 class Api::V1::FeedbacksController < ApplicationController
-  rate_limit to: 2, within: 24.hours, only: :request_book, with: -> { render json: { message: "You've hit your daily requests limit. Try again tomorrow.", success: false } }
+  rate_limit to: 1, within: 24.hours, only: :request_book, with: -> { render json: { message: "You've hit your daily requests limit. Try again tomorrow.", success: false } }
 
   def request_book
     permitted = request_book_params
     feedback = current_user.feedbacks.build(subject: "book_request", body: "Requested #{permitted[:book_title]} by #{permitted[:author_name]}")
 
+    return
     if feedback.save
       render json: { success: true }, status: :ok
     else

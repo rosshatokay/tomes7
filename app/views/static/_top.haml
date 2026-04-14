@@ -7,6 +7,7 @@
 				=	show_svg 'logo.svg'
 		%div.gap-6{class: 'md:flex items-center justify-center hidden'}
 			=	link_to 'Explore', explore_index_path, class: 'font-medium text-m text-secondary hover:text-on-background'
+			-# =	link_to 'Request a book', book_request_path, class: 'font-medium text-m text-secondary hover:text-on-background'
 			=	link_to 'About', about_path, class: 'font-medium text-m text-secondary hover:text-on-background'
 		.justify-end.flex.gap-2
 			- if authenticated?

@@ -22,8 +22,9 @@
 					.contain
 						=	render 'partials/footers/bottom'
 
-		- if flash.any?
-			.flash-wrapper{data: {flashes: flash.to_json.html_safe, controller: 'flashes'}}
+		-# - if flash.any?
+		#flash
+			=	render 'partials/flash'
 			
 		= yield(:scripts)
 

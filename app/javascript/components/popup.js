@@ -7,7 +7,7 @@ import tippy from "tippy.js";
  * @param {object} options - Popup options
  * @param {boolean} options.preventUnmount - Should popup remain in DOM after closing?
  */
-function Popup(element, options = {}){
+function Popup(element, options = {}) {
 	tippy(element, {
 		trigger: 'click',
 		appendTo: () => document.body,
@@ -41,13 +41,6 @@ function Popup(element, options = {}){
 		},
 		onMount(instance) {
 			instance.popper.querySelector('.context').setAttribute('data-state', 'visible')
-
-			// requestAnimationFrame(() => TippyHandler.bind())
-			document.body.addEventListener('click', (e) => {
-				if (e.target.dataset?.closePopup == 'true') {
-					instance.hide()
-				}
-			})
 		},
 		render() {
 			const popper = document.createElement('div')

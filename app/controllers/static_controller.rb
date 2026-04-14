@@ -48,6 +48,10 @@ class StaticController < ApplicationController
     set_meta_tags(reverse: true)
   end
 
+  def book_request
+    @breadcrumbs = [{ label: "Home", path: root_path }, { label: "Request a book" }]
+  end
+
   def community_guidelines
     @breadcrumbs = [{ label: "Home", path: root_path }, { label: "Community guidelines" }]
     @markdown_file = File.read(Rails.root.join("lib/articles/community_guidelines.md"))

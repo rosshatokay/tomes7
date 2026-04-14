@@ -126,6 +126,7 @@ Rails.application.routes.draw do
   get "/terms", to: "static#terms", as: :terms
   get "/privacy", to: "static#privacy", as: :privacy
   get "/about", to: "static#about", as: :about
+  # get "/request-a-book", to: "static#book_request", as: :book_request
 
   root "static#index"
 

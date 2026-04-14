@@ -36,6 +36,10 @@ class OnboardingController < ApplicationController
     return unless inviter.present?
     return if inviter == new_user
 
+    if new_user.follows?(inviter)
+      session[:referrer_id] = nil
+      return
+    end
     inviter.follow!(new_user)
     new_user.follow!(inviter)
 

@@ -42,7 +42,7 @@ class RegistrationsController < ApplicationController
       session[:referrer_id] = nil
       start_new_session_for(@user)
       flash[:info] = "Successfully signed up"
-      redirect_to root_path
+      redirect_to onboarding_index_path
     else
       flash.now[:error] = "Something went wrong"
       render :new

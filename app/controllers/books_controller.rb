@@ -12,7 +12,7 @@ class BooksController < ApplicationController
     @breadcrumbs = [
       { label: "Home", path: root_path },
       { label: "Books", path: explore_index_path },
-      { label: @book.category.name, path: root_path },
+      { label: @book.category.name, path: category_path(@book.category.slug) },
       { label: @book.title },
     ]
 

@@ -16,7 +16,7 @@
 				=	yield
 				%div{class: 'pb-16'}
 
-		- if flash.any?
-			.flash-wrapper{data: {flashes: flash.to_json.html_safe, controller: 'flashes'}}
+		#flash
+			=	render 'partials/flash'
 
 		= yield(:scripts)

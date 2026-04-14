@@ -2,63 +2,64 @@
 - if @is_edit && @book.cover.attached?
 	-	book_cover = @book.cover.service.url(@book.cover.blob.key)
 
-= form_with id: 'book-form', model: @book, url: @is_edit ? admins_book_path(@book.hashid) : admins_books_path, method: @is_edit ? :patch : :post, html: {class: 'grid grid-cols-[1fr_200px] gap-10' } do |f|
-	%div{class: 'flex flex-col gap-5'}
-		.flex.flex-col.gap-2
-			=	f.label :title, class: 'label-field'
-			=	f.text_field :title, placeholder: 'Enter the book\'s title', class: 'input-field h-11'
-		.flex.flex-col.gap-2
-			=	f.label :authors, class: 'label-field'
-			%select#book_authors{name: "authors[]", multiple: '', data: {controller: 'author-search'}}
-		.flex.flex-col.gap-2
-			=	f.label :category_id, 'Category', class: 'label-field'
-			= f.select :category_id, options_for_select(@categories, f.object.category_id), {}, {class: 'p-3'}
-		.flex.flex-col.gap-2
-			=	f.label :tag_names, 'Tags', class: 'label-field'
-			%select#book_tag_names{name: "book[tag_names][]", multiple: '', data: {controller: 'book-tags'}}
-		.flex.flex-col.gap-2
-			=	f.label :description, class: 'label-field'
-			=	f.text_area :description, placeholder: 'Describe the book a bit', class: 'input-field p-4'
-		.flex.flex-col.gap-2
-			=	f.label :wiki_url, 'Wikipedia URL', class: 'label-field'
-			=	f.text_field :wiki_url, placeholder: 'Enter the book\'s wikipedia page URL (if exists)', class: 'input-field h-11'
-		.flex.flex-col.gap-2
-			%label.label-field Ebook File
-			%div{data: {controller: 'epub-upload'}}
-				- if @book.epub.attached?
-					.flex.justify-between.items-center.w-full{'data-epub-upload-target': 'zone'}
-						.flex.items-center.gap-3
-							.flex-center.w-12.aspect-square.rounded-lg.border.border-outline
-								.ph.ph-file.text-xl
-							%div 
-								%p.font-medium= @book.epub.filename
-								%p.text-secondary.text-xs= number_to_human_size(@book.epub.byte_size)
-						.btn.btn-clear.h-9.font-normal.relative
+= turbo_frame_tag 'book_details' do
+	= form_with id: 'book-form', model: @book, url: @is_edit ? admins_book_path(@book.hashid) : admins_books_path, method: @is_edit ? :patch : :post, html: {class: 'grid grid-cols-[1fr_200px] gap-10' }, data: {controller: 'form-with-loading-submit-btn'} do |f|
+		%div{class: 'flex flex-col gap-5'}
+			.flex.flex-col.gap-2
+				=	f.label :title, class: 'label-field'
+				=	f.text_field :title, placeholder: 'Enter the book\'s title', class: 'input-field h-11'
+			.flex.flex-col.gap-2
+				=	f.label :authors, class: 'label-field'
+				%select#book_authors{name: "authors[]", multiple: '', data: {controller: 'author-search'}}
+			.flex.flex-col.gap-2
+				=	f.label :category_id, 'Category', class: 'label-field'
+				= f.select :category_id, options_for_select(@categories, f.object.category_id), {}, {class: 'p-3'}
+			.flex.flex-col.gap-2
+				=	f.label :tag_names, 'Tags', class: 'label-field'
+				%select#book_tag_names{name: "book[tag_names][]", multiple: '', data: {controller: 'book-tags'}}
+			.flex.flex-col.gap-2
+				=	f.label :description, class: 'label-field'
+				=	f.text_area :description, placeholder: 'Describe the book a bit', class: 'input-field p-4'
+			.flex.flex-col.gap-2
+				=	f.label :wiki_url, 'Wikipedia URL', class: 'label-field'
+				=	f.text_field :wiki_url, placeholder: 'Enter the book\'s wikipedia page URL (if exists)', class: 'input-field h-11'
+			.flex.flex-col.gap-2
+				%label.label-field Ebook File
+				%div{data: {controller: 'epub-upload'}}
+					- if @book.epub.attached?
+						.flex.justify-between.items-center.w-full{'data-epub-upload-target': 'zone'}
+							.flex.items-center.gap-3
+								.flex-center.w-12.aspect-square.rounded-lg.border.border-outline
+									.ph.ph-file.text-xl
+								%div 
+									%p.font-medium= @book.epub.filename
+									%p.text-secondary.text-xs= number_to_human_size(@book.epub.byte_size)
+							.btn.btn-clear.h-9.font-normal.relative
+								= f.file_field :epub, direct_upload: true, class: 'absolute inset-0 opacity-0 cursor-pointer'
+								%span Change
+					- else
+						.p-8.flex-center.rounded-xl.flex-col.gap-2.relative{class: 'bg-surface hover:bg-black/10 dark:hover:bg-white/15 transition', 'data-epub-upload-target': 'zone'}
 							= f.file_field :epub, direct_upload: true, class: 'absolute inset-0 opacity-0 cursor-pointer'
-							%span Change
-				- else
-					.p-8.flex-center.rounded-xl.flex-col.gap-2.relative{class: 'bg-surface hover:bg-black/10 dark:hover:bg-white/15 transition', 'data-epub-upload-target': 'zone'}
-						= f.file_field :epub, direct_upload: true, class: 'absolute inset-0 opacity-0 cursor-pointer'
-						%i.ph.ph-upload.text-xl
-						%span.text-sm Upload an epub file
-					
-		.checkbox-field
-			=	f.check_box :published
-			= f.label :published do
-				%span Public?
+							%i.ph.ph-upload.text-xl
+							%span.text-sm Upload an epub file
+						
+			.checkbox-field
+				=	f.check_box :published
+				= f.label :published do
+					%span Public?
 
+			%div
+			.flex.gap-2.cta
+				%button{type: 'submit', class: 'btn btn-primary h-11'} Save book
+				= link_to 'Preview', book_path(@book.slug), class: 'btn btn-surface h-11' unless !@is_edit
 		%div
-		.flex.gap-2.cta
-			%button{type: 'submit', class: 'btn btn-primary h-11'} Save book
-			= link_to 'Preview', book_path(@book.slug), class: 'btn btn-surface h-11' unless !@is_edit
-	%div
-		.flex.flex-col.gap-2{data: {controller: 'image-upload-preview'}}
-			%label.label-field Cover
-			.bg-surface.aspect-book.flex.flex-col.flex-center.rounded-md.cursor-pointer.relative{class: 'hover:bg-black/10 dark:hover:bg-white/15 transition', 'data-image-upload-preview-target': 'cover', style: @is_edit ? "background: url(#{book_cover}) center / cover;" : nil}
-				= f.file_field :cover, 'data-image-upload-preview-target': 'field', class: 'absolute opacity-0 inset-0 cursor-pointer'
-				- if book_cover.nil?
-					%i.ph.ph-image.mb-2.text-xl
-					%span.text-sm Upload a cover
+			.flex.flex-col.gap-2{data: {controller: 'image-upload-preview'}}
+				%label.label-field Cover
+				.bg-surface.aspect-book.flex.flex-col.flex-center.rounded-md.cursor-pointer.relative{class: 'hover:bg-black/10 dark:hover:bg-white/15 transition', 'data-image-upload-preview-target': 'cover', style: @is_edit ? "background: url(#{book_cover}) center / cover;" : nil}
+					= f.file_field :cover, 'data-image-upload-preview-target': 'field', class: 'absolute opacity-0 inset-0 cursor-pointer'
+					- if book_cover.nil?
+						%i.ph.ph-image.mb-2.text-xl
+						%span.text-sm Upload a cover
 
 :javascript
 	const prefillAuthors = #{@book.persisted? ? @book.authors.map{|a| { selected: true, id: a.hashid, full_name: a.full_name}}.to_json : []}

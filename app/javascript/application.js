@@ -8,6 +8,7 @@ import CarouselScroller from "./utils/carouselScroller"
 import Popup from "./components/popup"
 import copyToClipboard from "./utils/copyToClipboard"
 import toast from "./components/toast"
+import { hideAll } from "tippy.js"
 
 function bindCarousels() {
 	const carousels = document.querySelectorAll('.varousel-container')
@@ -59,7 +60,7 @@ function bindShareTriggerBtns() {
 		dataset.shareTitle ? shareData.title = dataset.shareTitle : null
 		dataset.shareDescription ? shareData.description = dataset.shareDescription : null
 		dataset.shareUrl ? shareData.url = dataset.shareUrl : null
-		
+
 		if (!navigator.share) {
 			copyToClipboard(url)
 			toast({ message: "URL copied" })
@@ -84,7 +85,16 @@ document.addEventListener('turbo:load', () => {
 	bindMenus()
 	bindCopyInviteLinkBtn()
 	bindShareTriggerBtns()
+	bindTippyCloser()
 })
+
+function bindTippyCloser() {
+	document.body.addEventListener('click', (e) => {
+		if (e.target.dataset?.closePopup == 'true') {
+			hideAll()
+		}
+	})
+}
 
 document.addEventListener("turbo:frame-load", (e) => {
 	e.target.scrollIntoView({ behavior: "smooth" })

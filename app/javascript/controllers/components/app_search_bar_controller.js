@@ -50,8 +50,14 @@ class AppSearchBar extends Search {
 		const secToHide = document.querySelectorAll('.on-focus-hide')
 		const gridWrapper = document.querySelector('.nav-grid')
 		
-		this.config.inputElm.addEventListener('focus', () => isFocused.val = true)
-		this.config.inputElm.addEventListener('blur', () => isFocused.val = false)
+		this.config.inputElm.addEventListener('focus', () => {
+			if (window.innerWidth > 600) return
+			isFocused.val = true
+		})
+		this.config.inputElm.addEventListener('blur', () => {
+			if (window.innerWidth > 600) return
+			isFocused.val = false
+		})
 
 		van.derive(() => {
 			if (isFocused.val) {

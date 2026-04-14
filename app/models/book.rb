@@ -57,6 +57,10 @@ class Book < ApplicationRecord
       .limit(limit)
   end
 
+  def should_generate_new_friendly_id?
+    title_changed? || super
+  end
+
   def rated_by?(user)
     raters.exists?(id: user&.id)
   end

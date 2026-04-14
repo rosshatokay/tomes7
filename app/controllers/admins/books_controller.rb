@@ -47,11 +47,21 @@ class Admins::BooksController < Admins::BaseController
     @book.authors = params[:authors]&.map { |id| Author.find(id) } || []
 
     if @book.update(book_params)
-      flash[:success] = "Changes saved"
-      redirect_to edit_admins_book_path(@book.hashid)
+      flash.now[:success] = "Book updated!"
+      render turbo_stream: [
+        turbo_stream.update("flash", partial: "partials/flash"),
+      ]
+      # respond_to do |format|
+      #   format.turbo_stream {
+      #     flash.now[:success] = "Changes saved"
+      #     render turbo_stream: turbo_stream.append("flash",
+      #                                              partial: "partials/flash")
+      #   }
+      #   format.html { redirect_to edit_admins_book_path(@book.hashid), status: :see_other }
+      # end
     else
       flash[:error] = "Something went wrong"
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

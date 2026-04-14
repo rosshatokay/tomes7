@@ -16,9 +16,9 @@
 				= link_to saved_profile_path(current_user.username), class: link_class do
 					%i.ph.ph-heart
 					%span Saved
-				-# = link_to profile_path(current_user.username), class: link_class do
-					%i.ph.ph-envelope
-					%span Request a book
+				%button{type: 'button', class: link_class, 'data-micromodal-trigger': 'request-book-modal', 'data-close-popup': 'true'}
+					%i.ph.ph-git-pull-request.pointer-events-none
+					%span.pointer-events-none Request a book
 				%button{type: 'button', class: link_class, 'data-micromodal-trigger': 'invite-modal', 'data-close-popup': 'true'}
 					%i.ph.ph-envelope.pointer-events-none
 					%span.pointer-events-none Invite a friend
@@ -33,3 +33,4 @@
 					%span Log out
 				
 = render 'partials/invite_modal'
+= render 'partials/request_book_modal'
