@@ -67,7 +67,7 @@ class User < ApplicationRecord
     if avatar.attached?
       # .variant creates the resized version; .processed ensures it exists
       # .url generates the actual link
-      avatar.variant(resize_to_limit: [size, size]).processed.url
+      avatar.service.url(avatar.blob.key, transformation: [{ width: size, height: size }])
     else
       mod = (id - 1) % DEFAULT_AVATARS.length
       DEFAULT_AVATARS[mod]
