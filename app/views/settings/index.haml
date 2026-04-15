@@ -1,3 +1,4 @@
+- content_for(:has_back_to_btn, true)
 - avatar_url = current_user.avatar.attached? ? current_user.avatar.service.url(current_user.avatar.blob.key) : nil
 
 .contain.contain--extra-small.contain--yield

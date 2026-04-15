@@ -12,7 +12,7 @@
 				-	if book.cover.attached?
 					=	ik_image_tag(book.cover, class: 'rounded-xl w-full')
 				- else
-					.bg-surface.w-full.aspect-book
+					.bg-surface.w-full.aspect-book.rounded-xl
 				- if progress.present?
 					-	percent = (progress * 100).round(0)
 					.absolute.pointer-events-none.top-2.left-2.flex-center.gap-1{class: 'bg-black/60 backdrop-blur-md text-white font-medium p-2 py-[3px] rounded-md'}
