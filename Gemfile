@@ -33,6 +33,8 @@ gem "bootsnap", require: false
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
+  gem "prosopite"
+  gem "pg_query"
   gem "brakeman", require: false
   gem "dotenv-rails"
   gem "rubocop-rails-omakase", require: false

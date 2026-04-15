@@ -5,7 +5,7 @@
 	.grid.grid-cols-3.gap-4
 		.bg-surface.p-4.rounded-lg
 			.flex.items-center.gap-3
-				%img{src: @user.get_avatar, class: 'w-12 aspect-square object-fit rounded-full'}
+				%img{src: @user.get_avatar_url, class: 'w-12 aspect-square object-fit rounded-full'}
 				%h3
 					%span.font-medium= @user.username
 					%span added a review to

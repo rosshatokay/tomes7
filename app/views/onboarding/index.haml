@@ -14,7 +14,7 @@
 			%div{data: {controller: 'image-upload-preview'}}
 				=	f.label :avatar, 'Profile picture', class: 'label-field mb-2'
 				.flex.gap-2.items-center
-					.w-16.aspect-square.rounded-full.relative{'data-image-upload-preview-target': 'cover', style: "background: url(#{current_user.get_avatar(size: 100)}) center / cover;"}
+					.w-16.aspect-square.rounded-full.relative{'data-image-upload-preview-target': 'cover', style: "background: url(#{current_user.get_avatar_url(size: 100)}) center / cover;"}
 					%div{class: 'btn btn-border h-9 relative'}	
 						=	f.file_field :avatar, class: 'absolute inset-0 opacity-0 cursor-pointer', accept: 'image/png, image/jpg, image/jpeg, image/avif, image/webp', 'data-image-upload-preview-target': 'field'
 						%i.ph.ph-upload-simple

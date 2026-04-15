@@ -7,7 +7,6 @@
 			%i.ph.ph-plus
 			%span Add author
 		
-	= Author.first.books_count
 	= render 'partials/table', headings: ['Author', '# Books'] do
 		- @authors.each_with_index do |author, index|
 			%tr{class: "cursor-pointer transition hover:bg-black/10 dark:hover:bg-white/10 #{index == @authors.size - 1 ? 'relative' : 'border-b border-outline relative'}", onclick: "location.href = '#{edit_admins_author_path(author.hashid)}'"}

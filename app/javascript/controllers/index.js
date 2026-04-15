@@ -14,6 +14,7 @@ import select_field_controller from "./components/select_field_controller"
 import image_upload_preview_controller from "./components/image_upload_preview_controller"
 import save_button_controller from "./components/save_button_controller"
 import request_book_controller from "./components/request_book_controller"
+import back_to_btn_controller from "./components/back_to_btn_controller"
 
 const controllers = {
 	"flashes": flashes_controller,
@@ -26,7 +27,8 @@ const controllers = {
 	"notifications-menu": notifications_menu_controller,
 	"select-field": select_field_controller,
 	"save-button": save_button_controller,
-	"request-book": request_book_controller
+	"request-book": request_book_controller,
+	"back-to-btn": back_to_btn_controller
 }
 
 Object.entries(controllers).forEach(([name, controller]) => {

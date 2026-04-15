@@ -1,7 +1,10 @@
 %div{class: 'md:w-[270px] md:min-w-[270px] w-full md:pl-12 md:pb-0 pb-16 flex flex-col gap-8'}
 	%aside
-		%h3.text-lg.leading-none.font-semibold.mb-4 Readers
-		.grid.grid-cols-5.gap-2
+		.flex.gap-2.items-center.mb-3
+			%h3.text-lg.leading-none.font-semibold Readers
+			%span.number-badge.is-skeleton.h-5#total-readers-count-badge{class: 'text-[11px]'}
+		%div{class: 'grid md:grid-cols-5 grid-cols-6 gap-2', 'data-book-page-target': 'readers'}
+		-# .grid.grid-cols-5.gap-2
 			-	12.times do
 				.bg-surface.w-full.aspect-square.rounded-full
 	%aside

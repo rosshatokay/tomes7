@@ -1,5 +1,5 @@
 class Api::V1::Users::BooksController < ApplicationController
-  allow_unauthenticated_access only: [:update_progress]
+  allow_unauthenticated_access only: [:update_progress, :readers]
   rate_limit to: 10, within: 5.minutes, only: :save, with: -> { render json: { error: "You're exceeding the rate limit. Slow down." }, status: :unprocessable_entity }
 
   def current_position
@@ -9,6 +9,30 @@ class Api::V1::Users::BooksController < ApplicationController
     render json: {
       current_position: entry.current_position,
     }
+  end
+
+  def readers
+    book = Book.friendly.find(params[:book_id])
+    readers_scope = book.readers
+    collection_data = readers_scope
+      .select(:id, :username)
+      .includes(avatar_attachment: { blob: :variant_records })
+      .limit(10)
+
+    readers_list = collection_data.map do |r|
+      {
+        username: r.username,
+        avatar: r.get_avatar_url(size: 40),
+        permalink: profile_path(r.username),
+      }
+    end
+
+    render json: {
+             readers: {
+               total_count: readers_scope.count, # Actually runs a SELECT COUNT
+               collection: readers_list,
+             },
+           }
   end
 
   def update_progress

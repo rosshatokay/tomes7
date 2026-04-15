@@ -1,6 +1,7 @@
 - content_for(:has_back_to_btn, true)
 
 =	render 'jsonld'
+
 %div{data: {controller: 'book-page'}}
 	%div{class: 'contain contain--yield flex flex-col md:flex-row'}
 		= render 'cover_aside'
@@ -9,7 +10,7 @@
 
 	= render 'review_modal'
 
-%div{class: 'fixed bottom-4 left-1/2 -translate-x-1/2'}
+%div{class: 'fixed bottom-4 left-1/2 -translate-x-1/2 md:hidden'}
 	=	link_to read_book_path(@book.slug), data: {turbo: false}, class: 'btn gap-2 btn-primary h-12 text-m shadow-lg px-6' do
 		%span Read the book
 		%i.ph.ph-arrow-up-right{class: '!text-lg'}

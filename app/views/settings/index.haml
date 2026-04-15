@@ -9,7 +9,7 @@
 			= f.label :avatar, 'Profile picture', class: 'label-field'
 			.flex.items-center.gap-4
 				.btn.btn-icon.btn-clear.w-16.p-1
-					.w-14.aspect-square.rounded-full.relative{'data-image-upload-preview-target': 'cover', style: "background: url(#{current_user.get_avatar(size: 100)}) center / cover;"}
+					.w-14.aspect-square.rounded-full.relative{'data-image-upload-preview-target': 'cover', style: "background: url(#{current_user.get_avatar_url(size: 100)}) center / cover;"}
 						=	f.file_field :avatar, class: 'absolute cursor-pointer inset-0 opacity-0',accept: 'image/png, image/jpg, image/jpeg, image/avif, image/webp', 'data-image-upload-preview-target': 'field'
 				= f.label :avatar, class: 'btn btn-border h-9' do
 					%i.ph.ph-upload-simple

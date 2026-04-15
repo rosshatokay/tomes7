@@ -25,8 +25,10 @@ Rails.application.routes.draw do
       namespace :users do
         resources :books, only: [] do
           collection do
-            post :save
+            get :readers
             get "current-position"
+
+            post :save
           end
           member do
             patch "update-progress"

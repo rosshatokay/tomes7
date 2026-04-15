@@ -3,18 +3,21 @@
 		%h1.text-3xl Inbox
 	
 	.flex.flex-col.gap-4
-		- @feedbacks.each do |feedback|
-			.flex.items-center.gap-3.justify-between.p-4.relative.rounded-xl{class: 'btn btn-border !shadow-none w-full active:scale-[0.999]'}
-				=	link_to '', admins_feedback_path(feedback.hashid), class: 'absolute inset-0 z-1'
-				.flex.items-center.gap-3
-					%img{src: feedback.user.get_avatar, class: 'w-10 aspect-square object-fit rounded-full'}
-					%div
-						%p.text-m
-							%span.font-medium= feedback.user.username
-							%span.font-normal.text-secondary submitted feedback
-						%div.text-secondary.font-normal{class: 'text-[13px]'} #{time_ago_in_words(feedback.created_at)} ago
-				.pr-2
-					.bg-surface.text-sm.px-3.h-7.flex-center.rounded-full.gap-2
-						%span= feedback.subject.humanize.downcase
+		-	if !@feedbacks.any?
+			= render 'partials/empty_state', title: 'Nothing here', description: "You haven't received any feedbacks yet."
+		- else
+			- @feedbacks.each do |feedback|
+				.flex.items-center.gap-3.justify-between.p-4.relative.rounded-xl{class: 'btn btn-border !shadow-none w-full active:scale-[0.999]'}
+					=	link_to '', admins_feedback_path(feedback.hashid), class: 'absolute inset-0 z-1'
+					.flex.items-center.gap-3
+						%img{src: feedback.user.get_avatar_url, class: 'w-10 aspect-square object-fit rounded-full'}
+						%div
+							%p.text-m
+								%span.font-medium= feedback.user.username
+								%span.font-normal.text-secondary submitted feedback
+							%div.text-secondary.font-normal{class: 'text-[13px]'} #{time_ago_in_words(feedback.created_at)} ago
+					.pr-2
+						.bg-surface.text-sm.px-3.h-7.flex-center.rounded-full.gap-2
+							%span= feedback.subject.humanize.downcase
 
-		=raw @pagy.series_nav
+			=raw @pagy.series_nav

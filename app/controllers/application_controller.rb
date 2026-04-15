@@ -16,16 +16,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # unless Rails.env.production?
-  #   around_action :n_plus_one_detection
+  unless Rails.env.production?
+    around_action :n_plus_one_detection
 
-  #   def n_plus_one_detection
-  #     Prosopite.scan
-  #     yield
-  #   ensure
-  #     Prosopite.finish
-  #   end
-  # end
+    def n_plus_one_detection
+      Prosopite.scan
+      yield
+    ensure
+      Prosopite.finish
+    end
+  end
 
   before_action do
     if current_user && current_user.admin?

@@ -11,12 +11,17 @@
 						%span.text-2xl= category_emoji(c.slug)
 						%h3.font-semibold.text-lg.mt-2{class: 'whitespace-break-spaces leading-[1.2]'}= c.name
 
-	%section 
-		.flex.gap-2.items-center.mb-5
+	%section.varousel-container
+		.flex.justify-between.items-center.mb-2
 			=	link_to trending_explore_index_path, class: 'flex gap-2 items-center group' do
 				%h2.font-medium.text-xl Trending
 				%i.ph.ph-caret-right.text-base{class: 'opacity-50 group-hover:opacity-100'}
-		%section.varousel-container
+			.flex.gap-2
+				%button.varousel-prev{type: 'button', class: 'btn btn-icon btn-surface w-8'}
+					%i.ph.ph-caret-left.text-secondary
+				%button.varousel-next{type: 'button', class: 'btn btn-icon btn-surface w-8'}
+					%i.ph.ph-caret-right.text-secondary
+		%section
 			.relative
 				.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
 					=	render partial: 'partials/book_card_block', collection: Book.with_attached_cover.published.take(8), as: :book, locals: { wrapper_class: 'md:w-[calc((100%/5)_-_14px)] md:min-w-[calc((100%/5)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex', small: true }
@@ -30,9 +35,9 @@
 					%h2.font-medium.text-xl Popular in #{c.name}
 					%i.ph.ph-caret-right.text-base{class: 'opacity-50 group-hover:opacity-100'}
 				.flex.gap-2
-					%button{type: 'button', class: 'btn btn-icon btn-surface w-8'}
+					%button.varousel-prev{type: 'button', class: 'btn btn-icon btn-surface w-8'}
 						%i.ph.ph-caret-left.text-secondary
-					%button{type: 'button', class: 'btn btn-icon btn-surface w-8'}
+					%button.varousel-next{type: 'button', class: 'btn btn-icon btn-surface w-8'}
 						%i.ph.ph-caret-right.text-secondary
 				
 			.relative

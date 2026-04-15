@@ -32,5 +32,5 @@
 
 		- if authenticated?
 			:javascript
-				window.current_user = #{Current.user.slice(:username,:email_address).merge({avatar: Current.user.get_avatar}).to_json}
+				window.current_user = #{Current.user.slice(:username,:email_address).merge({avatar: Current.user.get_avatar_url}).to_json}
 			

@@ -5,6 +5,6 @@
 
 	.p-4.border.border-outline.rounded-xl
 		.flex.items-center.gap-2.mb-4
-			%img{src: @feedback.user.get_avatar, class: 'w-8 aspect-square rounded-full object-cover'}
+			%img{src: @feedback.user.get_avatar_url, class: 'w-8 aspect-square rounded-full object-cover'}
 			%p.font-medium= @feedback.user.username
 		%p= simple_format @feedback.body

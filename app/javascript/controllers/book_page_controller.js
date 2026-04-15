@@ -3,8 +3,10 @@ import van from "vanjs-core";
 import loadableButton from "../components/loadableButton";
 import toast from "../components/toast";
 import MicroModal from "micromodal";
+import ajax from "../utils/ajax";
+import TippyHandler from "../components/tippyHandler";
 
-const { div, i } = van.tags
+const { div, i, a, img} = van.tags
 
 class RatingModule {
 	/**
@@ -108,8 +110,87 @@ class RatingModule {
 	}
 }
 
+/**
+ * Reader data
+ * @typedef {object} Reader
+ * @property {string} username
+ * @property {string} avatar
+ * @property {string} permalink
+ */
+
 export default class extends Controller {
+	static targets = ['readers']
+	#bookId = location.href.split('/')[location.href.split('/').length - 1]
+	/**
+	 * @type {HTMLElement}
+	 */
+	#readersContainer = this.readersTarget
+	#readersCountElm = document.getElementById('total-readers-count-badge')
+
 	initialize() {
 		new RatingModule()
+	}
+
+	connect() {
+		this.addReaders()
+	}
+
+	/**
+	 * Reader item
+	 * @param {Reader} reader 
+	 * @returns {HTMLElement}
+	 */
+	#reader(reader) {
+		if (!reader) {
+			return div({ class: 'bg-surface w-full aspect-square rounded-full is-skeleton' })
+		}
+
+		requestAnimationFrame(() => TippyHandler.bind())
+		
+		return a({ href: reader.permalink, class: 'w-full aspect-square rounded-full border-2 border-transparent hover:border-primary transition', 'data-tippy-content': reader.username },
+			img({src: reader.avatar, class: 'w-full h-full object-cover rounded-full'})
+		)
+	}
+
+	addReaders() {
+		van.add(this.#readersContainer, Array.from({ length: 12 }).map(i => this.#reader()))
+
+		setTimeout(() => {
+			this.getReaders()
+		}, 600);
+	}
+
+	/**
+	 * Handle successful response from API to render readers list
+	 * @param {object} res 
+	 * @param {object} res.readers
+	 * @param {number} res.readers.total_count
+	 * @param {Reader[]} res.readers.collection
+	 */
+	#handleReadersRes(res) {
+		const readers = res.readers
+		this.#readersContainer.innerHTML = ''
+		this.#readersCountElm.classList.remove('is-skeleton', 'h-5')
+		this.#readersContainer.classList.remove('gap-2')
+		this.#readersCountElm.textContent = readers.total_count
+		
+		if (readers.collection.length) {
+			readers.collection.forEach(reader => van.add(this.#readersContainer, this.#reader(reader)))
+		} else {
+			this.#readersContainer.classList.remove('grid')
+			van.add(this.#readersContainer, div({class: 'flex-center text-sm text-secondary p-4 rounded-lg w-full bg-surface'}, 'No readers yet'))
+		}
+	}
+
+	getReaders() {
+		ajax({
+			skipAutoErrorRender: true,
+			url: '/api/v1/users/books/readers',
+			data: {
+				book_id: this.#bookId
+			},
+			success: (res) => this.#handleReadersRes(res),
+			error: (res) => console.log(res),
+		})
 	}
 }

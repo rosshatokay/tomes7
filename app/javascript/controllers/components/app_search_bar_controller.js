@@ -49,6 +49,8 @@ class AppSearchBar extends Search {
 		const isFocused = van.state(false)
 		const secToHide = document.querySelectorAll('.on-focus-hide')
 		const gridWrapper = document.querySelector('.nav-grid')
+
+		if (!gridWrapper) return
 		
 		this.config.inputElm.addEventListener('focus', () => {
 			if (window.innerWidth > 600) return
@@ -62,10 +64,10 @@ class AppSearchBar extends Search {
 		van.derive(() => {
 			if (isFocused.val) {
 				secToHide.forEach(sec => sec.classList.add('hidden'))
-				gridWrapper.classList.remove('md:grid-cols-[1fr_1.2fr_1fr]', 'grid-cols-[24px_1fr_24px]')
+				gridWrapper.classList.remove('md:grid-cols-[1fr_1.2fr_1fr]', 'grid-cols-[24px_1fr_64px]')
 			} else {
 				secToHide.forEach(sec => sec.classList.remove('hidden'))
-				gridWrapper.classList.add('md:grid-cols-[1fr_1.2fr_1fr]', 'grid-cols-[24px_1fr_24px]')
+				gridWrapper.classList.add('md:grid-cols-[1fr_1.2fr_1fr]', 'grid-cols-[24px_1fr_64px]')
 			}
 		})
 	}

@@ -63,14 +63,18 @@ class User < ApplicationRecord
     "@#{username}"
   end
 
-  def get_avatar(size: 32)
-    mod = (id - 1) % DEFAULT_AVATARS.length
-
+  def get_avatar_url(size: 32)
     if avatar.attached?
-      return avatar.service.url(avatar.blob.key, transformation: [{ width: size, height: size }])
+      # .variant creates the resized version; .processed ensures it exists
+      # .url generates the actual link
+      avatar.variant(resize_to_limit: [size, size]).processed.url
+    else
+      mod = (id - 1) % DEFAULT_AVATARS.length
+      DEFAULT_AVATARS[mod]
     end
-
-    DEFAULT_AVATARS[mod]
+  rescue
+    # Fallback if processing fails
+    DEFAULT_AVATARS[0]
   end
 
   def update_counters_on_deletion

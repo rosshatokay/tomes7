@@ -2,7 +2,7 @@
 
 .action-menu
 	%div{class: 'toggler btn btn-clear btn-icon w-10'}
-		%div{class: 'min-w-8 w-8 aspect-square rounded-full bg-surface', style: "background: url(#{current_user.get_avatar}) center / cover;"}
+		%div{class: 'min-w-8 w-8 aspect-square rounded-full bg-surface', style: "background: url(#{current_user.get_avatar_url}) center / cover;"}
 	.hidden
 		%div{class: 'context w-[240px] !rounded-lg'}
 			%div{class: 'p-1 gap-0.5 border-b border-outline'}

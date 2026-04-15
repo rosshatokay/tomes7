@@ -17,7 +17,7 @@
 		= button_to logout_path, 'data-tippy-content': 'Sign out', placement: 'right', class: 'btn btn-icon btn-clear mb-2 w-8 px-2 rounded-lg gap-2', data: {turbo: false}, method: :delete do
 			%i.ph.ph-sign-out
 		.flex.items-center.gap-2.px-2
-			%img{src: current_admin.get_avatar, class: 'w-7 aspect-square rounded-full object-cover'}
+			%img{src: current_admin.get_avatar_url, class: 'w-7 aspect-square rounded-full object-cover'}
 			-# .flex.flex-col.gap-1
 				%div.leading-none.text-sm= current_admin.email
 				.text-xs.text-fg-secondary.leading-none= current_admin.role.humanize

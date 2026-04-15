@@ -14,7 +14,7 @@ class Book < ApplicationRecord
   has_many :ratings, dependent: :destroy
   has_many :raters, through: :ratings, source: :user
   has_many :user_books
-  has_many :readers, through: :user_books
+  has_many :readers, through: :user_books, source: :user
 
   has_one_attached :cover, service: :imagekit
   has_one_attached :epub, service: Rails.env.production? ? :amazon_prod : :amazon_dev

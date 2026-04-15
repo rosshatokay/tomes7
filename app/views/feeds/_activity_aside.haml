@@ -16,7 +16,7 @@
 					- unless !bg_icon
 						.flex.items-start.gap-3
 							.relative
-								%img{src: act.user.get_avatar(size: 48), class: 'min-w-8 w-8 aspect-square bg-surface rounded-full'}
+								%img{src: act.user.get_avatar_url(size: 48), class: 'min-w-8 w-8 aspect-square bg-surface rounded-full'}
 								.absolute.rounded-full.aspect-square.w-5.flex-center{class: "-right-2 -bottom-2 border-2 border-[var(--color-background)] #{bg_icon[:bg]}"}
 									%i.text-xs.ph-fill{class: bg_icon[:icon]}
 

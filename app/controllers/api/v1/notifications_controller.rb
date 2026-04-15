@@ -5,7 +5,7 @@ class Api::V1::NotificationsController < ApplicationController
         kind: n.kind,
         created_at: n.created_at.localtime,
         notifier: n.notifiable.nil? ? nil : {
-          avatar: n.notifiable.get_avatar,
+          avatar: n.notifiable.get_avatar_url,
           username: n.notifiable.username,
         },
         permalink: n.notifiable.nil? ? nil : get_permalink_based_on_kind(n),

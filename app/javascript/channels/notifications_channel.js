@@ -1,16 +1,9 @@
 import consumer from "./consumer"
 
 consumer.subscriptions.create("NotificationsChannel", {
-	connected() {
-		// Called when the subscription is ready for use on the server
-		console.log('connection made');
+	connected() {},
 
-	},
-
-	disconnected() {
-		// Called when the subscription has been terminated by the server
-		console.log('diconnected');
-	},
+	disconnected() {},
 
 	received(data) {
 		const badge = document.getElementById('unread-notifs-badge')

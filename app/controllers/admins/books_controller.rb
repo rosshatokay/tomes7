@@ -22,6 +22,7 @@ class Admins::BooksController < Admins::BaseController
     @book = Book.with_attached_cover.with_attached_epub.includes(tags: []).find(params[:id])
     @categories = Category.order(:name).pluck(:name, :id)
     @breadcrumbs = [
+      { label: "Home", path: admins_root_path },
       { label: "Books", path: admins_books_path },
       { label: @book.title },
     ]

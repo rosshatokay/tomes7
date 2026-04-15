@@ -15,7 +15,7 @@
 		%div{class: 'max-w-[420px] mx-auto px-5 w-full flex flex-col gap-6'}
 			-	if @invited_by.present?
 				.flex.items-center
-					.w-14.aspect-square.rounded-full.bg-surface{style: "background: url(#{@invited_by.get_avatar}) center / cover;"}
+					.w-14.aspect-square.rounded-full.bg-surface{style: "background: url(#{@invited_by.get_avatar_url}) center / cover;"}
 					.w-6.aspect-square.rounded-full.shadow-lg.flex-center.z-3.bg-background{class: '-mx-2'}
 						%i.ph.ph-plus.text-lg.text-secondary
 					.w-14.aspect-square.rounded-full.flex-center{class: 'z-2 bg-primary'}

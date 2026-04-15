@@ -135,6 +135,15 @@ html.dark
 [data-close-popup] *
 	pointer-events: none
 
+.is-skeleton
+	pointer-events: none
+	background: linear-gradient(90deg, #aaa2b11a 40%, #ffffff, #aaa2b11a 60%) right / 300% 100%
+	position: relative
+	animation: 1s skeleton infinite
+	
+@keyframes skeleton
+	100%
+		background-position: left
 	
 html.dark
 	.overflow-x-auto, .overflow-y-auto
@@ -143,3 +152,5 @@ html.dark
 		scrollbar-color: transparent transparent
 		&:hover
 			scrollbar-color: rgba(255,255,255,.3) transparent
+	.is-skeleton
+		background: linear-gradient(90deg, #bebebe12 40%, #f7f7f722, #bebebe12 60%) right / 300% 100%
