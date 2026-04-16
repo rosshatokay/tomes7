@@ -38,7 +38,7 @@ class BooksController < ApplicationController
   end
 
   def read
-    @book = Book.friendly.find(params[:id])
+    @book = Book.friendly.find(params[:slug])
 
     return unless user_signed_in?
 

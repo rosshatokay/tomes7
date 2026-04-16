@@ -33,36 +33,44 @@ class Admins::BooksController < Admins::BaseController
   def create
     @book = Book.build(book_params)
     @book.authors = params[:authors]&.map { |id| Author.find(id) } || []
+    @categories = Category.order(:name).pluck(:name, :id)
 
     if @book.save
-      flash[:success] = "Book created"
-      # redirect_to admins_books_path
+      flash.now[:success] = "Book created"
+      render turbo_stream: [
+               turbo_stream.update("flash", partial: "partials/flash"),
+               turbo_stream.replace("book_details", partial: "admins/books/form", locals: { book: Book.new }),
+             ]
     else
-      flash[:error] = "Something went wrong"
-      render :new
+      flash.now[:alert] = "There were problems saving the book."
+
+      render turbo_stream: [
+               turbo_stream.update("flash", partial: "partials/flash"),
+               turbo_stream.replace("book_details", partial: "form", locals: { book: @book }),
+             ], status: :unprocessable_entity
     end
   end
 
   def update
     @book = Book.find(params[:id])
     @book.authors = params[:authors]&.map { |id| Author.find(id) } || []
+    @categories = Category.order(:name).pluck(:name, :id)
 
     if @book.update(book_params)
-      flash.now[:success] = "Book updated!"
+      flash.now[:success] = "Book updated"
       render turbo_stream: [
-        turbo_stream.update("flash", partial: "partials/flash"),
-      ]
-      # respond_to do |format|
-      #   format.turbo_stream {
-      #     flash.now[:success] = "Changes saved"
-      #     render turbo_stream: turbo_stream.append("flash",
-      #                                              partial: "partials/flash")
-      #   }
-      #   format.html { redirect_to edit_admins_book_path(@book.hashid), status: :see_other }
-      # end
+               turbo_stream.update("flash", partial: "partials/flash"),
+               # Usually, you'd also want to clear the form or append the new item
+               turbo_stream.replace("book_details", partial: "admins/books/form", locals: { book: @book, is_edit: true }),
+             ]
     else
-      flash[:error] = "Something went wrong"
-      render :edit, status: :unprocessable_entity
+      flash.now[:error] = "Something went wrong"
+      # render :edit, status: :unprocessable_entity
+      render turbo_stream: [
+               turbo_stream.update("flash", partial: "partials/flash"),
+               # Usually, you'd also want to clear the form or append the new item
+               turbo_stream.replace("book_details", partial: "admins/books/form", locals: { book: @book, is_edit: true }),
+             ], status: :unprocessable_entity
     end
   end
 

@@ -96,10 +96,11 @@ Rails.application.routes.draw do
     end
   end
 
+  get "/read/:slug", to: "books#read", as: :read_book
+
   resources :books, only: [:show] do
     member do
       get :epub, as: :epub_file
-      get :read
     end
   end
 

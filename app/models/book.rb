@@ -23,6 +23,8 @@ class Book < ApplicationRecord
 
   accepts_nested_attributes_for :authorships, allow_destroy: true
 
+  validates :title, presence: true
+  validates :description, presence: true
   validates :epub, content_type: ["application/epub+zip"], size: { less_than: 100.megabytes }
 
   scope :published, -> { includes(:category, :cover_attachment, :authors).where(published: true) }
@@ -93,6 +95,10 @@ class Book < ApplicationRecord
 
   def tag_names
     tags.pluck(:name).join(", ")
+  end
+
+  def to_param
+    hashid
   end
 
   private

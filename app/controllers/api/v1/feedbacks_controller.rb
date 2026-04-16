@@ -5,7 +5,6 @@ class Api::V1::FeedbacksController < ApplicationController
     permitted = request_book_params
     feedback = current_user.feedbacks.build(subject: "book_request", body: "Requested #{permitted[:book_title]} by #{permitted[:author_name]}")
 
-    return
     if feedback.save
       render json: { success: true }, status: :ok
     else
