@@ -1,11 +1,6 @@
--# - formatted_head_title = @head_title.present? ? "#{@head_title} | Gleam News" : "Gleam News"
--# - canonical_url = "#{request.base_url}#{request.path}"
--# - banner_url = "#{request.base_url}#{asset_path('og-image.jpg')}"
--# %title= 
 = yield(:meta_tags)
 = display_meta_tags site: "Tomes"
 = action_cable_meta_tag
--# = display_meta_tags ok: { title: :title, description: :description }
 
 %meta{name: 'viewport', content: "width=device-width,initial-scale=1"}
 
@@ -18,33 +13,11 @@
 
 = yield(:jsonld)
 
--# - if @seo_tags.present?
-	%link{rel: 'canonical', href: canonical_url}
-	%meta{name: 'description', content: @seo_tags[:description]}
-	%meta{property: 'og:title', content: @full_head_title.presence || formatted_head_title}
-	%meta{property: 'og:description', content: @seo_tags[:description]}
-	%meta{property: 'og:type', content: @seo_tags[:type]}
-	%meta{property: 'og:url', content: canonical_url}
-	%meta{property: 'og:image', content: @seo_tags[:image].presence || banner_url}
-	%meta{property: 'og:site_name', content: 'Gleam News'}
-
-	%meta{name: 'twitter:card', content: 'summary_large_image'}
-	%meta{name: 'twitter:title', content: @full_head_title.presence || formatted_head_title}
-	%meta{name: 'twitter:description', content: @seo_tags[:description]}
-	%meta{name: 'twitter:image', content: @seo_tags[:image].presence || banner_url}
-	%meta{name: 'twitter:url', content: canonical_url}
 	
 -# - if yield(:no_robots) == 'true'
 -# 	%meta{name: 'robots', content: 'noindex, nofollow'}
 -# - elsif !admin_signed_in?
 -# 	%meta{name: 'robots', content: 'index, follow'}
-
--# %link{rel: "icon", type:"image/png", href:asset_path('favicon-96x96.png'), sizes: "96x96"}
--# %link{rel: "icon", type:"image/svg+xml", href: asset_path("favicon.svg")}
--# %link{rel: "shortcut icon", href: asset_path("favicon.ico")}
--# %link{rel: "apple-touch-icon", sizes:"180x180", href: asset_path("apple-touch-icon.png")}
--# %meta{ name: "apple-mobile-web-app-title", content: "Gleam News"}
--# %link{rel: "shortcut icon", href: asset_path("favicon.ico")}
 
 -# Fonts
 %link(rel="preconnect" href="https://fonts.googleapis.com")/
@@ -65,3 +38,11 @@
 = stylesheet_link_tag 'application', media: 'all'
 
 = yield(:include_stylesheets)
+
+%script(src="https://www.googletagmanager.com/gtag/js?id=G-FGZLZ061LB")
+:javascript
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'G-FGZLZ061LB');
