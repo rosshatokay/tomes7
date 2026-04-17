@@ -10,7 +10,7 @@ class CategoriesController < ApplicationController
       { label: @category.name },
     ]
 
-    books_scope = @category.books.includes(:cover_attachment, :authors)
+    books_scope = @category.books.published
     books_scope = apply_filters(books_scope)
 
     @pagy, @books = pagy(books_scope, limit: 10)

@@ -8,6 +8,7 @@ import BookChaptersController from "./controllers/components/book_chapters_contr
 import BookTagsController from "./controllers/components/book_tags_controller"
 
 import TippyHandler from "./components/tippyHandler"
+import MicroModal from "micromodal"
 
 const controllers = {
 	"author-search": AuthorSearchController,
@@ -22,4 +23,5 @@ Object.entries(controllers).forEach(([name, controller]) => {
 
 document.addEventListener('turbo:load', () => {
 	TippyHandler.bind()
+	MicroModal.init({disableFocus: true, disableScroll: true})
 })

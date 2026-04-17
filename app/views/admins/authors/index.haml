@@ -3,9 +3,13 @@
 		%div
 			%h1 Authors
 			%p #{@authors.count} authors
-		= link_to new_admins_author_path, class: 'btn btn-surface h-9' do
-			%i.ph.ph-plus
-			%span Add author
+		.flex.gap-2
+			= link_to new_admins_author_path, class: 'btn btn-surface h-9' do
+				%i.ph.ph-plus
+				%span Add author
+			%div.btn.btn-surface.h-9{'data-micromodal-trigger': 'csv-import-modal'}
+				%i.ph.ph-upload-simple
+				%span Import CSV
 		
 	= render 'partials/table', headings: ['Author', '# Books'] do
 		- @authors.each_with_index do |author, index|
@@ -15,3 +19,13 @@
 						=	ik_image_tag(author.avatar, transformation: [{width: 100, height: 100}], class: 'rounded-full w-10 min-w-10')
 						%span= author.full_name
 				%td.p-3= author.books_count
+
+= render 'partials/modal', title: "Import CSV of authors", id: 'csv-import-modal' do
+	=	form_with(url: csv_import_admins_authors_path, method: :post) do |f|
+		%div Create authors from a CSV file.
+		.w-full.p-10.bg-surface.rounded-xl.relative.h-25.flex-center.flex-col.gap-2
+			= f.file_field :csv, class: 'opacity-0 absolute inset-0 cursor-pointer'
+			%i.ph.ph-upload-simple.text-2xl
+			%span Choose a CSV file
+		%button{class: 'btn btn-secondary h-9 w-fit relative', type: 'submit'}
+			%span Upload

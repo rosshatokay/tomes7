@@ -1,3 +1,5 @@
+require "csv"
+
 class Admins::AuthorsController < Admins::BaseController
   layout "dashboard"
 
@@ -44,6 +46,44 @@ class Admins::AuthorsController < Admins::BaseController
     else
       flash[:error] = "Something went wrong"
       render :edit
+    end
+  end
+
+  def csv_import
+    Prosopite.pause
+
+    file = params[:csv]
+    return redirect_to admins_authors_path, alert: "No file uploaded" unless file
+
+    created_count = 0
+    errors = []
+
+    # 1. Wrap in a transaction for atomicity
+    Author.transaction do
+      CSV.foreach(file.path, headers: true).with_index(1) do |row, line_number|
+        author = Author.find_or_initialize_by(full_name: row["full_name"]&.strip)
+
+        # Assign other attributes from CSV
+        author.bio = row["bio"]
+        author.wiki_url = row["wiki_url"]
+
+        if author.save
+          created_count += 1
+        else
+          errors << "Line #{line_number}: #{author.errors.full_messages.join(", ")}"
+        end
+      end
+
+      # 3. Optional: Rollback if there are ANY errors
+      if errors.any?
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    if errors.any?
+      redirect_to admins_authors_path, alert: "Import failed: #{errors.first(3).join(", ")}..."
+    else
+      redirect_to admins_authors_path, notice: "Successfully imported #{created_count} authors."
     end
   end
 

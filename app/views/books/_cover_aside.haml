@@ -2,7 +2,7 @@
 
 %div{class: 'md:w-[320px] md:min-w-[320px] md:mx-0 w-3/4 mx-auto md:pr-12 md:pb-8'}
 	.sticky.top-20
-		-	if Rails.env.production?
+		-	if @book.cover.attached?
 			=	ik_image_tag(@book.cover, class: 'w-full aspect-book rounded-xl max-h-[700px]', transformation: [{width: 1000}])
 		- else
 			.bg-surface.w-full.w-full.aspect-book

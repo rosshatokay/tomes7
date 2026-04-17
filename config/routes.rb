@@ -59,7 +59,11 @@ Rails.application.routes.draw do
 
     resources :users
     resources :feedbacks
-    resources :authors
+    resources :authors do
+      collection do
+        post "csv-import"
+      end
+    end
     resources :books
   end
 

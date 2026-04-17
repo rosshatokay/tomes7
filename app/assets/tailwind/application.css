@@ -2,10 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-	--color-primary: #E89105;
-}
-
 ::placeholder {
 	color: var(--color-on-background) !important;
 	opacity: .4 !important;

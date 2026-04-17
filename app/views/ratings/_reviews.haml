@@ -4,7 +4,7 @@
 	}
 
 %section#reviews
-	%h3.text-lg.font-semibold.mb-4 Reviews
+	%h3.text-lg.font-medium.mb-4 Reviews
 	-	if @ratings.empty?
 		#empty_reviews
 			=	render 'partials/empty_state', title: "No reviews yet", description: "No one has left a review for this book. Be the first!" do
