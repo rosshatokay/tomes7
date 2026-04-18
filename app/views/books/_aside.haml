@@ -13,9 +13,14 @@
 			= link_to 'mailto:hey@tomes.club', class: 'flex items-center gap-2 group w-fit' do
 				%i.ph.ph-at.text-lg.text-secondary
 				%p.leading-none{class: 'group-hover:underline'} Contact us
-			%button{class: 'cursor-pointer flex items-center gap-2 group w-fit', 'data-micromodal-trigger': 'request-book-modal'}
-				%i.ph.ph-git-pull-request.text-lg.text-secondary
-				%p.leading-none{class: 'group-hover:underline'} Request a book
+			- if user_signed_in?
+				%button{class: 'cursor-pointer flex items-center gap-2 group w-fit', 'data-micromodal-trigger': 'request-book-modal'}
+					%i.ph.ph-git-pull-request.text-lg.text-secondary
+					%p.leading-none{class: 'group-hover:underline'} Request a book
+			- else
+				= link_to new_session_path(return_to: book_path(@book.slug)), class: 'cursor-pointer flex items-center gap-2 group w-fit', 'data-micromodal-trigger': 'request-book-modal' do
+					%i.ph.ph-git-pull-request.text-lg.text-secondary
+					%p.leading-none{class: 'group-hover:underline'} Request a book
 			= link_to about_path, class: 'flex items-center gap-2 group w-fit' do
 				%i.ph.ph-info.text-lg.text-secondary
 				%p.leading-none{class: 'group-hover:underline'} Learn about Tomes

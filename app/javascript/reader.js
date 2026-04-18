@@ -2,6 +2,7 @@ import van from "vanjs-core"
 import { addCustomFont, addStyleToReader } from "./utils/utils"
 import _ from "lodash"
 import ajax from "./utils/ajax"
+import MicroModal from "micromodal"
 
 const { div, button, span } = van.tags
 
@@ -108,10 +109,23 @@ class Reader {
 			this.chaptersMenu.setTocByNav(nav)
 			this.onRelocation(nav)
 			this.getPercentage()
+			this.showTutorialModal()
 		})
 		this.bindProgress()
 	}
 
+	showTutorialModal() {
+		const markedAsComplete = localStorage.getItem('marked-nav-modal-complete')
+
+		if (!markedAsComplete || markedAsComplete != 'true') {
+			MicroModal.show('navigation-modal', {
+				disableFocus: true,
+				disableScroll: true,
+				onClose: () => localStorage.setItem('marked-nav-modal-complete', true)
+			})
+		}
+	}
+	
 	hideUI() {
 		this.#elms.topNav.classList.add('opacity-0')
 		this.#elms.pagesLeftLabel.classList.add('opacity-0')

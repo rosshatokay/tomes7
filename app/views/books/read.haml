@@ -32,6 +32,23 @@
 	.footer.p-6.pt-0.text-center.min-h-10
 		.text-secondary.text-sm#pages-left-label
 
+= render 'partials/modal', title: "Navigating the Reader", id: 'navigation-modal' do
+	%div.mb-4 Navigating the reader is quite easy. 
+	%div.mb-4 
+		%span In order to flip pages, you can either use your left/right arrow keys on your keyboard.
+		%span Or use the 
+		%span.inline-flex
+			%i.ph.ph-caret-left.bg-surface.px-1{class: 'py-0.5 rounded-sm mx-0.5'}
+			%i.ph.ph-caret-right.bg-surface.px-1{class: 'py-0.5 rounded-sm mx-0.5'}
+		%span buttons in the top navigation bar.
+	%div 
+		%span To view the table of contents, click the 
+		%span.inline-flex
+			%i.ph.ph-list.bg-surface.px-1{class: 'py-0.5 rounded-sm mx-0.5'}
+		%span button in the top navigation bar.
+	%button.btn.btn-secondary.h-10.mx-auto.mt-6{'data-micromodal-close': ''} Understood
+
+
 - content_for(:scripts) do
 	%script(src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js") 
 	%script(src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js") 
