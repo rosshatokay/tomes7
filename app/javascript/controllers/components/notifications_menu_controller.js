@@ -23,6 +23,7 @@ export default class extends Controller {
 	initialize() {
 		this.menu = this.#createMenu()
 
+		this.element.innerHTML = ''
 		Popup(this.menu)
 		van.add(this.element, this.menu)
 		this.#bindListeners()
