@@ -70,8 +70,8 @@
 
 	%section
 		%h3.text-lg.font-medium.mb-4 Readers also enjoyed
-		.grid.gap-4{class: 'md:grid-cols-4 grid-cols-2'}
-			=	render partial: 'partials/book_card_block', collection: @book.similar_books.take(4), as: :book, locals: {small: true, hide_category: true}
+		.grid.gap-4{class: 'md:grid-cols-4 grid-cols-2 gap-y-6'}
+			=	render partial: 'partials/book_card_block', collection: @book.similar_books.take(4), as: :book, locals: {small: true, hide_category: true, wrapper_class: 'flex'}
 		
 	= render 'ratings/reviews'
 		
