@@ -1,0 +1,27 @@
+<%- content_for(:jsonld) do %>
+<script type="application/ld+json">
+<%= {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Classic #{@category.name} Books",
+  "description": "A collection of free, timeless #{@category.name} classics on Tomes.",
+  "numberOfItems": @pagy.count,
+  "itemListElement": @books.each_with_index.map do |book, index|
+    {
+      "@type": "ListItem",
+      "position": @pagy.offset + index + 1,
+      "url": book_url(book), # Generates the full canonical URL
+      "name": book.title,
+      "item": {
+        "@type": "Book",
+        "name": book.title,
+        "author": {
+          "@type": "Person",
+          "name": book.author_names # Assuming you have an author association/method
+        }
+      }
+    }
+  end
+}.to_json.html_safe %>
+</script>
+<% end %>

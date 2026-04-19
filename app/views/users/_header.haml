@@ -3,7 +3,7 @@
 
 .flex.items-start.gap-6.justify-between
 	.flex.gap-6.flex-col
-		%img{src: @user.get_avatar_url(size: 200), alt: "#{@user.username}'s profile picture", class: 'w-22 rounded-full aspect-square object-cover'}
+		%img{src: @avatar, alt: "#{@user.username}'s profile picture", class: 'w-22 rounded-full aspect-square object-cover'}
 		%div
 			%h1.font-semibold{class: 'text-[28px] leading-none mb-0.5'}= @user.username
 			%h3.text-m.mb-1.text-secondary= @user.handle

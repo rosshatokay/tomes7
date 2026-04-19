@@ -19,6 +19,12 @@ class CategoriesController < ApplicationController
       format.html
       format.turbo_stream
     end
+
+    set_meta_tags(
+      title: "Free #{@category.name} Books | Read Timeless #{@category.name} Classics",
+      description: "Access a curated collection of free #{@category.name} books and classic texts. From foundational works to rare archives, start reading #{@category.name} masterpieces on Tomes today.",
+      og: {},
+    )
   end
 
   private

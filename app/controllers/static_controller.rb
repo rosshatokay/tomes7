@@ -39,6 +39,22 @@ class StaticController < ApplicationController
 
     @featured_books = Book.includes(:cover_attachment, :authors, :category).order(created_at: :desc).first(5)
     @page_description = "Read timeless and classic books for free. In one beautiful reading app."
+
+    set_meta_tags(
+      description: "Read the timeless classics, review and save books. In one beautiful free reading app.",
+      og: {
+        url: "https://tomes.club",
+        site_name: "Tomes",
+        type: "website",
+        title: :title,
+        description: :description,
+        image: helpers.asset_url("/splash.jpg"),
+      },
+      twitter: {
+        card: "summary_large_image",
+        image: helpers.asset_url("/splash.jpg"),
+      },
+    )
   end
 
   def terms
@@ -67,6 +83,19 @@ class StaticController < ApplicationController
 
   def about
     @breadcrumbs = [{ label: "Home", path: root_path }, { label: "About" }]
-    set_meta_tags(reverse: true, title: "About", og: { title: "About | Tomes", description: :description })
+
+    set_meta_tags(
+      reverse: true,
+      title: "About",
+      og: {
+        title: :title,
+        description: :description,
+        image: helpers.asset_url("/splash.jpg"),
+      },
+      twitter: {
+        card: "summary_large_image",
+        image: helpers.asset_url("/splash.jpg"),
+      },
+    )
   end
 end

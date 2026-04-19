@@ -26,7 +26,7 @@
 %link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css")/
 %link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css")/
 %link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css")/
-
+%link{rel: "canonical", href: request.original_url.split('?').first}
 %link{rel: 'manifest', href: '/manifest.json'}
 
 %meta{name: "turbo-prefetch", content: "false"}
@@ -38,6 +38,24 @@
 = stylesheet_link_tag 'application', media: 'all'
 
 = yield(:include_stylesheets)
+
+- if @breadcrumbs.present?
+	%script{type: "application/ld+json", id: "jsonld-breadcrumbs", data: { turbo_track: "reload" }}
+		:plain
+			#{ 
+				{
+					"@context": "https://schema.org",
+					"@type": "BreadcrumbList",
+					"itemListElement": @breadcrumbs.map.with_index do |bc, i|
+						{
+							"@type": "ListItem",
+							"position": i + 1,
+							"name": bc[:label],
+							"item": bc[:path] ? "https://tomes.com#{bc[:path]}" : nil
+						}
+					end
+				}.to_json
+			}
 
 %script(src="https://www.googletagmanager.com/gtag/js?id=G-FGZLZ061LB")
 :javascript

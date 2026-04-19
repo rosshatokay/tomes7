@@ -7,11 +7,24 @@ class UsersController < ApplicationController
   def show
     @breadcrumbs = [{ label: "Home", path: root_path }, { label: @user.handle }]
     @activities = @user.activities.includes(:subject).order(created_at: :desc).first(5)
+    @avatar = @user.get_avatar_url(size: 200)
 
     set_meta_tags(
       title: "#{@user.username}'s profile",
       description: "Follow #{@user.username} on Tomes",
       reverse: true,
+      og: {
+        title: :title,
+        description: :description,
+        image: @avatar,
+        site_name: "Tomes",
+      },
+      twitter: {
+        title: :title,
+        description: :description,
+        image: @seo_image_url,
+        card: "summary",
+      },
     )
   end
 
