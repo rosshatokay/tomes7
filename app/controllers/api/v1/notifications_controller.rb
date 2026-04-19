@@ -1,6 +1,7 @@
 class Api::V1::NotificationsController < ApplicationController
   def index
-    data = current_user.notifications.includes(:notifiable).order(created_at: :desc).last(10).map { |n|
+    notifs = current_user.notifications.includes(:notifiable).order(created_at: :desc).last(10)
+    data = notifs.map { |n|
       {
         kind: n.kind,
         created_at: n.created_at.localtime,
@@ -12,7 +13,15 @@ class Api::V1::NotificationsController < ApplicationController
       }
     }
 
+    notifs.map { |n| n.update(read_at: Time.current) }
+
     render json: data
+  end
+
+  def poll
+    unread_exists = current_user.notifications.unread.exists?
+
+    render json: { unread_exists: unread_exists }, status: 200
   end
 
   private

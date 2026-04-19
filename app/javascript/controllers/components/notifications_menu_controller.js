@@ -4,6 +4,7 @@ import Popup from "../../components/popup";
 import ajax from "../../utils/ajax";
 import toast from "../../components/toast";
 import timeAgo from "../../utils/timeago";
+import NotificationsListener from "../../utils/notificationsListener";
 
 /**
  * @typedef {object} Notification
@@ -18,10 +19,15 @@ import timeAgo from "../../utils/timeago";
 const { div, button, i, span, img, a } = van.tags
 
 export default class extends Controller {
-	#notifsBadge = span({id: 'unread-notifs-badge', class: 'w-1.5 h-1.5 hidden rounded-full block bg-red-500 dark:bg-red-400 top-1.5 right-1.5 absolute'})
-	
+	#notifsBadge = span({ id: 'unread-notifs-badge', class: 'w-1.5 h-1.5 hidden rounded-full block bg-red-500 dark:bg-red-400 top-1.5 right-1.5 absolute' })
+	#unreadState = van.state(false)
+
 	initialize() {
 		this.menu = this.#createMenu()
+		this.notifListener = new NotificationsListener({
+			unreadFlagState: this.#unreadState,
+			endpoint: '/api/v1/notifications/poll'
+		})
 
 		this.element.innerHTML = ''
 		Popup(this.menu)
@@ -31,7 +37,18 @@ export default class extends Controller {
 
 	#bindListeners() {
 		this.menu._tippy.setProps({
-			onShow: () => this.#getNotifs()
+			onShow: () => this.#getNotifs(),
+			onHidden: () => this.notifListener.startPolling()
+		})
+
+		van.derive(() => {
+			if (this.#unreadState.val == true) {
+				this.#notifsBadge.classList.remove('hidden')
+				this.notifListener.stopPolling()
+			} else {
+				this.#notifsBadge.classList.add('hidden')
+				this.notifListener.startPolling()
+			}
 		})
 	}
 
@@ -108,6 +125,7 @@ export default class extends Controller {
 	#render(notifs) {
 		this.container.innerHTML = ''
 		this.#notifsBadge.classList.add('hidden')
+		this.#unreadState.val = false
 
 		if (!notifs?.length) {
 			van.add(this.container,

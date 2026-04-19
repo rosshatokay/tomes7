@@ -15,7 +15,11 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :notifications, only: [:index]
+      resources :notifications, only: [:index] do
+        collection do
+          get :poll
+        end
+      end
       resources :feedbacks, only: [] do
         collection do
           post "request-book"
