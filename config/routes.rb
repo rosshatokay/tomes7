@@ -27,6 +27,12 @@ Rails.application.routes.draw do
       end
 
       namespace :users do
+        resources :follow, only: [] do
+          collection do
+            post :index
+          end
+        end
+
         resources :books, only: [] do
           collection do
             get :readers
@@ -124,8 +130,6 @@ Rails.application.routes.draw do
     get "/", to: "users#show", as: :profile
     # get "/reviews", to: "users#reviews", as: :reviews_profile
     get "/saved", to: "users#saved", as: :saved_profile
-    post "/follow", to: "users#follow", as: :follow_user
-    post "/unfollow", to: "users#unfollow", as: :unfollow_user
   end
 
   constraints AuthenticatedConstraint.new do

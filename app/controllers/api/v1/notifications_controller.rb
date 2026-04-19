@@ -19,6 +19,7 @@ class Api::V1::NotificationsController < ApplicationController
   end
 
   def poll
+    # maybe you can limit scope to `.last(10)` to mach the `index`
     unread_exists = current_user.notifications.unread.exists?
 
     render json: { unread_exists: unread_exists }, status: 200

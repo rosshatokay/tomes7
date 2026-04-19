@@ -11,8 +11,8 @@
 				%p.text-m.opacity-80= @user.bio
 			.mt-4.flex.gap-8
 				%div
-					%h3.font-medium= @user.followers_count
-					%p.text-sm.text-secondary= "Follower".pluralize(@user.followers_count)
+					%h3.font-medium#followers_count= @user.followers_count
+					%p.text-sm.text-secondary#followers_count_label= "Follower".pluralize(@user.followers_count)
 				%div
 					%h3.font-medium= @user.followees_count
 					%p.text-sm.text-secondary= "Following".pluralize(@user.followees_count)

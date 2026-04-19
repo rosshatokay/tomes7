@@ -62,30 +62,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def follow
-    current_user.follow!(@user)
-
-    Notifications::Notifier.user_followed(follower: current_user, followed: @user)
-
-    respond_to do |format|
-      format.turbo_stream {
-        render turbo_stream: turbo_stream.replace(helpers.dom_id(@user, :follow_button), partial: "users/follow_button", locals: { user: @user })
-      }
-      format.html { redirect_to @user }
-    end
-  end
-
-  def unfollow
-    current_user.unfollow!(@user)
-
-    respond_to do |format|
-      format.turbo_stream {
-        render turbo_stream: turbo_stream.replace(helpers.dom_id(@user, :follow_button), partial: "users/follow_button", locals: { user: @user })
-      }
-      format.html { redirect_to @user }
-    end
-  end
-
   private
 
   def find_user
