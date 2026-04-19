@@ -22,24 +22,38 @@ class UsersController < ApplicationController
       twitter: {
         title: :title,
         description: :description,
-        image: @seo_image_url,
+        image: @avatar,
         card: "summary",
       },
     )
   end
 
   def reviews
+    @avatar = @user.get_avatar_url(size: 200)
     @breadcrumbs = [{ label: "Home", path: root_path }, { label: @user.handle, path: profile_path(@user.username) }, { label: "Reviews" }]
   end
 
   def saved
     @breadcrumbs = [{ label: "Home", path: root_path }, { label: @user.handle, path: profile_path(@user.username) }, { label: "Saved" }]
     @pagy, @saved_books = pagy(@user.likees(Book).includes(:authors, :cover_attachment), limit: 10)
+    @avatar = @user.get_avatar_url(size: 200)
 
     set_meta_tags(
       title: "#{@user.username}'s saved books",
       description: "Check out #{@user.username}'s saved books on Tomes",
       reverse: true,
+      og: {
+        title: :title,
+        description: :description,
+        image: @avatar,
+        site_name: "Tomes",
+      },
+      twitter: {
+        title: :title,
+        description: :description,
+        image: @avatar,
+        card: "summary",
+      },
     )
 
     respond_to do |format|
