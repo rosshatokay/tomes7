@@ -4,9 +4,9 @@ class Admins::BooksController < Admins::BaseController
   layout "dashboard"
 
   def index
-    scope = Book.with_attached_cover.includes(:authors, :category).all.order(created_at: :desc)
+    @scope = Book.with_attached_cover.includes(:authors, :category).all.order(created_at: :desc)
 
-    @pagy, @books = pagy(scope, limit: 10)
+    @pagy, @books = pagy(@scope, limit: 10)
   end
 
   def new

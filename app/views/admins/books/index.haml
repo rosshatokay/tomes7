@@ -1,14 +1,36 @@
-.contain--small
-	.dashboard-heading.flex.justify-between.items-center
-		%div
-			%h1 Books
-		= link_to new_admins_book_path, class: 'btn btn-primary h-9' do
-			%i.ph.ph-plus
-			%span Add book
+.contain
+	.dashboard-heading
+		%div.mb-6
+			%h1.flex.items-center.gap-2
+				%span Books
+				%span.number-badge.font-normal.text-base= @scope.size
+		.flex.items-center.gap-2
+			.relative{class: 'w-[320px]'}
+				%i.ph.ph-magnifying-glass{class: 'absolute top-1/2 left-4 -translate-y-1/2 text-lg text-secondary'}
+				%input{id: 'search', type: 'text', name: 'q', placeholder: "Search for books", class: "input-field h-10 pl-10 w-full"}
+			= link_to new_admins_book_path, class: 'btn btn-primary h-10 rounded-xl' do
+				%i.ph.ph-plus
+				%span Add book
 
 	-	if @books.size > 0
 		=	turbo_frame_tag "books" do
-			.border.border-outline.rounded-lg
+			=	render 'partials/table', headings: ['Title', 'Authors', 'Status', 'Category'] do
+				-	@books.each do |book|
+					%tr{class: 'border-b border-black/5 dark:border-white/5'}
+						%td.p-3.pl-0
+							.flex.items-center.gap-5
+								-	if book.cover.attached?
+									= ik_image_tag(book.cover, transformation: [{width: 100}], class: 'aspect-book min-w-11 w-11')
+								- else
+									.bg-surface.aspect-book.w-11.min-w-11
+								%div 
+									.font-medium= book.title
+						%td.p-3.whitespace-nowrap= book.author_names
+						%td.p-3
+							.border.text-sm.px-3.h-7.flex-center.rounded-full.gap-2.w-fit{class: "#{!book.published? ? 'border-outline text-secondary' : 'border-green-700 text-green-700 dark:border-green-200 dark:text-green-200'}"}
+								%span= book.published? ? 'Published' : 'Not published'
+						%td.p-3.whitespace-nowrap= book.category.name
+			-# .border.border-outline.rounded-lg
 				- @books.each_with_index do |book, i|
 					.flex.items-center.gap-5.p-5.justify-between.relative{class: "hover:bg-surface transition #{i < @books.size - 1 ? 'border-b border-outline' : ''}"}
 						=	link_to '', edit_admins_book_path(book.hashid), class: 'absolute inset-0', data: {turbo: false}

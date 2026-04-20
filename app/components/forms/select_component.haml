@@ -1,0 +1,10 @@
+.select-field.btn.btn-surface{class: 'h-8 rounded-md px-3', data: {controller: 'select-field'}}
+	%select{data: {action: 'change->select-field#updateUrlParams', param: @url_param}}
+		- @option_groups.each do |option_group|
+			%optgroup{label: option_group[:label]}
+				-	option_group[:options].each do |option|
+					%option{value: option.last, selected: params[@url_param] == option.last}= option.first
+	.rounded-md.flex.gap-2.text-sm.items-center
+		%i.ph{class: @icon}
+		%span{'data-select-field-target': 'label'}
+		%i.ph.ph-caret-down

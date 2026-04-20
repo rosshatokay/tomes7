@@ -1,9 +1,33 @@
-.contain.contain--extra-small
+.contain
 	.dashboard-heading.flex.justify-between.items-center
 		%div
-			%h1 Users
-			
-	.flex.flex-col.gap-4
+			%h1.flex.items-center.gap-2
+				%span Users
+				%span.number-badge.font-normal.text-base= @users.size
+		=	render Forms::SelectComponent.new(icon: 'ph-arrows-down-up', option_groups: @sort_option_groups, url_param: :joined_at)
+
+	= render 'partials/table', headings: ['Name', 'Email', 'Provider', 'Last session', 'Joined at'] do
+		-	@users.each do |user|
+			%tr{class: 'border-b border-black/5 dark:border-white/5'}
+				%td.p-3.pl-0
+					.flex.items-center.gap-4
+						%img{src: user.get_avatar_url(size: 48), class: 'min-w-9 w-9 aspect-square rounded-full object-cover'}
+						.font-medium= user.username
+				%td.p-3= user.email_address
+				%td.p-3
+					%div.bg-surface.text-sm.p-1.px-2.flex.items-center.gap-1.w-fit.rounded-md
+						-	if user.identities.first&.provider_name == 'Google'
+							.svg-wrapper.h-4
+								= show_svg 'socials/google.svg'
+							%span Google
+						-	else
+							%i.ph.ph-at.text-base
+							%span Email
+				%td.p-3.whitespace-nowrap #{time_ago_in_words(user.sessions.last.updated_at)} ago
+				%td.p-3.whitespace-nowrap #{time_ago_in_words(user.created_at)} ago
+	.mt-6.flex-center
+		=raw @pagy.series_nav
+	-# .flex.flex-col.gap-4
 		- @users.each do |user|
 			.p-4.border.border-outline.rounded-xl.flex.items-center.gap-3
 				%img{src: user.get_avatar_url, class: 'w-10 rounded-full object-cover aspect-square'}

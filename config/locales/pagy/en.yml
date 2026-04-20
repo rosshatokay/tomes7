@@ -1,0 +1,11 @@
+en:
+  pagy:
+    p11n: 'OneOther'
+    aria_label:
+      nav:
+        one: "Page"
+        other: "Pages"
+      previous: "Previous"
+      next: "Next"
+    previous: "<i class='ph ph-arrow-left'></i>"
+    next: "<i class='ph ph-arrow-right'></i>"
