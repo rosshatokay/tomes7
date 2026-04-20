@@ -245,9 +245,6 @@ class Reader {
 			const match = nav.toc.find(item => href.includes(item.href.split('#')[0]))
 
 			if (match) {
-				console.log(match.label);
-				console.log(this.#elms.chapterLabel);
-				
 				this.#elms.chapterLabel.forEach(el => el.textContent = match.label)
 			}
 
