@@ -23,7 +23,12 @@
 						-	else
 							%i.ph.ph-at.text-base
 							%span Email
-				%td.p-3.whitespace-nowrap #{time_ago_in_words(user.sessions.last.updated_at)} ago
+				%td.p-3.whitespace-nowrap
+					- last_session = user.sessions.sort_by(&:updated_at).last
+					- if last_session
+						= "#{time_ago_in_words(last_session.updated_at)} ago"
+					- else
+						N/A
 				%td.p-3.whitespace-nowrap #{time_ago_in_words(user.created_at)} ago
 	.mt-6.flex-center
 		=raw @pagy.series_nav
