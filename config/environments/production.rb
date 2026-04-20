@@ -68,7 +68,9 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
+  # Switch to a service once approaching OOM
   # config.cache_store = :mem_cache_store
+  config.cache_store = :memory_store, { size: 128.megabytes }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
