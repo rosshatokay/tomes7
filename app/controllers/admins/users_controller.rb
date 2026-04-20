@@ -30,7 +30,7 @@ class Admins::UsersController < Admins::BaseController
     when "earliest-first"
       scope.order(created_at: :asc)
     else
-      scope
+      scope.order(created_at: :desc)
     end
   end
 end

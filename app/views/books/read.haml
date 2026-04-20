@@ -3,19 +3,22 @@
 - content_for(:hide_nav, true)
 
 .t-reader.flex.flex-col.h-screen.overflow-hidden{data: {slug: @book.slug, book_id: @book.hashid}}
-	#top-nav.w-full.min-h-16.h-16.flex.items-center.px-6.grid.grid-cols-3.transition
-		.flex.items-center.gap-4
-			=	ik_image_tag(@book.cover, transformation: [{width: 100, height: 100}], class: 'min-w-10 w-10 aspect-square rounded-lg object-cover')
-			%div 
-				.text-sm.leading-none= @book.title
-				.text-sm.text-secondary= @book.author_names
-		.text-center
-			.text-lg.headline.leading-none#chapter-label Chapter I.
+	#top-nav.w-full.min-h-16.h-16.flex.items-center.grid-cols-3.transition{class: 'md:px-6 px-4 md:relative md:grid flex justify-between fixed bg-background z-2 md:shadow-none shadow-lg'}
+		.flex.items-center{class: 'md:gap-4 gap-2 min-w-0'}
+			.btn.btn-icon.min-w-9.w-9.btn-clear{class: 'md:hidden', data: {controller: 'back-to-btn'}}
+				%i.ph.ph-caret-left
+			=	ik_image_tag(@book.cover, transformation: [{width: 100, height: 100}], class: 'min-w-10 w-10 aspect-square rounded-lg object-cover md:block hidden')
+			.min-w-0
+				.text-sm.leading-none.font-medium.truncate= @book.title
+				.text-sm.text-secondary{class: 'md:block hidden'}= @book.author_names
+				.text-sm.text-secondary.truncate.chapter-label{class: 'md:hidden'} Chapter 1
+		.text-center{class: 'md:block hidden'}
+			.text-lg.headline.leading-none.chapter-label
 		.flex.justify-end.gap-2.items-center
 			#progress-indicator
-			.btn.btn-icon.w-9.btn-clear#prev-page{'data-tippy-content': 'Previous page', 'data-tippy-icon': '◀'}
+			.btn.btn-icon.w-9.btn-clear#prev-page{class: 'md:flex hidden', 'data-tippy-content': 'Previous page', 'data-tippy-icon': '◀'}
 				%i.ph.ph-caret-left
-			.btn.btn-icon.w-9.btn-clear#next-page{'data-tippy-content': 'Next page', 'data-tippy-icon': '▶'}
+			.btn.btn-icon.w-9.btn-clear#next-page{class: 'md:flex hidden', 'data-tippy-content': 'Next page', 'data-tippy-icon': '▶'}
 				%i.ph.ph-caret-right
 			.action-menu#chapters
 				.toggler
@@ -29,7 +32,7 @@
 			%div{class: 'loading-spinner w-6 h-6 border-2'}
 		%div{class: 'max-w-[1400px] md:py-2 md:px-5 px-2 h-full w-full mx-auto transition opacity-0', id: 'pages-area'}
 		
-	.footer.p-6.pt-0.text-center.min-h-10
+	.footer.pt-0.text-center{class: 'md:p-6 md:min-h-10 p-4 min-h-8'}
 		.text-secondary.text-sm#pages-left-label
 
 = render 'partials/modal', title: "Navigating the Reader", id: 'navigation-modal' do
@@ -41,6 +44,7 @@
 			%i.ph.ph-caret-left.bg-surface.px-1{class: 'py-0.5 rounded-sm mx-0.5'}
 			%i.ph.ph-caret-right.bg-surface.px-1{class: 'py-0.5 rounded-sm mx-0.5'}
 		%span buttons in the top navigation bar.
+	%div.mb-4 On mobile, you can tap the right edge of screen to go to the next page, and the left edge to go to the previous page.
 	%div 
 		%span To view the table of contents, click the 
 		%span.inline-flex

@@ -35,8 +35,6 @@ function Popup(element, options = {}) {
 			instance.popper.querySelector('.sheet')?.setAttribute('data-state', 'hidden')
 			instance.popper.classList.remove('shown')
 
-			console.log(instance.reference.dataset);
-			
 			if (instance.reference.dataset.disableScroll == 'on') {
 				document.body.style.overflow = 'auto'
 			}

@@ -16,7 +16,7 @@ class Reader {
 	#rendition
 	#elms = {
 		topNav: document.getElementById('top-nav'),
-		chapterLabel: document.getElementById('chapter-label'),
+		chapterLabel: document.querySelectorAll('.chapter-label'),
 		pagesLeftLabel: document.getElementById('pages-left-label'),
 		spinner: document.getElementById('spinner'),
 		progressIndicator: document.getElementById('progress-indicator'),
@@ -125,7 +125,7 @@ class Reader {
 			})
 		}
 	}
-	
+
 	hideUI() {
 		this.#elms.topNav.classList.add('opacity-0')
 		this.#elms.pagesLeftLabel.classList.add('opacity-0')
@@ -136,22 +136,36 @@ class Reader {
 	showUI() {
 		this.#elms.topNav.classList.remove('opacity-0')
 		this.#elms.pagesLeftLabel.classList.remove('opacity-0')
-		
 
 		this.#uiIsVisible = true;
 	}
 
 	bindMouseListeners(doc) {
-		// Start the initial timer
-		this.#inactivityTimer = setTimeout(() => this.hideUI(), this.#inactivityLimit);
+		if (document.body.clientWidth > 640) {
+			this.#inactivityTimer = setTimeout(() => this.hideUI(), this.#inactivityLimit);
+		}
 
-		doc.addEventListener('mousemove', () => {
-			// 1. Only call showUI if it's currently hidden
+		doc.addEventListener('pointerdown', (e) => {
+			if (e.pointerType === 'mouse') return
+
+			if (!this.#uiIsVisible) {
+				if (!this.#clickedOutsideReader(e)) return
+
+				this.showUI()
+			} else {
+				if (this.#clickedOutsideReader(e)) return
+
+				this.hideUI()
+			}
+		})
+
+		doc.addEventListener('pointermove', (e) => {
+			if (e.pointerType !== 'mouse') return
+
 			if (!this.#uiIsVisible) {
 				this.showUI();
 			}
 
-			// 2. Always reset the timer so it doesn't hide while moving
 			clearTimeout(this.#inactivityTimer);
 			this.#inactivityTimer = setTimeout(() => this.hideUI(), this.#inactivityLimit);
 		});
@@ -183,7 +197,7 @@ class Reader {
 				progress: whole / 100,
 				current_position: cfi
 			},
-			success: (res) => {},
+			success: (res) => { },
 			error: (res) => console.error(res)
 		})
 	}
@@ -231,7 +245,10 @@ class Reader {
 			const match = nav.toc.find(item => href.includes(item.href.split('#')[0]))
 
 			if (match) {
-				this.#elms.chapterLabel.textContent = match.label
+				console.log(match.label);
+				console.log(this.#elms.chapterLabel);
+				
+				this.#elms.chapterLabel.forEach(el => el.textContent = match.label)
 			}
 
 			this.updatePagination(loc)
@@ -240,6 +257,66 @@ class Reader {
 				document.getElementById('pages-area').classList.remove('opacity-0')
 			}, 300);
 		})
+	}
+
+	#clickedOutsideReader(e) {
+		const hasNavId = e.target.getAttribute('id') == 'top-nav'
+		const navClicked = e.target.closest('#top-nav')
+		const menuClicked = e.target.closest('.context')
+
+		return (hasNavId || navClicked || menuClicked) || false
+	}
+
+	/**
+	 * @param {TouchEvent} e 
+	 * @param {Document} doc
+	 */
+	#handleMobileNav(e, doc) {
+		const touchXpos = e.changedTouches[0].screenX
+		const pageWidth = doc.body.clientWidth
+		const linkClicked = e.target.closest('a')
+		
+		if (this.#clickedOutsideReader(e) || linkClicked) return
+
+		try {
+			if (touchXpos >= pageWidth * 0.9) {
+				this.#rendition.next()
+			}
+			if (touchXpos <= pageWidth * 0.4) {
+				this.#rendition.prev()
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	/**
+	 * 
+	 * @param {Document} doc - click event
+	 */
+	#handleMobileTaps(doc) {
+		let startTime
+		let isMoving = false
+
+		doc.addEventListener('touchstart', (e) => {
+			startTime = Date.now();
+			isMoving = false; // Reset on every new touch
+		}, { passive: true });
+
+		doc.addEventListener('touchmove', () => {
+			isMoving = true; // Movement invalidates a simple tap
+		}, { passive: true });
+
+		doc.addEventListener('touchend', (e) => {
+			const duration = Date.now() - startTime;
+
+			// Threshold: Only trigger if held for less than 500ms and no movement occurred
+			if (!isMoving && duration < 500) {
+				this.#handleMobileNav(e, doc)
+			} else if (!isMoving && duration >= 500) {
+				console.log('Hold ignored');
+			}
+		});
 	}
 
 	/**
@@ -251,7 +328,9 @@ class Reader {
 			if (e.key === "ArrowLeft") this.#rendition.prev()
 		}
 
+		this.#handleMobileTaps(doc)
 		doc.addEventListener('keydown', onKeyDown)
+
 		Theme.onThemeLoaded((e) => this.#rendition.themes.select(e.detail.theme))
 	}
 
@@ -338,7 +417,7 @@ class ChaptersMenu {
 			)
 		)
 
-		// van.add(context, div(() => `wot ${this.#chapters.val.length}`))
+		context.innerHTML = ''
 		van.add(context, div(
 			() => !this.#chapters.val.length
 				? div({ class: 'flex-center text-sm text-secondary p-4 py-8' }, div({ class: 'loading-spinner w-6 h-6 border-2' }))
