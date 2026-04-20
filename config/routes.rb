@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   namespace :admins do
     root "dashboard#index"
 
+    resources :activities, only: [:index]
     resources :users
     resources :feedbacks
     resources :authors do

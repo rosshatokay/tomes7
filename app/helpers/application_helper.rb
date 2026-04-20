@@ -50,6 +50,11 @@ module ApplicationHelper
         label: "Users",
         icon: "ph-users-four",
       },
+      {
+        path: admins_activities_path,
+        label: "Activities",
+        icon: "ph-pulse",
+      },
     ]
   end
 

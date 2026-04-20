@@ -1,18 +1,11 @@
-class Admins::UsersController < Admins::BaseController
+class Admins::ActivitiesController < Admins::BaseController
   include Pagy::Method
   layout "dashboard"
 
   def index
-    users_scope = User.with_attached_avatar.includes(:sessions, :identities).all
-    users_scope = apply_filters(users_scope)
-    @pagy, @users = pagy(users_scope, limit: 10)
-
-    @sort_option_groups = [
-      {
-        label: "Joined at",
-        options: [["Newest first", "newest-first"], ["Earliest first", "earliest-first"]],
-      },
-    ]
+    scope = Activity.includes(user: [avatar_attachment: :blob]).all
+    # scope = apply_filters(scope)
+    @pagy, @activities = pagy(scope.order(created_at: :desc), limit: 10)
   end
 
   private
