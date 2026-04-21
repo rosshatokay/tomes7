@@ -107,7 +107,7 @@ export default class extends Controller {
 		return a({ href: notif.permalink, class: `flex items-start gap-3 hover:bg-surface active:bg-black/10 dark:active:bg-white/10 transition p-3 px-2 rounded-lg` },
 			div({ class: 'relative' },
 				img({ class: 'w-9 aspect-square rounded-full bg-surface', src: notif.notifier.avatar }),
-				div({ class: `absolute rounded-full aspect-square w-5 flex-center -right-2 -bottom-2 border-2 border-[#333] ${formattedKind.bg}` },
+				div({ class: `absolute rounded-full aspect-square w-5 flex-center -right-2 -bottom-2 border-2 border-white dark:border-[#333] ${formattedKind.bg}` },
 					i({ class: `ph text-xs ${formattedKind.icon}`, style: 'color: inherit' })
 				)
 			),

@@ -16,8 +16,9 @@
 		=	turbo_frame_tag "books" do
 			=	render 'partials/table', headings: ['Title', 'Authors', 'Status', 'Category'] do
 				-	@books.each do |book|
-					%tr{class: 'border-b border-black/5 dark:border-white/5'}
+					%tr{class: 'border-b border-black/5 dark:border-white/5 relative hover:bg-surface'}
 						%td.p-3.pl-0
+							=	link_to '', edit_admins_book_path(book.hashid), class: 'absolute inset-0 z-1', data: {turbo: false}
 							.flex.items-center.gap-5
 								-	if book.cover.attached?
 									= ik_image_tag(book.cover, transformation: [{width: 100}], class: 'aspect-book min-w-11 w-11')
