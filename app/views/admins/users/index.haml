@@ -3,7 +3,7 @@
 		%div
 			%h1.flex.items-center.gap-2
 				%span Users
-				%span.number-badge.font-normal.text-base= @users.size
+				%span.number-badge.font-normal.text-base= User.count
 		=	render Forms::SelectComponent.new(icon: 'ph-arrows-down-up', option_groups: @sort_option_groups, url_param: :joined_at)
 
 	= render 'partials/table', headings: ['Name', 'Email', 'Provider', 'Last session', 'Joined at'] do

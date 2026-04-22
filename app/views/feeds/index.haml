@@ -11,7 +11,7 @@
 					.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
 						-	if @collection.any?
 							=	render partial: 'partials/book_card_block', collection: @collection.first(8), as: :user_book, locals: {small: true, wrapper_class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
-						%div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
+						%div{class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex'}
 							.w-full
 								%button#focus-search-bar-btn.cursor-pointer.rounded-xl.p-6.border-2.border-outline.border-dashed.aspect-book.w-full.flex-center.flex-col.gap-2{class: 'text-secondary hover:border-black hover:text-black dark:hover:text-white dark:hover:border-white transition'}
 									%i.ph.ph-plus.text-xl

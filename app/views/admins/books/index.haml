@@ -3,15 +3,17 @@
 		%div.mb-6
 			%h1.flex.items-center.gap-2
 				%span Books
-				%span.number-badge.font-normal.text-base= @scope.size
+				%span.number-badge.font-normal.text-base= Book.count
 		.flex.items-center.gap-2
-			.relative{class: 'w-[320px]'}
-				%i.ph.ph-magnifying-glass{class: 'absolute top-1/2 left-4 -translate-y-1/2 text-lg text-secondary'}
-				%input{id: 'search', type: 'text', name: 'q', placeholder: "Search for books", class: "input-field h-10 pl-10 w-full"}
+			= form_with(url: admins_books_path, method: :get) do |f|
+				.relative{class: 'w-[320px]'}
+					%i.ph.ph-magnifying-glass{class: 'absolute top-1/2 left-4 -translate-y-1/2 text-lg text-secondary'}
+					= f.text_field :q, id: 'search', type: 'text', name: 'q', placeholder: "Search for books", value: params[:q], class: "input-field h-10 pl-10 w-full"
 			= link_to new_admins_book_path, class: 'btn btn-primary h-10 rounded-xl' do
 				%i.ph.ph-plus
 				%span Add book
-
+		- if params[:q].present?
+			.mt-4.text-sm.text-secondary Found #{@pagy.count} results
 	-	if @books.size > 0
 		=	turbo_frame_tag "books" do
 			=	render 'partials/table', headings: ['Title', 'Authors', 'Status', 'Category'] do
@@ -49,7 +51,7 @@
 			.mt-6
 			=raw @pagy.series_nav(anchor_string: 'data-turbo-action="advance"')
 	- else
-		nothing here
+		= render 'partials/empty_state', title: "Nothing here", description: "Couldn't find any books for your query"
 
 	-# .grid.grid-cols-4.gap-4.gap-y-8
 		-	@books.each do |book|

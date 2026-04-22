@@ -1,12 +1,12 @@
+- content_for(:hide_bottom_nav, true)
 - content_for(:hide_nav, true)
 
-.w-full.min-h-screen.flex-center.relative
-	%div{class: 'bg-black/60 absolute inset-0'}
-	%div{class: 'max-w-[540px] p-10 py-16 w-full bg-white dark:bg-surface rounded-2xl z-1 relative shadow-lg'}
-		.logo.h-10.w-fit.mx-auto
+.w-full.min-h-screen.relative
+	%div{class: 'max-w-[540px] mx-auto md:p-10 p-5 py-16 w-full bg-white dark:bg-surface rounded-2xl z-1 relative'}
+		.logo.h-8.w-fit.mx-auto
 			=	show_svg 'logo-icon.svg'
-		.text-center.my-6
-			%h1.text-3xl.font-semibold.mb-1 Welcome to Tomes
+		.text-center.my-6.mb-12
+			%h1.font-semibold.mb-1{class: 'md:text-3xl text-2xl'} Welcome to Tomes
 			%p.text-secondary Finish setting up your profile to join the club!
 		= form_with model: current_user, url: onboarding_index_path, data: {turbo: false, controller: 'form-with-loading-submit-btn'}, html: {class: 'max-w-[400px] flex flex-col gap-4 mx-auto'} do |f|
 			- if current_user.errors.any?
@@ -22,7 +22,9 @@
 				= input_error_label(current_user.errors[:avatar])
 				
 			%div
-				=	f.label :username, class: 'label-field mb-2'
+				.flex
+					=	f.label :username, class: 'label-field mb-2'
+					%span{class: 'text-red-600 dark:text-red-300'} *
 				= f.text_field :username, class: 'input-field h-11', placeholder: 'Enter a username'
 				= input_error_label(current_user.errors[:username])
 			

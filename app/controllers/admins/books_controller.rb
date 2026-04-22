@@ -4,9 +4,13 @@ class Admins::BooksController < Admins::BaseController
   layout "dashboard"
 
   def index
-    @scope = Book.with_attached_cover.includes(:authors, :category).all.order(created_at: :desc)
+    scope = Book.with_attached_cover.includes(:authors, :category)
 
-    @pagy, @books = pagy(@scope, limit: 10)
+    if params[:q].present?
+      scope = scope.where("title ILIKE ?", "%#{params[:q].downcase}%")
+    end
+
+    @pagy, @books = pagy(scope.order(created_at: :desc), limit: 10)
   end
 
   def new
