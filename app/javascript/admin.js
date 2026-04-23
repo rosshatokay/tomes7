@@ -6,7 +6,7 @@ import AuthorSearchController from "./components/search/author_search_controller
 import EpubUploadController from "./controllers/components/epub_upload_controller"
 import BookChaptersController from "./controllers/components/book_chapters_controller"
 import BookTagsController from "./controllers/components/book_tags_controller"
-
+import "chartkick/chart.js"
 import TippyHandler from "./components/tippyHandler"
 import MicroModal from "micromodal"
 

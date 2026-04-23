@@ -27,7 +27,8 @@ gem "active_storage_validations"
 gem "oauth2"
 gem "redcarpet"
 gem "socialization"
-
+gem "chartkick"
+gem "groupdate"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 gem "bootsnap", require: false
@@ -35,6 +36,7 @@ gem "bootsnap", require: false
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
+  gem "ruby-lsp", require: false
   gem "prosopite"
   gem "pg_query"
   gem "brakeman", require: false

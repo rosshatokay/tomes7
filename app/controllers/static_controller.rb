@@ -37,7 +37,7 @@ class StaticController < ApplicationController
       },
     ]
 
-    @featured_books = Book.includes(:cover_attachment, :authors, :category).order(created_at: :desc).first(5)
+    @featured_books = Book.includes(:authors, :category, cover_attachment: :blob).order(created_at: :desc).first(5)
     @page_description = "Read timeless and classic books for free. In one beautiful reading app."
 
     set_meta_tags(
