@@ -33,7 +33,7 @@ class SearchService
   end
 
   def book_results
-    Book.where(published: true).where("title ILIKE ? OR ? <% title", "#{query}%", query).map do |book|
+    Book.with_attached_cover.includes(:authors).where(published: true).where("title ILIKE ? OR ? <% title", "#{query}%", query).map do |book|
       {
         book: {
           title: book.title,
@@ -48,7 +48,7 @@ class SearchService
   end
 
   def author_results
-    Author.where("full_name ILIKE ? OR ? <% full_name", "#{query}%", query).map do |author|
+    Author.with_attached_avatar.where("full_name ILIKE ? OR ? <% full_name", "#{query}%", query).map do |author|
       {
         author: {
           full_name: author.full_name,
