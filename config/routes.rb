@@ -90,7 +90,7 @@ Rails.application.routes.draw do
 
   resources :settings do
     collection do
-      # get :preferences
+      get :preferences
       patch :profile
     end
   end

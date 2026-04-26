@@ -1,3 +1,22 @@
 
 .contain.contain--extra-small.contain--yield
 	= render 'header'
+
+	.mb-6
+		.text-lg.font-medium Notifications
+		.text-secondary Choose how you would like to be notified about updates, invites and subscriptions.
+
+	.border.border-outline.rounded-xl
+		.p-3.flex.items-center.gap-2.justify-between.border-b.border-outline
+			.flex.items-center.gap-2
+				.bg-surface.w-7.aspect-square.flex-center.rounded-md
+					%i.ph.ph-user-plus.text-secondary
+				%span A user follows me
+			%div.checkbox-field.no-label
+				%input{type: 'checkbox', id: 'accept-tos', required: 'true'}
+				%label{for: "accept-tos"}
+		.p-3.flex.items-center.gap-2.justify-between
+			.flex.items-center.gap-2
+				.bg-surface.w-7.aspect-square.flex-center.rounded-md
+					%i.ph.ph-house.text-secondary
+				%span 

@@ -2,8 +2,8 @@
 - avatar_url = current_user.avatar.attached? ? current_user.avatar.service.url(current_user.avatar.blob.key) : nil
 
 .contain.contain--extra-small.contain--yield
-	%h1.text-3xl.font-semibold.mb-6 Settings
-	-# = render 'header'
+	-# %h1.text-3xl.font-semibold.mb-6 Settings
+	= render 'settings/header'
 	
 	= form_with model: current_user, url: profile_settings_path, method: :patch, html: {class: 'flex flex-col gap-5 max-w-[640px]'}, data: {controller: 'form-with-loading-submit-btn', turbo: false} do |f|
 		.flex.flex-col.gap-2{data: {controller: 'image-upload-preview'}}

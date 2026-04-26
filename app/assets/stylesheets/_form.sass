@@ -3,6 +3,14 @@
 	display: flex
 	--box-width: 36px
 	--box-height: 20px
+	&.no-label
+		label
+			&::before
+				top: 50%
+				transform: translateY(-50%)
+			&::after
+				transform: translateY(-50%)
+				top: 0px
 	input
 		position: absolute
 		opacity: 0
