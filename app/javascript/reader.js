@@ -29,6 +29,13 @@ class Reader {
 			"line-height": "1.35",
 			"background": "#181819"
 		},
+		"a:link": {
+			"color": "white",
+			"border-bottom": "1px solid rgba(255,255,255,.2)",
+		},
+		"a:link:hover": {
+			"border-color": "white"	
+		}
 	}
 	#lightTheme = {
 		body: {
@@ -36,6 +43,13 @@ class Reader {
 			"line-height": "1.35",
 			"background": "#ffffff"
 		},
+		"a:link": {
+			"color": "black",
+			"border-bottom": "1px solid rgba(1,1,1,.1)",
+		},
+		"a:link:hover": {
+			"border-color": "black"	
+		}
 	}
 	#bookLocation
 	#bookSlug = document.querySelector('[data-slug]').dataset.slug
