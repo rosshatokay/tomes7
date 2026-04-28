@@ -13,7 +13,7 @@
 				%span.text-secondary (#{@book.ratings_count} reviews)
 			.border-l.border-outline.h-4{class: 'md:block hidden'}
 			-	if user_signed_in?
-				%button.save-btn{type: 'button', class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5', data: {controller: 'save-button', 'book-id': @book.hashid, 'is-liked': current_user&.likes?(@book) ? 'true' : 'false'}}
+				%button.save-btn{type: 'button', class: 'p-1 px-2 btn-clear cursor-pointer rounded-md transition md:flex items-center hidden gap-1.5', data: {controller: 'save-button', 'book-id': @book.hashid, save_button_is_liked_value: current_user&.likes?(@book) ? 'true' : 'false'}}
 					%i.ph.ph-heart.text-lg.text-secondary.icon
 					%span.label Save
 			- else

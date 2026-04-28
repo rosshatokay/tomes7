@@ -12,7 +12,7 @@
 					%i.ph.ph-book-open{class: '!text-xl leading-none'}
 					%span{class: 'text-[13px]'} Read
 				- if user_signed_in?
-					%button.save-btn{class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white', data: {controller: 'save-button', 'book-id': @book.hashid, 'is-liked': current_user&.likes?(@book) ? 'true' : 'false'}}
+					%button.save-btn{class: 'btn btn-surface flex-col h-initial p-8 rounded-xl w-full h-12 text-secondary hover:text-black dark:hover:text-white', data: {controller: 'save-button', 'book-id': @book.hashid, save_button_is_liked_value: current_user&.likes?(@book) ? 'true' : 'false'}}
 						%i.ph.ph-heart.icon{class: '!text-xl leading-none'}
 						%span.label{class: 'text-[13px]'} Save
 				- else
