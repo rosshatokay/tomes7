@@ -3,7 +3,7 @@ class Admins::ActivitiesController < Admins::BaseController
   layout "dashboard"
 
   def index
-    scope = Activity.includes(user: [avatar_attachment: :blob]).all
+    scope = Activity.includes(:subject, user: [avatar_attachment: :blob]).all
     # scope = apply_filters(scope)
     @pagy, @activities = pagy(scope.order(created_at: :desc), limit: 10)
   end

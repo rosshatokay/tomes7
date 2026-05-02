@@ -25,11 +25,11 @@
 				.font-medium Activity
 				%i.ph.ph-caret-right.text-secondary
 			.my-4.mb-6
-				.font-medium.text-xl= @users_scope.count
+				.font-medium.text-xl= @chart_data.values.sum
 				.flex.items-center.gap-2
 					.w-2.min-w-2.aspect-square.rounded-full.bg-indigo-500 
 					.text-secondary.text-sm Registrations
-			= column_chart @users_scope.group_by_day(:created_at).count
+			= column_chart @chart_data, range: @date_range, series: true
 		.border.border-outline.rounded-xl.mt-4
 			.p-4.pb-0
 				.flex.items-center.justify-between.mb-4

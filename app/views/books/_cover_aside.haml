@@ -1,9 +1,13 @@
 - rated = @book.rated_by?(current_user)
+- progress = @user_book.present? ? @user_book.progress : nil
 
 %div{class: 'md:w-[320px] md:min-w-[320px] md:mx-0 w-3/4 mx-auto md:pr-12 md:pb-8'}
 	.sticky.top-20
 		-	if @book.cover.attached?
-			=	ik_image_tag(@book.cover, class: 'w-full aspect-book rounded-xl max-h-[700px]', transformation: [{width: 1000}])
+			.relative
+				=	ik_image_tag(@book.cover, class: 'w-full aspect-book rounded-xl max-h-[700px]', transformation: [{width: 1000}])
+				- if progress.present?
+					= render Books::ProgressBadgeComponent.new(progress: progress)
 		- else
 			.bg-surface.w-full.w-full.aspect-book
 		%div{class: 'md:block hidden'}

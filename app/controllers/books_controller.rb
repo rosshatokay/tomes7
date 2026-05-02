@@ -8,7 +8,9 @@ class BooksController < ApplicationController
     @seo_image_url = @book.cover.attached? ? @book.cover.service.url(@book.cover.blob.key, transformation: [{ width: 600 }]) : nil
     @toc = @book.toc
     @pagy, @ratings = pagy(@book.ratings.includes(user: { avatar_attachment: :blob }).order(created_at: :desc), limit: 5)
-
+    @user_book = if user_signed_in?
+        current_user.user_books.find_by(book_id: @book.id)
+      end
     @breadcrumbs = [
       { label: "Home", path: root_path },
       { label: "Books", path: explore_index_path },

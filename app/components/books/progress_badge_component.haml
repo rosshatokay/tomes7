@@ -1,0 +1,4 @@
+-	percent = (@progress * 100).round(0)
+.absolute.pointer-events-none.top-2.left-2.flex-center.gap-1{class: 'bg-white/90 backdrop-blur-md text-black font-normal p-2 py-[3px] rounded-md'}
+	%i.text-sm{class: "#{percent == 100 ? 'ph-fill ph-check-circle text-green-700' : 'ph ph-circle'}"}
+	%p{class: 'text-[11px]'} #{percent}%

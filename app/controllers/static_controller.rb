@@ -4,17 +4,17 @@ class StaticController < ApplicationController
   def index
     @features = [
       {
-        badge_label: "Digital library",
+        badge_label: "Unlimited Access",
         heading: "A library that never closes, wherever you are",
         description: "Explore a growing collection of public domain classics, spanning genres, eras, and cultures. Your library is always open and ready.",
       },
       {
-        badge_label: "Digital library",
+        badge_label: "Smart Reading",
         heading: "A personalized beautiful reading experience",
         description: "Bookmark pages, save your favorite books, and pick up right where you left off—on any device. Build your own personal reading space.",
       },
       {
-        badge_label: "Digital library",
+        badge_label: "Social Discovery",
         heading: "Share your voice and mark on every book",
         description: "Write reviews, rate books, and discover what others are saying before you dive in. Join a community of readers and help others find their next great read.",
       },
