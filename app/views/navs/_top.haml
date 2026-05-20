@@ -1,7 +1,7 @@
 - links = [{label: 'Home', path: root_path}, {label: 'Explore', path: explore_index_path}]
 
 - if user_signed_in?
-	.fixed.top-0.left-0.w-full.z-10{class: "md:h-16 h-14 bg-white/95 dark:bg-[#181819e0] backdrop-blur-lg #{yield(:has_back_to_btn).present? ? 'md:block hidden' : ''}"}
+	.fixed.top-0.left-0.w-full.z-10{class: "md:h-16 h-14 bg-[#FBF6F0] dark:bg-[#181819e0] backdrop-blur-lg #{yield(:has_back_to_btn).present? ? 'md:block hidden' : ''}"}
 		.nav-grid.contain.grid.h-full.items-center{class: 'md:grid-cols-[1fr_1.2fr_1fr] grid-cols-[24px_1fr_64px] gap-6'}
 			.flex.items-center.gap-8{class: 'on-focus-hide'}
 				=	link_to root_path, class: 'logo md:h-7 h-6' do
@@ -20,13 +20,7 @@
 			.flex.justify-end.items-center{class: 'on-focus-hide md:gap-2 gap-1'}
 				-	if authenticated?
 					%div{class: '', 'data-tippy-content': 'Notifications', data: {controller: "notifications-menu"}}
-					-# %div{data: {controller: 'profile-menu'}}
 					=	render 'partials/user_dropdown'
-					-# .action-menu
-						%toggler asd
-						.hidden
-							.context
-								asd
 
 					- if current_user.admin?
 						=	link_to 'Dashboard', admins_root_path, class: 'btn btn-surface h-9 md:flex hidden'
