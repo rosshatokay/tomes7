@@ -107,7 +107,8 @@ Rails.application.routes.draw do
   resources :explore, only: [] do
     collection do
       get :index
-      get :trending
+      get "trending-authors"
+      get "trending-books"
     end
   end
 

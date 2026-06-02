@@ -1,9 +1,11 @@
 .contain.contain--yield
-	%div{class: 'md:grid grid-cols-[1fr_320px] flex flex-col gap-16'}
+	%div{class: 'md:grid grid-cols-[300px_1fr] flex flex-col gap-16'}
+		= render 'activity_aside'
+
 		.flex.flex-col.gap-12.min-w-0
 			%div.varousel-container
 				.flex.items-center.justify-between.mb-2
-					.font-medium.text-lg
+					.font-medium.text-xl
 						%span Currently reading
 						%span.number-badge.text-sm #{@collection.size}
 
@@ -18,9 +20,25 @@
 									.text-center
 										%p.text-sm Add a book
 
+			%div
+				.font-medium.text-xl.mb-4 Recommended authors
+				.grid.grid-cols-3.gap-4
+					-	@recommended_authors.each do |author|
+						.flex.items-center.gap-4.gap-y-6.group.relative
+							= link_to '', author_path(author.slug), class: 'absolute inset-0'
+							%div{class: "w-14 aspect-square rounded-full flex-center bg-surface ring-2 ring-transparent group-hover:ring-black dark:group-hover:ring-white transition"}
+								-	if author.avatar.attached?
+									=	ik_image_tag(author.avatar, class: 'w-14 aspect-square rounded-full object-cover', transformation: [{width: 56, height: 56}])
+								- else
+									%i.ph.ph-user.text-secondary.text-2xl
+							%div
+								.font-medium= author.full_name
+								.text-secondary.text-sm= pluralize(author.books_count, "book")
+
+
 			%div.varousel-container
 				.flex.items-center.justify-between.mb-2
-					.font-medium.text-lg Recently added to Tomes
+					.font-medium.text-xl Recently added to Tomes
 					.flex.gap-2
 						%button.varousel-prev{type: 'button', class: 'btn btn-icon btn-surface w-8'}
 							%i.ph.ph-caret-left.text-secondary
@@ -30,4 +48,3 @@
 					.flex.gap-4.varousel.overflow-x-auto.p-2.pb-6{class: '-mx-2'}
 						= render partial: 'partials/book_card_block', collection: @recently_added_books, as: :book, locals: { small: true, wrapper_class: 'md:w-[calc((100%/4)_-_14px)] md:min-w-[calc((100%/4)_-_14px)] min-w-[calc((100%/2)_-_14px)] w-[calc((100%/2)_-_14px)] flex' }
 
-		= render 'activity_aside'

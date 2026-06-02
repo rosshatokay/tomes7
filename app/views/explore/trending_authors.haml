@@ -1,0 +1,14 @@
+- content_for(:has_back_to_btn, true)
+
+.contain.contain--yield
+	.flex.justify-between.items-center.mb-6
+		%h1.text-3xl.font-semibold Trending authors
+
+	.grid.gap-6#books_grid{class: 'md:grid-cols-8 grid-cols-2'}
+		-	@authors.each do |author|
+			.flex.flex-col.gap-2.items-center.relative
+				=	link_to '', author_path(author.slug), class: 'absolute inset-0'
+				%div.aspect-square.rounded-full.bg-surface{class: 'w-full'}
+				%div.text-center
+					.font-medium{class: 'text-[15px]'}= author.full_name
+		-# = render partial: 'partials/book_card_block', collection: @books, as: :book, locals: { small: true, hide_category: true }

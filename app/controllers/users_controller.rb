@@ -35,7 +35,7 @@ class UsersController < ApplicationController
 
   def saved
     @breadcrumbs = [{ label: "Home", path: root_path }, { label: @user.handle, path: profile_path(@user.username) }, { label: "Saved" }]
-    @pagy, @saved_books = pagy(@user.likees(Book).includes(:authors, :cover_attachment), limit: 10)
+    @pagy, @saved_books = pagy(@user.likees(Book).includes(:authors, cover_attachment: :blob), limit: 10)
     @avatar = @user.get_avatar_url(size: 200)
 
     set_meta_tags(

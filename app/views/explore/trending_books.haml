@@ -2,7 +2,7 @@
 
 .contain.contain--yield
 	.flex.justify-between.items-center.mb-6
-		%h1.text-3xl.font-semibold Trending
+		%h1.text-3xl.font-semibold Trending books
 
 	.grid.gap-4.gap-y-6#books_grid{class: 'md:grid-cols-5 grid-cols-2'}
 		= render partial: 'partials/book_card_block', collection: @books, as: :book, locals: { small: true, hide_category: true }

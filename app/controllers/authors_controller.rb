@@ -4,7 +4,7 @@ class AuthorsController < ApplicationController
 
   def show
     @author = Author.includes(avatar_attachment: :blob).friendly.find(params[:id])
-    @breadcrumbs = [{ label: "Home", path: root_path }, { label: "Authors", path: authors_path }, { label: @author.full_name }]
+    @breadcrumbs = [{ label: "Home", path: root_path }, { label: "Explore", path: explore_index_path }, { label: @author.full_name }]
     @pagy, @books = pagy(@author.books, limit: 10)
     @author_avatar = @author.avatar.attached? ? @author.avatar.service.url(@author.avatar.blob.key, transformation: [{ width: 250, height: 250 }]) : nil
 
