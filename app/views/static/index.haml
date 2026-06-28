@@ -57,24 +57,24 @@
 			.bg-surface.w-fit.p-2.text-sm.py-1.px-3.rounded-md.mb-5 Features
 			%h2{class: 'md:text-[48px] text-4xl font-medium leading-none mb-6'} Built especially for book lovers
 			.text-2xl{class: 'max-w-[480px] text-lg text-secondary'} Tomes makes makes reading effortless and enjoyable. Packed with useful feature.
-		.grid.grid-cols-3.gap-4
-			.bg-surface.rounded-xl.overflow-hidden
-				.p-9
-					.text-lg.font-medium.mb-2 Timeless Classics
-					.text-base Explore a growing collection of timeless works in public domain.
-				.w-full.h-16.bg-red-100
-			.bg-surface.rounded-xl.overflow-hidden.col-span-2
-				.p-9
-					.text-lg.font-medium.mb-2 Always Open
-					.text-base.max-w-lg Your library is always open and ready, whether you're reading late at night or during a quick break, wherever you are.
-				.w-full.h-16.bg-red-100
-			.bg-surface.rounded-xl.overflow-hidden
-				.p-9
-			.bg-surface.rounded-xl.overflow-hidden
-				.p-9
-			.bg-surface.rounded-xl.overflow-hidden
-				.p-9
+		.grid.grid-cols-3.gap-6
+			.flex.flex-col.items-center
+				.bg-surface.w-full.aspect-square.rounded-xl{style: "background: url(https://i.pinimg.com/736x/31/e8/45/31e8455b6b965b1b93b35c0b4466f836.jpg) center / cover;"}
+				.mt-5.text-center.w-full
+					%h3.font-medium.text-lg.mb-1 A library open 24/7
+					%p.text-secondary{class: 'text-[15px] max-w-[360px] mx-auto'} Download designs you like or copy it straight into Figma with our new Figma plugin.
+			.flex.flex-col.items-center
+				.bg-surface.w-full.aspect-square.rounded-xl{style: "background: url(https://i.pinimg.com/736x/31/e8/45/31e8455b6b965b1b93b35c0b4466f836.jpg) center / cover;"}
+				.mt-5.text-center.w-full
+					%h3.font-medium.text-lg.mb-1 asd
+					%p.text-secondary{class: 'text-[15px] max-w-[360px] mx-auto'} Download designs you like or copy it straight into Figma with our new Figma plugin.
+			.flex.flex-col.items-center
+				.bg-surface.w-full.aspect-square.rounded-xl{style: "background: url(https://i.pinimg.com/736x/31/e8/45/31e8455b6b965b1b93b35c0b4466f836.jpg) center / cover;"}
+				.mt-5.text-center.w-full
+					%h3.font-medium.text-lg.mb-1 asd
+					%p.text-secondary{class: 'text-[15px] max-w-[360px] mx-auto'} Download designs you like or copy it straight into Figma with our new Figma plugin.
 			
+
 
 		-# -	@features.each_with_index do |feature, i|
 			%div{class: "md:grid grid-cols-2 md:gap-0 #{i == 0 ? 'md:pt-16' : 'md:pt-25 pt-20'} flex flex-col gap-6"}
