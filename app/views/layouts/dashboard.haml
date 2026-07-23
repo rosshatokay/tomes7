@@ -2,11 +2,17 @@
 	%head
 		= render 'layouts/head_content'
 		= stylesheet_link_tag 'tailwind', "data-turbo-track": "reload"
-		= javascript_include_tag "admin", type: "module", "data-turbo-track": "reload"
+		-# = javascript_include_tag "admin", type: "module", "data-turbo-track": "reload"
+
+		= inertia_ssr_head
+		= vite_react_refresh_tag
 		= javascript_include_tag 'theme'
+		= vite_client_tag
+		= vite_typescript_tag 'application.tsx'
 	%body
 
-		%div{class: "grid md:grid-cols-[64px_1fr] grid-cols-1 w-full h-screen overflow-hidden"}
+		= yield
+		-# %div{class: "grid md:grid-cols-[64px_1fr] grid-cols-1 w-full h-screen overflow-hidden"}
 			= render "admins/dashboard/aside"
 			.w-full.h-full.overflow-y-auto{class: 'md:px-0 px-5'}
 				- if @breadcrumbs
@@ -16,7 +22,7 @@
 				=	yield
 				%div{class: 'pb-16'}
 
-		#flash
+		-# #flash
 			=	render 'partials/flash'
 
-		= yield(:scripts)
+		-# = yield(:scripts)

@@ -71,6 +71,18 @@ class Book < ApplicationRecord
     ratings.where(user_id: user.id)&.first
   end
 
+  def to_hash
+    cover = self.cover.attached? ? self.cover.service.url(self.cover.blob.key, transformation: [{ width: 500 }]) : nil
+
+    {
+      title: title,
+      cover: cover,
+      author_names: author_names,
+      category: category.name,
+      published: published,
+    }
+  end
+
   def tag_names=(input)
     # Accept string or array
     names = Array(input)

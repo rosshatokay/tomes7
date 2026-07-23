@@ -30,6 +30,7 @@ gem "socialization"
 gem "chartkick"
 gem "groupdate"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "inertia_rails"
 
 gem "bootsnap", require: false
 
@@ -58,3 +59,5 @@ group :test do
 end
 
 gem "bcrypt", "~> 3.1"
+
+gem "vite_rails", "~> 3.11"

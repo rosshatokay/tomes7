@@ -150,6 +150,7 @@ GEM
       dotenv (= 3.2.0)
       railties (>= 6.1)
     drb (2.2.3)
+    dry-cli (1.4.1)
     em-websocket (0.5.3)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0)
@@ -247,6 +248,8 @@ GEM
     imagekitio-rails (1.0.0.beta.1)
       imagekitio (~> 4.0)
       rails (>= 6.0)
+    inertia_rails (3.22.0)
+      railties (>= 6)
     io-console (0.8.2)
     io-like (0.4.0)
     irb (1.17.0)
@@ -296,6 +299,7 @@ GEM
     multi_json (1.20.1)
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
+    mutex_m (0.3.0)
     nenv (0.3.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
@@ -375,6 +379,8 @@ GEM
     racc (1.8.1)
     rack (3.2.6)
     rack-livereload (0.5.1)
+      rack
+    rack-proxy (0.8.3)
       rack
     rack-session (2.1.2)
       base64 (>= 0.1.0)
@@ -572,6 +578,15 @@ GEM
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       concurrent-ruby (~> 1)
+    vite_rails (3.11.1)
+      railties (>= 5.1, < 9)
+      vite_ruby (~> 3.0, >= 3.2.2)
+    vite_ruby (3.10.2)
+      dry-cli (>= 0.7, < 2)
+      logger (~> 1.6)
+      mutex_m
+      rack-proxy (~> 0.6, >= 0.6.1)
+      zeitwerk (~> 2.2)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -627,6 +642,7 @@ DEPENDENCIES
   hashid-rails
   httparty
   imagekitio-rails
+  inertia_rails
   jbuilder
   meta-tags
   oauth2
@@ -651,6 +667,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   view_component
+  vite_rails (~> 3.11)
   web-console
 
 CHECKSUMS
@@ -700,6 +717,7 @@ CHECKSUMS
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   dotenv-rails (3.2.0) sha256=657e25554ba622ffc95d8c4f1670286510f47f2edda9f68293c3f661b303beab
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
+  dry-cli (1.4.1) sha256=b8015bb76c708aa8705a36faf694973e75eeeffca39b89c8e172dc6f66a7d874
   em-websocket (0.5.3) sha256=f56a92bde4e6cb879256d58ee31f124181f68f8887bd14d53d5d9a292758c6a8
   epub-cfi (0.1.4) sha256=9e1eb749ec71279f03e78c9a4d723e751857c023bebc1273ef85f0ccdd76205a
   epub-parser (0.5.0) sha256=a2009d5037408908ffdccf7d39adcad12ca91e296043e30fb86146ead9696e33
@@ -739,6 +757,7 @@ CHECKSUMS
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
   imagekitio (4.3.0) sha256=f817bd21cc629e2b9ad922d9eb3d48f6d15cfcfc0e195395a170bb100ed6902b
   imagekitio-rails (1.0.0.beta.1) sha256=dfc4ea608060c06185e5e250fcde7fa7dd5896897c3e062e2d6ffa932e5fcdf4
+  inertia_rails (3.22.0) sha256=39c20120de472015d2831fa461f8a09672c68e91c41d3d660e0b1d16b787b7b1
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
   io-like (0.4.0) sha256=808994312907b3d59c548e75215183ccd950e63101ad08800c4df4188a2a0211
   irb (1.17.0) sha256=168c4ddb93d8a361a045c41d92b2952c7a118fa73f23fe14e55609eb7a863aae
@@ -765,6 +784,7 @@ CHECKSUMS
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
   multi_json (1.20.1) sha256=2f3934e805cc45ef91b551a1f89d0e9191abd06a5e04a2ef09a6a036c452ca6d
   multi_xml (0.8.1) sha256=addba0290bac34e9088bfe73dc4878530297a82a7bbd66cb44dcd0a4b86edf5a
+  mutex_m (0.3.0) sha256=cfcb04ac16b69c4813777022fdceda24e9f798e48092a2b817eb4c0a782b0751
   nenv (0.3.0) sha256=d9de6d8fb7072228463bf61843159419c969edb34b3cef51832b516ae7972765
   net-http (0.9.1) sha256=25ba0b67c63e89df626ed8fac771d0ad24ad151a858af2cc8e6a716ca4336996
   net-imap (0.6.3) sha256=9bab75f876596d09ee7bf911a291da478e0cd6badc54dfb82874855ccc82f2ad
@@ -808,6 +828,7 @@ CHECKSUMS
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rack (3.2.6) sha256=5ed78e1f73b2e25679bec7d45ee2d4483cc4146eb1be0264fc4d94cb5ef212c2
   rack-livereload (0.5.1) sha256=8ac16592b74d6c198611626d0369827f95a28de663874f7c960d0e630d278c3f
+  rack-proxy (0.8.3) sha256=1e446a37be6d9c59647e710d2df7d23e3b0b4e1b982dab4f188a0354aa1fff0b
   rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
@@ -879,6 +900,8 @@ CHECKSUMS
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   version_gem (1.1.9) sha256=0c1a0962ae543c84a00889bb018d9f14d8f8af6029d26b295d98774e3d2eb9a4
   view_component (4.7.0) sha256=d9612abf255fbe89d524bafa470ec90c27b945e14d0bf2d3529ef676cfcb957e
+  vite_rails (3.11.1) sha256=61fa4a7c9248fc28f22a05e0760810bf79f645b776c721d888a815c5d21dd338
+  vite_ruby (3.10.2) sha256=db465451eb180abbdc81f596ba63671d2b2552e2bb7bf3c1f7b79f9d58ca9a86
   warden (1.2.9) sha256=46684f885d35a69dbb883deabf85a222c8e427a957804719e143005df7a1efd0
   web-console (4.2.1) sha256=e7bcf37a10ea2b4ec4281649d1cee461b32232d0a447e82c786e6841fd22fe20
   websocket (1.2.11) sha256=b7e7a74e2410b5e85c25858b26b3322f29161e300935f70a0e0d3c35e0462737

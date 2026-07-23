@@ -6,11 +6,15 @@ class Admins::BooksController < Admins::BaseController
   def index
     scope = Book.with_attached_cover.includes(:authors, :category)
 
-    if params[:q].present?
-      scope = scope.where("title ILIKE ?", "%#{params[:q].downcase}%")
-    end
+    # if params[:q].present?
+    #   scope = scope.where("title ILIKE ?", "%#{params[:q].downcase}%")
+    # end
 
-    @pagy, @books = pagy(scope.order(created_at: :desc), limit: 10)
+    # @pagy, @books = pagy(scope.order(created_at: :desc), limit: 10)
+
+    render inertia: "Admin/Books", props: {
+             books: scope.map { |book| book.to_hash },
+           }
   end
 
   def new

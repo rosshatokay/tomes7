@@ -1,0 +1,23 @@
+{
+  // "files": [],
+	"compilerOptions": {
+		"target": "ES2022",
+    "moduleResolution": "bundler",
+		"ignoreDeprecations": "6.0",
+		"baseUrl": ".",
+    "paths": {
+      "@/*": ["app/frontend/*"]
+    },
+		"types": ["vite/client"],
+		"jsx": "react-jsx"
+	},
+	"include": ["app/frontend/**/*", "app/javascript/entrypoints"]
+  // "references": [
+  //   {
+  //     "path": "./tsconfig.app.json"
+  //   },
+  //   {
+  //     "path": "./tsconfig.node.json"
+  //   }
+  // ]
+}
