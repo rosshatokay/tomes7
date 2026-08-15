@@ -1,0 +1,123 @@
+import { BookCard } from "@/components/partials/BookCard"
+import { LinkUnderline } from "@/components/partials/LinkUnderline"
+import { RatingStars } from "@/components/partials/RatingStars"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { createBreadcrumbs } from "@/lib/utils"
+import { GlassesIcon, HeartIcon, ShareIcon } from "lucide-react"
+import React from "react"
+
+interface BookPageProps {
+	book: {
+		title: string
+		cover_url: string
+		description: string
+		wiki_url: string
+	}
+	category: {
+		name: string
+		permalink: string
+	}
+	authors: [{
+		name: string
+		avatar_url: string
+		bio: string
+		permalink: string
+	}]
+}
+
+function SimpleFormat(text: string) {
+	if (!text) return null;
+
+	return text.split(/\n\n+/).map((paragraph: string, pIndex: number) => (
+		<p key={pIndex}>
+			{paragraph.split('\n').map((line, lIndex) => (
+				<React.Fragment key={lIndex}>
+					{line}
+					{lIndex < paragraph.split('\n').length - 1 && <br />}
+				</React.Fragment>
+			))}
+		</p>
+	));
+}
+
+
+export default function BookPage({ book, category, authors }: BookPageProps) {
+	const crumbs = [
+		{ label: "Home", path: "/" },
+		{ label: category.name, path: category.permalink },
+		{ label: book.title, path: "" },
+	]
+
+	return (
+		<div>
+			<div className="large-container my-4">
+				{createBreadcrumbs(crumbs)}
+			</div>
+			<div className="grid grid-cols-12 large-container">
+				<div className="h-[calc(100vh_-_120px)] col-span-7 sticky top-20 pb-5 flex flex-col gap-2 pr-12">
+					<div className="bg-card w-full h-full flex-center rounded-xl py-12 overflow-hidden">
+						<div className="relative h-full aspect-[4/6]">
+							<img className="h-full w-full relative z-1 rounded-sm" src={book.cover_url} />
+							<img className="h-full w-full h-full scale-[1.1] absolute top-0 opacity-25 blur-3xl" src={book.cover_url} />
+						</div>
+					</div>
+				</div>
+				<div className="pt-6 col-span-5 flex flex-col gap-10">
+					<section>
+						<h1 className="text-4xl font-medium">{book.title}</h1>
+						<h2 className="text-lg mt-0.5">
+							{authors.map((author, index) => (
+								<span key={index}>
+									<span><a href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</a></span>
+									{index < authors.length - 1 && <span className="text-subtle">, </span>}
+								</span>
+							))}
+						</h2>
+						<div className="flex gap-1 mt-2">
+							<div className="-ml-2">
+								<Button variant={"ghost"} className={"px-2 text-[15px]"}>
+									<RatingStars rating={4} />
+									<span>4.2 <span className="text-subtle">(24)</span></span>
+								</Button>
+							</div>
+							<Button variant={"ghost"} className={"px-2 text-[15px]"}>
+								<HeartIcon />
+								<span>Save</span>
+							</Button>
+							<Button variant={"ghost"} className={"px-2 text-[15px]"}>
+								<ShareIcon />
+								<span>Share</span>
+							</Button>
+						</div>
+						<div className="mt-6">
+							<div className="text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
+							{book.wiki_url && <p className="text-sm mt-2 text-subtle">Read more at <LinkUnderline href={book.wiki_url} className="text-foreground" target="_blank">Wikipedia</LinkUnderline>.</p>}
+						</div>
+						<div className="mt-6">
+							<Button size={"lg"} variant={"secondary"} className={"w-full h-10"}><GlassesIcon /> Read</Button>
+						</div>
+					</section>
+					<section>
+						<h3 className="mb-2 text-subtle">About the {authors.length > 1 ? "authors" : "author"}</h3>
+						{authors.map((author, index) => (
+							<div key={index}>
+								<div className="flex items-center gap-3 mb-3">
+									<Avatar>
+										<AvatarImage src={author.avatar_url} alt={author.name}></AvatarImage>
+										<AvatarFallback>{author.name[0]}</AvatarFallback>
+									</Avatar>
+									<h3>{author.name}</h3>
+								</div>
+								<div className="text-neutral-300 line-clamp-3">{author.bio}</div>
+							</div>
+						))}
+					</section>
+				</div>
+			</div>
+			<div className="large-container mt-6">
+				<h3 className="text-xl">Similar to this book</h3>
+			</div>
+		</div>
+	)
+}

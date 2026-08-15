@@ -1,4 +1,5 @@
 import { Book } from "@/interfaces/book";
+import { Link } from "@inertiajs/react";
 import { StarIcon } from "lucide-react";
 
 interface BookProps {
@@ -7,9 +8,10 @@ interface BookProps {
 
 export const BookCard = ({ book }: BookProps) => {
 	return (
-		<div className="bg-card rounded-xl p-6 flex flex-col gap-6">
+		<div className="bg-card rounded-xl p-6 flex flex-col gap-6 relative hover:bg-white/10 transition">
+			<Link href={book.permalink} className="absolute inset-0 z-1" />
 			<div className="w-full flex-center pt-2">
-				<img src={book.cover} className="w-1/2 rounded-md" alt="" />
+				<img src={book.cover} className="w-3/5 rounded-sm" alt={`${book.title}'s cover art`} />
 			</div>
 			<div>
 				<div className="text-subtle">{book.author_names}</div>

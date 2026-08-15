@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :new_session
   get "signup", to: "registrations#new", as: :new_user_registration
 
+  resources :books, only: [:show]
+  resources :authors, only: [:show]
+
   root "static#index"
 
   direct :rails_public_blob do |blob|

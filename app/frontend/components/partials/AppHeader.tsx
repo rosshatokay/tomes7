@@ -2,13 +2,14 @@ import { LogoIcon } from "@/assets/LogoIcon";
 import { Button } from "../ui/button";
 import { SearchIcon } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
+import { cn } from "@/lib/utils";
 
 export default function AppHeader() {
 	const { url } = usePage()
 	const navLinks = [
 		{ label: "Books", path: "/" },
 		{ label: "Authors", path: "/authors" }
-	]
+	] 
 
 	return (
 		<div>
@@ -20,7 +21,7 @@ export default function AppHeader() {
 							const isActive = url === item.path
 							
 							return (
-								<Button variant={isActive ? "secondary" : "ghost"} className={"text-[15px] rounded-full"} nativeButton={false} render={<Link href={"/"} />}>{item.label}</Button>
+								<Button key={item.path} variant={isActive ? "secondary" : "ghost"} className={cn("text-[15px] rounded-full", !isActive && "text-subtle")} nativeButton={false} render={<Link href={"/"} />}>{item.label}</Button>
 							)
 						})}
 					</div>
