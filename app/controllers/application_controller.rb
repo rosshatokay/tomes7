@@ -7,6 +7,19 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   helper_method :current_admin
 
+  inertia_share auth: -> {
+                  {
+                    user: current_user&.as_json(
+                      only: [
+                        :email, :username, :full_name,
+                      ],
+                    )&.merge({
+                      id: current_user&.hashid,
+                      avatar_url: current_user&.avatar_url,
+                    }),
+                  }
+                }
+
   before_action :check_onboarding
 
   def check_onboarding

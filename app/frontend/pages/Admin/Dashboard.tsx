@@ -90,7 +90,7 @@ export default function Dashboard(props: DashboardProps) {
 									<CartesianGrid vertical={false}></CartesianGrid>
 									<Bar
 										dataKey="registrations"
-										fill="#ffffff"
+										fill="var(--color-foreground)"
 										radius={4}
 										shape={(props: any) => nilValBarShape(props)}
 									/>

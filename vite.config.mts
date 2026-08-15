@@ -1,12 +1,30 @@
 import react from '@vitejs/plugin-react'
 import inertia from '@inertiajs/vite'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import RubyPlugin from 'vite-plugin-ruby'
+import path from 'node:path'
 
 export default defineConfig({
-  plugins: [
-    RubyPlugin(),
-    inertia(),
-    react(),
-  ],
+	plugins: [
+    tailwindcss(),
+		RubyPlugin(),
+		inertia({
+			ssr: {
+				entry: 'entrypoints/ssr.tsx'
+			}
+		}),
+		react(),
+	],
+	resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './app/frontend'),
+    },
+  },
+	server: {
+    // Ensures file system changes are watched properly in all environments
+    watch: {
+      usePolling: true, 
+    }
+  }
 })

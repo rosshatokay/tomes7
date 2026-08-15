@@ -13,7 +13,7 @@ class Admins::BooksController < Admins::BaseController
     # @pagy, @books = pagy(scope.order(created_at: :desc), limit: 10)
 
     render inertia: "Admin/Books", props: {
-             books: scope.map { |book| book.to_hash },
+             books: scope.map { |book| book.to_hash.merge({ permalink: book_path(book.slug) }) },
            }
   end
 

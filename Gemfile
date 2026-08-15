@@ -47,10 +47,7 @@ end
 
 group :development do
   gem "web-console"
-  gem "guard-livereload"
   gem "solargraph"
-  gem "guard"
-  gem "rack-livereload"
 end
 
 group :test do

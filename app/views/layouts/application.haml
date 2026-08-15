@@ -1,36 +1,172 @@
+<!DOCTYPE html>
 %html
 	%head
-		= render 'layouts/head_content'
-		= stylesheet_link_tag 'tailwind', "data-turbo-track": "reload"
-		= javascript_include_tag "application", type: "module", "data-turbo-track": "reload"
-		= javascript_include_tag 'theme'
-		- if !user_signed_in?
-			%script(src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js") 
-			=	javascript_include_tag 'landing', "data-turbo-track": "reload"
-	%body
+		%title{'data-inertia': ''}= content_for(:title) || "highlight.cv"
+		%meta(name="viewport" content="width=device-width,initial-scale=1")
+		%meta(name="apple-mobile-web-app-capable" content="yes")
+		%meta(name="application-name" content="highligh.cv")
+		%meta(name="mobile-web-app-capable" content="yes")
+		= csrf_meta_tags
+		= csp_meta_tag
 
-		=	render 'navs/top' unless yield(:hide_nav) == "true"
+		= yield :head
+
+		-# <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+		-# <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+		%link(rel="icon" href="/favicon.png" type="image/png")
+		%link(rel="icon" href="/favicon.svg" type="image/svg+xml")
+		%link(rel="apple-touch-icon" href="/favicon.png")
+
+		%link(rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96")
+		%link(rel="icon" type="image/svg+xml" href="/favicon.svg")
+		%link(rel="shortcut icon" href="/favicon.ico")
+		%link(rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png")
+		%meta(name="apple-mobile-web-app-title" content="highlight.cv")
+		%link(rel="manifest" href="/site.webmanifest")
+
+		%link(rel="preconnect" href="https://fonts.googleapis.com")/
+		%link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)/
+		%link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200;1,300&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap")/
+
+		:javascript
+			const Theme = (() => {
+				// Helper to check if we are running in the browser
+				const isBrowser = typeof window !== 'undefined'
+
+				// Safely evaluate globals only if we are in the browser, otherwise use fallbacks
+				const root = isBrowser ? document.querySelector('html') : null
+				const prefersDarkTheme = isBrowser ? window.matchMedia('(prefers-color-scheme: dark)') : null
+				let storedTheme = isBrowser ? localStorage.getItem("theme") : null
+				const isInLibrary = isBrowser ? document.querySelector('html')?.classList.contains('library') : false
+				
+				let themeSelector
+
+				function triggerThemeLoaded(theme)
+				{
+					if (!isBrowser) return
+					const event = new CustomEvent('themeLoaded', {
+						detail: {
+							theme: theme
+						}
+					})
+					document.dispatchEvent(event)
+				}
+
+				function setTheme(theme, isSysPref)
+				{
+					switch (theme) {
+						case "light":
+							root?.classList.remove('dark')
+							root?.classList.add('light')
+						break
+						case "dark":
+							root?.classList.add('dark')
+							root?.classList.remove('light')
+						break
+						case "system":
+							setByPreference()
+						break
+					}
+
+					if (isInLibrary) {
+						root?.classList.add('library')
+					}
+
+					if (isBrowser) {
+						if (!isSysPref) {
+							localStorage.setItem("theme", theme)
+						} else {
+							localStorage.setItem("theme", 'system')
+						}
+						storedTheme = localStorage.getItem("theme")
+					}
+
+					triggerThemeLoaded(theme)
+				}
+
+				function setByPreference()
+				{
+					if (prefersDarkTheme?.matches)
+					{
+						setTheme('dark', true)
+					} else {
+						setTheme('light', true)
+					}
+				}
+
+				function initialize()
+				{
+					if (!isBrowser) return
+
+					if (storedTheme) {
+						root?.removeAttribute("class")
+
+						setTheme(storedTheme)
+						
+						setTimeout(function(){
+							triggerThemeLoaded(storedTheme)
+						}, 50)
+					} else {
+						setByPreference()
+					}
+
+					listenToSysPref()
+
+					document.addEventListener('DOMContentLoaded', () => {
+						themeSelector = document.getElementById('theme-selector')
+					})
+				}
+
+				function listenToSysPref()
+				{
+					if (!isBrowser) return
+
+					window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',({ matches }) => {
+						if (matches) {
+							setTheme('dark', true)
+						} else {
+							setTheme('light', true)
+						}
+					})
+				}
+
+				function getTheme() {
+					return isBrowser ? localStorage.getItem('theme') : null
+				}
+
+				return {
+					initialize,
+					setTheme,
+					getTheme,
+					setByPreference,
+					onThemeLoaded: (callback) => {
+						if (!isBrowser) return
+						document.addEventListener('themeLoaded', callback)
+					}
+				}
+			})()
+
+			Theme.initialize()
+			window.Theme = Theme
+
+		= vite_stylesheet_tag "application"
+		= vite_react_refresh_tag
+		= inertia_ssr_head
+		= vite_typescript_tag 'application.tsx'
 		
-		.yield-wrapper
-			- if @breadcrumbs.present?
-				.contain.mt-2{class: 'md:block hidden'}
-					=	render 'partials/breadcrumbs'
-			=	yield
-			
-			=	render 'navs/bottom' unless yield(:hide_bottom_nav) == "true" || yield(:has_back_to_btn).present?
-			
-			- if !user_signed_in?
-				-	unless yield(:hide_footer) == 'true'
-					.contain
-						=	render 'partials/footers/bottom'
 
-		-# - if flash.any?
-		#flash
-			=	render 'partials/flash'
-			
-		= yield(:scripts)
+	%body
+		:javascript
+			(function() {
+				const savedTheme = localStorage.getItem('theme');
+				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-		- if authenticated?
-			:javascript
-				window.current_user = #{Current.user.slice(:username,:email_address).merge({avatar: Current.user.get_avatar_url}).to_json}
-			
+				if (savedTheme === 'dark' || (!savedTheme && prefersDark) || (savedTheme === "system" && prefersDark)) {
+						document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			})();
+
+		= yield

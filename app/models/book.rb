@@ -80,6 +80,8 @@ class Book < ApplicationRecord
       author_names: author_names,
       category: category.name,
       published: published,
+      average_rating: average_rating,
+      ratings_count: ratings_count,
     }
   end
 

@@ -1,5 +1,0 @@
-%div
-	- if Current.user.nil?
-		= link_to "Follow", new_session_path(return_to: profile_path(user.username)), data: { turbo: false }, class: "btn btn-primary h-9"
-	- else
-		%div{ data: { controller: "follow-btn", follow_btn_is_following_value: "#{Current.user.follows?(user)}" } }

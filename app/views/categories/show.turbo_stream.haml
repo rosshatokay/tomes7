@@ -1,9 +1,0 @@
-= turbo_stream.append "books_grid" do
-  - @books.each do |book|
-    = render partial: 'partials/book_card_block', locals: { book: book, small: true, hide_category: true }
-
-= turbo_stream.replace "pagination" do
-  - if @pagy.next
-    = turbo_frame_tag "pagination", src: category_path(@category.slug, page: @pagy.next, format: :turbo_stream), loading: :lazy do
-      .py-6.pb-10.flex-center
-        .loading-spinner

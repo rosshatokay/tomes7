@@ -2,16 +2,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Spinner } from "@/components/ui/spinner";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Book } from "@/interfaces/book";
 import AdminLayout from "@/layouts/AdminLayout";
-import { Deferred } from "@inertiajs/react";
+import { Deferred, Link } from "@inertiajs/react";
 
 interface PageProps {
 	books: Book[]
 }
 
 export default function BooksPage(props: PageProps) {
+	console.log(props.books[0])
+	
 	return (
 		<>
 			<div className="max-w-5xl w-full mx-auto flex flex-col gap-12">
@@ -36,12 +38,18 @@ export default function BooksPage(props: PageProps) {
 										</div>
 									</TableCell>
 									<TableCell className="text-base">{book.author_names}</TableCell>
-									<TableCell className="text-base">{book.published ? <Badge variant="secondary" className="text-sm h-7 p-3 text-neutral-200 bg-green-400/10 text-green-100">Published</Badge> : <div>not</div>}</TableCell>
+									<TableCell className="text-base">
+										{
+											book.published ? 
+											<Badge variant="secondary" className="text-sm h-7 p-3 bg-green-500/20 text-green-900 dark:bg-green-400/10 dark:text-green-100">Published</Badge> 
+											: <Badge variant="secondary" className="text-sm h-7 p-3 bg-orange-500/20 text-orange-900 dark:bg-orange-400/10 dark:text-orange-100">Hidden</Badge> 
+										}
+									</TableCell>
 									<TableCell className="text-right">
 										<DropdownMenu>
 											<DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="size-8"><i className="ph ph-dots-three text-xl"></i></Button>}></DropdownMenuTrigger>
 											<DropdownMenuContent side="bottom" align="end">
-												<DropdownMenuItem>View</DropdownMenuItem>
+												<DropdownMenuItem render={<Link href={book.permalink} />}>View</DropdownMenuItem>
 												<DropdownMenuItem>Share</DropdownMenuItem>
 											</DropdownMenuContent>
 										</DropdownMenu>

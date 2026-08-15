@@ -5,25 +5,7 @@ class SessionsController < ApplicationController
   def new
     redirect_to root_path, alert: "Already signed in" if user_signed_in?
 
-    @seo_image_url = "/web-app-manifest-192x192.png"
-    set_meta_tags(
-      title: "Sign in",
-      description: "Sign in",
-      og: {
-        title: :title,
-        description: :description,
-        site_name: "Tomes",
-        url: new_session_url,
-        image: @seo_image_url,
-      },
-      twitter: {
-        title: :title,
-        description: :description,
-        image: @seo_image_url,
-        card: "summary",
-      },
-      reverse: true,
-    )
+    render inertia: "Auth/Login"
   end
 
   def create
