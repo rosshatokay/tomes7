@@ -6,7 +6,7 @@ class Admins::BaseController < ApplicationController
       auth: {
         admin: current_user&.admin? ? {
           id: current_user.id,
-          email: current_user.email_address,
+          email: current_user.email,
         } : nil,
       },
     }

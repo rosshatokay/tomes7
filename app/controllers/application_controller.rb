@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
                       ],
                     )&.merge({
                       id: current_user&.hashid,
-                      avatar_url: current_user&.avatar_url,
+                      avatar_url: current_user&.get_avatar_url,
                     }),
                   }
                 }

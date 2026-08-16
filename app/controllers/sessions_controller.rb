@@ -11,18 +11,18 @@ class SessionsController < ApplicationController
   def create
     return if user_signed_in?
 
-    if user = User.authenticate_by(params.permit(:email_address, :password))
+    if user = User.authenticate_by(params.permit(:email, :password))
       start_new_session_for user
-      flash[:info] = "Signed in"
       redirect_to(safe_return_to(params[:return_to]) || root_path)
     else
-      redirect_to new_session_path, alert: "Try another email address or password."
+      redirect_to new_session_path, inertia: {
+                                      errors: { email: "Invalid email address or password." },
+                                    }
     end
   end
 
   def destroy
     terminate_session
-    flash[:info] = "Successfully signed out"
     redirect_to root_path, status: :see_other
   end
 

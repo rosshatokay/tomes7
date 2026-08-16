@@ -9,7 +9,6 @@ class AuthenticatedConstraint
 end
 
 Rails.application.routes.draw do
-
   # Redirect to localhost from 127.0.0.1 to use same IP address with Vite server
   constraints(host: "127.0.0.1") do
     get "(*path)", to: redirect { |params, req| "#{req.protocol}localhost:#{req.port}/#{params[:path]}" }
@@ -21,10 +20,12 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :new_session
   get "signup", to: "registrations#new", as: :new_user_registration
 
-  resources :books, only: [:show]
+  resource :session, only: [:create, :destroy]
+  resources :books, only: [:index, :show]
   resources :authors, only: [:show]
 
-  root "static#index"
+  root "feeds#index", constraints: AuthenticatedConstraint.new, as: :authenticated_root
+  root to: redirect("/books")
 
   direct :rails_public_blob do |blob|
     if ENV["ACTIVE_STORAGE_ASSET_HOST"].present?

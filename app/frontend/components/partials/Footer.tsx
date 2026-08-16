@@ -39,7 +39,7 @@ export const Footer = () => {
 						<div key={group.label} className="flex flex-col gap-1">
 							<h4>{group.label}</h4>
 							{group.items.map(item => (
-								<Link key={item.path} href={""} className="text-subtle hover:text-foreground transition">{item.label}</Link>
+								<Link key={item.path} href={item.path} className="text-subtle hover:text-foreground transition">{item.label}</Link>
 							))}
 						</div>
 					))}

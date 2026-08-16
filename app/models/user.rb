@@ -34,7 +34,7 @@ class User < ApplicationRecord
 
   before_save :set_avatar_path, if: -> { avatar.attached? && avatar.attachment.blob.key.exclude?("/") }
 
-  validates :email_address, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true
   validates :username,
             presence: { on: ONBOARDING_STEP },
             uniqueness: true,

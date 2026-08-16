@@ -1,6 +1,13 @@
 class BooksController < ApplicationController
   allow_unauthenticated_access
 
+  def index
+    render inertia: "Books/Index", props: {
+      categories: JSON.parse(Category.all.take(4).to_json(only: [:name, :slug])),
+      books: InertiaRails.defer { Book.published.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
+    }
+  end
+
   def show
     book = Book.with_attached_cover.includes(:category, authors: :avatar_attachment).friendly.find(params[:id])
 
@@ -19,6 +26,7 @@ class BooksController < ApplicationController
         description: book.description,
         wiki_url: book.wiki_url,
       },
+      tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {
         name: book.category.name,
         permalink: "/",

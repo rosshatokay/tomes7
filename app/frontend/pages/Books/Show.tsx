@@ -2,6 +2,7 @@ import { BookCard } from "@/components/partials/BookCard"
 import { LinkUnderline } from "@/components/partials/LinkUnderline"
 import { RatingStars } from "@/components/partials/RatingStars"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { createBreadcrumbs } from "@/lib/utils"
 import { GlassesIcon, HeartIcon, ShareIcon } from "lucide-react"
@@ -14,6 +15,7 @@ interface BookPageProps {
 		description: string
 		wiki_url: string
 	}
+	tags: [{ name: string }]
 	category: {
 		name: string
 		permalink: string
@@ -42,7 +44,7 @@ function SimpleFormat(text: string) {
 }
 
 
-export default function BookPage({ book, category, authors }: BookPageProps) {
+export default function BookPage({ book, category, authors, tags }: BookPageProps) {
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: category.name, path: category.permalink },
@@ -56,14 +58,13 @@ export default function BookPage({ book, category, authors }: BookPageProps) {
 			</div>
 			<div className="grid grid-cols-12 large-container">
 				<div className="h-[calc(100vh_-_120px)] col-span-7 sticky top-20 pb-5 flex flex-col gap-2 pr-12">
-					<div className="bg-card w-full h-full flex-center rounded-xl py-12 overflow-hidden">
+					<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 						<div className="relative h-full aspect-[4/6]">
-							<img className="h-full w-full relative z-1 rounded-sm" src={book.cover_url} />
-							<img className="h-full w-full h-full scale-[1.1] absolute top-0 opacity-25 blur-3xl" src={book.cover_url} />
+							<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
 						</div>
 					</div>
 				</div>
-				<div className="pt-6 col-span-5 flex flex-col gap-10">
+				<div className="pt-6 col-span-5 flex flex-col gap-12">
 					<section>
 						<h1 className="text-4xl font-medium">{book.title}</h1>
 						<h2 className="text-lg mt-0.5">
@@ -90,16 +91,21 @@ export default function BookPage({ book, category, authors }: BookPageProps) {
 								<span>Share</span>
 							</Button>
 						</div>
-						<div className="mt-6">
-							<div className="text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
-							{book.wiki_url && <p className="text-sm mt-2 text-subtle">Read more at <LinkUnderline href={book.wiki_url} className="text-foreground" target="_blank">Wikipedia</LinkUnderline>.</p>}
+						<div className="mt-4">
+							<Button size={"lg"} variant={"secondary"} className={"w-full h-10"}><GlassesIcon /> Read</Button>
 						</div>
 						<div className="mt-6">
-							<Button size={"lg"} variant={"secondary"} className={"w-full h-10"}><GlassesIcon /> Read</Button>
+							<div className="text-neutral-700 dark:text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
+							{book.wiki_url && <p className="text-sm mt-2 text-subtle">Read more at <LinkUnderline href={book.wiki_url} className="text-foreground" target="_blank">Wikipedia</LinkUnderline>.</p>}
+						</div>
+						<div className="mt-4">
+							{tags.map(tag => (
+								<Badge key={tag.name} variant={"outline"} className="h-7 px-3 text-sm font-normal text-subtle">{tag.name}</Badge>
+							))}
 						</div>
 					</section>
 					<section>
-						<h3 className="mb-2 text-subtle">About the {authors.length > 1 ? "authors" : "author"}</h3>
+						<h3 className="mb-2">About the {authors.length > 1 ? "authors" : "author"}</h3>
 						{authors.map((author, index) => (
 							<div key={index}>
 								<div className="flex items-center gap-3 mb-3">
@@ -109,9 +115,13 @@ export default function BookPage({ book, category, authors }: BookPageProps) {
 									</Avatar>
 									<h3>{author.name}</h3>
 								</div>
-								<div className="text-neutral-300 line-clamp-3">{author.bio}</div>
+								<div className="text-neutral-700 dark:text-neutral-300 line-clamp-3">{author.bio}</div>
 							</div>
 						))}
+					</section>
+					<section>
+						<h3 className="mb-2">Reviews</h3>
+						<p></p>
 					</section>
 				</div>
 			</div>
