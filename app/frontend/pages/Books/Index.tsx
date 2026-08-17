@@ -1,4 +1,5 @@
 import { BookCard } from "@/components/partials/BookCard"
+import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
@@ -24,14 +25,14 @@ export default function LandingPage(props: LandingPageProps) {
 					</div>
 				</div>
 			</div>
-			<div className="large-container mb-4">
+			<div className="large-container mb-2">
 				<div className="flex gap-1">
 					{props.categories.map(cat => (
 						<Button variant={"secondary"} className={"text-[15px] rounded-full"} key={cat.slug}>{cat.name}</Button>
 					))}
 				</div>
 			</div>
-			<Deferred data={"books"} fallback={LoadingBooksSkeleton}>
+			<Deferred data={"books"} fallback={<BooksSkeletons />}>
 				<div className="px-2 pb-2 grid grid-cols-3 gap-2">
 					{props.books?.map((book, index) => (
 						<div key={index}><BookCard book={book} /></div>
@@ -42,12 +43,3 @@ export default function LandingPage(props: LandingPageProps) {
 	)
 }
 
-function LoadingBooksSkeleton() {
-	return (
-		<div className="grid grid-cols-4 gap-2 p-2">
-			{Array.from({ length: 6 }).map((_, i) => (
-				<Skeleton key={i} className="w-full rounded-xl aspect-square" />
-			))}
-		</div>
-	)
-}

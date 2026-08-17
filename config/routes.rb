@@ -23,6 +23,13 @@ Rails.application.routes.draw do
   resource :session, only: [:create, :destroy]
   resources :books, only: [:index, :show]
   resources :authors, only: [:show]
+  resources :categories, only: [:show]
+
+  namespace :api do
+    namespace :v1 do
+      resources :search, only: [:index]
+    end
+  end
 
   root "feeds#index", constraints: AuthenticatedConstraint.new, as: :authenticated_root
   root to: redirect("/books")

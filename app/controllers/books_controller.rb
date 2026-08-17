@@ -13,6 +13,7 @@ class BooksController < ApplicationController
 
     render inertia: "Books/Show", props: {
       **format_book(book),
+      similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
     }
   end
 
