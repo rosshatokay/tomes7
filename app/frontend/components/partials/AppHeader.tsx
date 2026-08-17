@@ -7,6 +7,7 @@ import { AuthProps } from "@/interfaces/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SearchDialog } from "./SearchDialog";
 import { useState } from "react";
+import NotificationsPopover from "./NotificationsPopover";
 
 export default function AppHeader(auth?: AuthProps) {
 	const { url } = usePage()
@@ -49,7 +50,7 @@ export default function AppHeader(auth?: AuthProps) {
 				</div>
 				{!!user && (
 					<div className="flex items-center gap-2 justify-end">
-						<Button variant={"ghost"} size={"icon"}><BellIcon /></Button>
+						<NotificationsPopover />
 						<Avatar>
 							<AvatarImage src={user.avatar_url}></AvatarImage>
 							<AvatarFallback>{user.username[0]}</AvatarFallback>

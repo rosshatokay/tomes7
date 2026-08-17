@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  allow_unauthenticated_access
+  allow_unauthenticated_access except: %i[ save ]
 
   def index
     render inertia: "Books/Index", props: {
@@ -17,15 +17,35 @@ class BooksController < ApplicationController
     }
   end
 
+  def save
+    book = Book.friendly.find(params[:slug]) rescue nil
+
+    unless book.present?
+      render json: { error: "Could not find book" }, status: :unprocessable_entity and return
+    end
+
+    current_user.toggle_like!(book)
+
+    is_liked = current_user.likes?(book)
+
+    if is_liked
+      Activities::Logger.saved_book(user: current_user, book: book)
+    end
+
+    render json: { success: true }
+  end
+
   private
 
   def format_book(book)
     {
       book: {
         title: book.title,
+        slug: book.slug,
         cover_url: book.cover.attached? ? book.cover.service.url(book.cover.blob.key, transformation: [{ width: 600 }]) : nil,
         description: book.description,
         wiki_url: book.wiki_url,
+        is_saved: current_user&.likes?(book) || false,
       },
       tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {

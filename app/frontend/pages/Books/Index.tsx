@@ -33,7 +33,7 @@ export default function LandingPage(props: LandingPageProps) {
 				</div>
 			</div>
 			<Deferred data={"books"} fallback={<BooksSkeletons />}>
-				<div className="px-2 pb-2 grid grid-cols-3 gap-2">
+				<div className="large-container pb-8 grid grid-cols-3 gap-2">
 					{props.books?.map((book, index) => (
 						<div key={index}><BookCard book={book} /></div>
 					))}

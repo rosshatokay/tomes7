@@ -24,7 +24,7 @@ class Api::V1::Users::FollowController < ApplicationController
 
   def follow(user)
     current_user.follow!(user)
-    # Notifications::Notifier.user_followed(follower: current_user, followed: user)
+    Notifications::Notifier.user_followed(follower: current_user, followed: user)
   end
 
   def unfollow(user)

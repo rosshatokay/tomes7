@@ -20,14 +20,23 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: :new_session
   get "signup", to: "registrations#new", as: :new_user_registration
 
+  scope "/@:username" do
+    get "/", to: "users#show", as: :profile
+  end
+
   resource :session, only: [:create, :destroy]
-  resources :books, only: [:index, :show]
   resources :authors, only: [:show]
   resources :categories, only: [:show]
+  resources :books, only: [:index, :show] do
+    collection do
+      post :save
+    end
+  end
 
   namespace :api do
     namespace :v1 do
       resources :search, only: [:index]
+      resources :notifications, only: [:index]
     end
   end
 
