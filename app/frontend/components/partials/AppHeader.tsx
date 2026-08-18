@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SearchDialog } from "./SearchDialog";
 import { useState } from "react";
 import NotificationsPopover from "./NotificationsPopover";
+import TopProfileMenu from "./TopProfileMenu";
 
 export default function AppHeader(auth?: AuthProps) {
 	const { url } = usePage()
@@ -32,7 +33,7 @@ export default function AppHeader(auth?: AuthProps) {
 							const isActive = url === item.path
 
 							return (
-								<Button key={item.path} variant={isActive ? "secondary" : "ghost"} className={cn("text-sm rounded-full", !isActive && "text-subtle")} nativeButton={false} render={<Link href={item.path} />}>{item.label}</Button>
+								<Button key={item.path} variant={isActive ? "secondary" : "ghost"} className={cn("text-sm rounded-full", !isActive && "text-subtle")} nativeButton={false} render={<Link href={item.path} prefetch />}>{item.label}</Button>
 							)
 						})}
 					</div>
@@ -51,10 +52,7 @@ export default function AppHeader(auth?: AuthProps) {
 				{!!user && (
 					<div className="flex items-center gap-2 justify-end">
 						<NotificationsPopover />
-						<Avatar>
-							<AvatarImage src={user.avatar_url}></AvatarImage>
-							<AvatarFallback>{user.username[0]}</AvatarFallback>
-						</Avatar>
+						<TopProfileMenu user={user} />
 					</div>
 				)}
 				{!user && (

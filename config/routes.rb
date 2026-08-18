@@ -19,13 +19,14 @@ Rails.application.routes.draw do
 
   get "login", to: "sessions#new", as: :new_session
   get "signup", to: "registrations#new", as: :new_user_registration
+  delete "logout", to: "sessions#destroy", as: :logout
 
   scope "/@:username" do
     get "/", to: "users#show", as: :profile
   end
 
   resource :session, only: [:create, :destroy]
-  resources :authors, only: [:show]
+  resources :authors, only: [:show, :index]
   resources :categories, only: [:show]
   resources :books, only: [:index, :show] do
     collection do

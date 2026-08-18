@@ -67,7 +67,7 @@ export default function NotificationsPopover() {
 							</Avatar>
 							<div>
 								<div>{notif.notifier?.username} <span className="text-subtle">{formatKind(notif.kind)}</span></div>
-								<div className="text-subtle">{format(notif.created_at)}</div>
+								<div className="text-subtle text-[13px]">{format(notif.created_at)}</div>
 							</div>
 						</div>
 					))}

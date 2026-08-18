@@ -4,7 +4,7 @@ class BooksController < ApplicationController
   def index
     render inertia: "Books/Index", props: {
       categories: JSON.parse(Category.all.take(4).to_json(only: [:name, :slug])),
-      books: InertiaRails.defer { Book.published.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
+      books: Book.published.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
     }
   end
 
@@ -46,6 +46,8 @@ class BooksController < ApplicationController
         description: book.description,
         wiki_url: book.wiki_url,
         is_saved: current_user&.likes?(book) || false,
+        average_rating: book.average_rating,
+        ratings_count: book.ratings_count,
       },
       tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {

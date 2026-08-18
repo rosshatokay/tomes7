@@ -1,8 +1,6 @@
 import { Logo } from "@/assets/Logo"
-import { LogoIcon } from "@/assets/LogoIcon"
 import { LogoText } from "@/assets/LogoText"
 import { Link } from "@inertiajs/react"
-import { LinkUnderline } from "./LinkUnderline"
 
 const footerNavLinks = [
 	{
@@ -34,7 +32,7 @@ export const Footer = () => {
 						<p>Read the greatest books of all time — for free. <br /> © 2026 Tomes. All rights reserved.</p>
 					</div>
 				</div>
-				<div className="grid grid-cols-2 gap-4 col-span-4 col-start-9">
+				<div className="grid grid-cols-2 gap-4 col-span-4 col-start-7">
 					{footerNavLinks.map(group => (
 						<div key={group.label} className="flex flex-col gap-1">
 							<h4>{group.label}</h4>

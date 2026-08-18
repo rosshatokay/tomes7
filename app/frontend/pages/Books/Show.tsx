@@ -2,6 +2,7 @@ import { BookCard } from "@/components/partials/BookCard"
 import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { LinkUnderline } from "@/components/partials/LinkUnderline"
 import { RatingStars } from "@/components/partials/RatingStars"
+import ShareDialog from "@/components/partials/ShareDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -23,6 +24,8 @@ interface BookPageProps {
 		description: string
 		wiki_url: string
 		is_saved: boolean
+		average_rating: number
+		ratings_count: number
 	}
 	tags: [{ name: string }]
 	category: {
@@ -55,6 +58,7 @@ function SimpleFormat(text: string) {
 
 
 export default function BookPage({ auth, book, category, authors, tags, similar_books }: BookPageProps) {
+	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const [isSaved, setIsSaved] = useState<boolean>(book.is_saved)
 	const crumbs = [
 		{ label: "Home", path: "/" },
@@ -81,7 +85,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 				<title>{book.title + " by " + authors.map(author => author.name).join(', ')}</title>
 			</Head>
 			<div>
-				<div className="large-container my-4">
+				<div className="large-container mt-2 mb-4">
 					{createBreadcrumbs(crumbs)}
 				</div>
 				<div className="grid grid-cols-12 large-container">
@@ -106,8 +110,8 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							<div className="flex gap-1 mt-1">
 								<div className="-ml-2">
 									<Button variant={"ghost"} className={"px-2 text-[15px]"}>
-										<RatingStars rating={4} />
-										<span>4.2 <span className="text-subtle">(24)</span></span>
+										<RatingStars rating={book.average_rating} />
+										<span>{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></span>
 									</Button>
 								</div>
 								{!auth.user && (
@@ -127,7 +131,11 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 										<span>{isSaved ? "Saved" : "Save"}</span>
 									</Button>
 								)}
-								<Button variant={"ghost"} className={"px-2 text-[15px]"}>
+								<Button
+									variant={"ghost"}
+									className={"px-2 text-[15px]"}
+									onClick={() => setIsShareOpen(true)}
+								>
 									<ShareIcon />
 									<span>Share</span>
 								</Button>
@@ -170,23 +178,21 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							<h3 className="text-subtle mb-2">About the {authors.length > 1 ? "authors" : "author"}</h3>
 							{authors.map((author, index) => (
 								<div key={index}>
-									<div className="flex items-center gap-3 mb-3">
+									<Link href={author.permalink} className="flex items-center gap-3 mb-3 group w-fit">
 										<Avatar>
 											<AvatarImage src={author.avatar_url} alt={author.name}></AvatarImage>
 											<AvatarFallback>{author.name[0]}</AvatarFallback>
 										</Avatar>
-										<h3 className="text-[15px]">{author.name}</h3>
-									</div>
+										<h3 className="text-[15px] group-hover:text-foreground/80 transition">{author.name}</h3>
+									</Link>
 									<div className="text-[15px] text-neutral-700 dark:text-neutral-300 line-clamp-3">{author.bio}</div>
 								</div>
 							))}
 						</section>
 					</div>
 				</div>
-				<div className="large-container mt-6 mb-4">
-					<h3 className="text-xl">Similar to this book</h3>
-				</div>
-				<div className="px-2">
+				<div className="large-container mt-6">
+					<h3 className="text-xl mb-4">Similar to this book</h3>
 					<Deferred data={"similar_books"} fallback={<BooksSkeletons className="px-0 grid-cols-4" />}>
 						<div className="grid grid-cols-4 gap-2">
 							{similar_books?.map((book, index) => <BookCard key={index} book={book} />)}
@@ -194,6 +200,9 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					</Deferred>
 				</div>
 			</div>
+			<ShareDialog url="as" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
+			<div className="pt-20"></div>
+			<hr />
 		</>
 	)
 }

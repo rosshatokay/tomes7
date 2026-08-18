@@ -1,4 +1,5 @@
 import { BookCard } from "@/components/partials/BookCard";
+import { Footer } from "@/components/partials/Footer";
 import { Button } from "@/components/ui/button";
 import { Book } from "@/interfaces/book";
 import { Head } from "@inertiajs/react";
@@ -13,13 +14,14 @@ export default function HomePage({ currently_reading }: HomePageProps) {
 			<Head>
 				<title>Library</title>
 			</Head>
-			<div className="large-container pt-6 flex-center flex-col h-[30vh] min-h-50">
+			<div className="large-container flex-center flex-col h-[30vh] min-h-50">
 				<h1 className="text-5xl mb-4">Library</h1>
 				<p className="text-subtle">Your collection of books</p>
 			</div>
 			<div className="large-container">
 				<div className="flex gap-2">
 					<Button variant={"secondary"} className={"rounded-full text-[15px]"}>Reading</Button>
+					<Button variant={"ghost"} className={"rounded-full text-[15px]"}>Following</Button>
 					<Button variant={"ghost"} className={"rounded-full text-[15px]"}>Saved</Button>
 				</div>
 			</div>

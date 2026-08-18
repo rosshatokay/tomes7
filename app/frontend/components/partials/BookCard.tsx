@@ -15,7 +15,7 @@ export const BookCard = ({ book }: BookProps) => {
 			</div>
 			<div>
 				<div className="text-subtle text-sm">{book.author_names}</div>
-				<div>{book.title}</div>
+				<h3>{book.title}</h3>
 				<div className="flex items-center gap-1 text-sm mt-1">
 					<StarIcon fill="var(--subtle)" size={15} stroke="none" />
 					<span className="leading-none pt-0.5">{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></span>

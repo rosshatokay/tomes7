@@ -3,26 +3,42 @@ import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
+import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
 import { Category } from "@/interfaces/category"
+import { cn } from "@/lib/utils"
 import { Deferred } from "@inertiajs/react"
 import { ArrowRight } from "lucide-react"
 
 interface LandingPageProps {
 	categories: Category[]
 	books: Book[]
+	auth: AuthProps
 }
 
 export default function LandingPage(props: LandingPageProps) {
+	const auth = props.auth
+
 	return (
 		<>
-			<div className="h-[60vh] flex-col flex-center">
+			<div className={cn("flex-col flex-center", auth.user === null ? "h-[60vh]" : "h-[30vh]")}>
 				<div className="max-w-xl w-full text-center">
-					<h1 className="text-5xl font-medium mb-4">Read the greatest books <br /> of all time. For free.</h1>
-					<p className="text-subtle">Access timeless classics for free.</p>
-					<div className="mt-6">
-						<Button size={"lg"} className={"text-base rounded-full"}>Join for free <ArrowRight /></Button>
-					</div>
+					<h1 className="text-5xl font-medium mb-4">
+						{auth.user === null ?
+							(<span>Read the greatest books <br /> of all time. For free.</span>)
+							: (<span>Books</span>)}
+					</h1>
+					{auth.user !== null && (
+						<p className="text-subtle">Explore the timeless classics</p>
+					)}
+					{auth.user === null && (
+						<div>
+							<p className="text-subtle">Access timeless classics for free.</p>
+							<div className="mt-6">
+								<Button size={"lg"} className={"text-base rounded-full"}>Join for free <ArrowRight /></Button>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 			<div className="large-container mb-2">
@@ -32,13 +48,13 @@ export default function LandingPage(props: LandingPageProps) {
 					))}
 				</div>
 			</div>
-			<Deferred data={"books"} fallback={<BooksSkeletons />}>
-				<div className="large-container pb-8 grid grid-cols-3 gap-2">
-					{props.books?.map((book, index) => (
-						<div key={index}><BookCard book={book} /></div>
-					))}
-				</div>
-			</Deferred>
+			<div className="large-container pb-8 grid grid-cols-4 gap-2">
+				{props.books?.map((book, index) => (
+					<div key={index}><BookCard book={book} /></div>
+				))}
+			</div>
+			{/* <Deferred data={"books"} fallback={<BooksSkeletons />}> */}
+			{/* </Deferred> */}
 		</>
 	)
 }
