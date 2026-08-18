@@ -35,10 +35,10 @@ export default function AuthorPage({ author, books }: Props) {
 					{createBreadcrumbs(crumbs)}
 				</div>
 				<div className="large-container">
-					<div className="flex-center flex-col gap-4 pt-12 py-20">
-						<Avatar className={"mb-2 size-12"}>
+					<div className="flex-center flex-col gap-4 pt-6 py-20">
+						<Avatar className={"mb-2 size-16"}>
 							<AvatarImage src={author.avatar_url} />
-							<AvatarFallback>{author.full_name[0]}</AvatarFallback>
+							<AvatarFallback className={"text-xl"}>{author.full_name[0]}</AvatarFallback>
 						</Avatar>
 						<div className="text-center mb-2">
 							<h1 className="text-2xl mb-2">{author.full_name}</h1>
@@ -58,7 +58,7 @@ export default function AuthorPage({ author, books }: Props) {
 						</div>
 					</div>
 					{books.length > 0 && (
-						<div className="grid grid-cols-3">
+						<div className="grid grid-cols-4 gap-2">
 							{books.map((book, index) => <BookCard key={index} book={book} />)}
 						</div>
 					)}

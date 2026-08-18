@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   resource :session, only: [:create, :destroy]
   resources :authors, only: [:show, :index]
+  resources :users, only: [:show]
   resources :categories, only: [:show]
   resources :books, only: [:index, :show] do
     collection do

@@ -11,13 +11,13 @@ interface Props {
 export default function TopProfileMenu({ user }: Props) {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger render={<Avatar className={"border border-transparent hover:border-foreground/50 cursor-pointer transition"}>
+			<DropdownMenuTrigger nativeButton={false} render={<Avatar className={"border border-transparent hover:border-foreground/50 cursor-pointer transition"}>
 				<AvatarImage src={user?.avatar_url}></AvatarImage>
 				<AvatarFallback>{user?.username[0]}</AvatarFallback>
 			</Avatar>} />
 			<DropdownMenuContent className={"w-48"} align={"end"}>
 				<DropdownMenuGroup>
-					<DropdownMenuItem><UserIcon /> Profile</DropdownMenuItem>
+					<DropdownMenuItem nativeButton={false} render={<Link href={`/@${user?.username}`} />}><UserIcon /> Profile</DropdownMenuItem>
 					<DropdownMenuItem><HeartIcon /> Saved</DropdownMenuItem>
 					<DropdownMenuItem><GitPullRequestArrowIcon /> Request a book</DropdownMenuItem>
 					<DropdownMenuItem><MailPlusIcon /> Invite a friend</DropdownMenuItem>
