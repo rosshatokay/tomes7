@@ -102,7 +102,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							<h2 className="text-lg mt-0.5">
 								{authors.map((author, index) => (
 									<span key={index}>
-										<span><a href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</a></span>
+										<span className="font-normal"><a href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</a></span>
 										{index < authors.length - 1 && <span className="text-subtle">, </span>}
 									</span>
 								))}
@@ -157,20 +157,20 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							<h3 className="text-subtle mb-2">Book details</h3>
 							<div className="flex flex-col gap-2 text-[15px]">
 								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="">Original title</h3>
-									<h3>Le mythe de Sisyphe</h3>
+									<h3 className="!font-normal">Original title</h3>
+									<h3 className="!font-normal">Le mythe de Sisyphe</h3>
 								</div>
 								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="text-subtle">Translator</h3>
-									<h3>Justin O'Brien</h3>
+									<h3 className="text-subtle !font-normal">Translator</h3>
+									<h3 className="!font-normal">Justin O'Brien</h3>
 								</div>
 								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="text-subtle">Language</h3>
-									<h3>French</h3>
+									<h3 className="text-subtle !font-normal">Language</h3>
+									<h3 className="!font-normal">French</h3>
 								</div>
 								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="text-subtle">Publication date</h3>
-									<h3>21 February 1848</h3>
+									<h3 className="text-subtle !font-normal">Publication date</h3>
+									<h3 className="!font-normal">21 February 1848</h3>
 								</div>
 							</div>
 						</section>

@@ -7,6 +7,7 @@ import { toast } from "../ui/toast";
 import { format } from "timeago.js"
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Spinner } from "../ui/spinner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 interface Notification {
 	kind: "user_followed" | "accepted_invite"
@@ -52,7 +53,10 @@ export default function NotificationsPopover() {
 	return (
 		<div>
 			<Popover onOpenChange={open => setIsOpen(open)}>
-				<PopoverTrigger render={<Button variant={"ghost"} size={"icon"}><BellIcon /></Button>} />
+				<Tooltip>
+					<TooltipTrigger delay={0} render={<PopoverTrigger render={<Button variant={"ghost"} size={"icon"}><BellIcon /></Button>} />} />
+					<TooltipContent>Notifications</TooltipContent>
+				</Tooltip>
 				<PopoverContent align="end" className={"w-90 p-1 gap-1"}>
 					<p className="text-sm text-subtle p-2 pt-2 pb-0">Notifications</p>
 

@@ -20,15 +20,6 @@ class ApplicationController < ActionController::Base
                   }
                 }
 
-  before_action :check_onboarding
-
-  def check_onboarding
-    # Only redirect if they are logged in and haven't finished onboarding
-    if authenticated? && !current_user.onboarded?
-      redirect_to onboarding_index_path
-    end
-  end
-
   unless Rails.env.production?
     around_action :n_plus_one_detection
 
@@ -56,5 +47,15 @@ class ApplicationController < ActionController::Base
 
   def current_admin
     @current_admin ||= Current.user unless !Current.user&.admin?
+  end
+
+  private
+
+  def inertia_errors_for(record, object_name = nil)
+    prefix = object_name || record.model_name.param_key
+
+    record.errors.to_hash.transform_keys do |key|
+      "#{prefix}.#{key}"
+    end.transform_values(&:first)
   end
 end

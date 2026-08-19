@@ -1,6 +1,7 @@
 import { Book } from "@/interfaces/book";
 import { Link } from "@inertiajs/react";
 import { StarIcon } from "lucide-react";
+import { RatingStars } from "./RatingStars";
 
 interface BookProps {
 	book: Book
@@ -17,8 +18,9 @@ export const BookCard = ({ book }: BookProps) => {
 				<div className="text-subtle text-sm">{book.author_names}</div>
 				<h3>{book.title}</h3>
 				<div className="flex items-center gap-1 text-sm mt-1">
-					<StarIcon fill="var(--subtle)" size={15} stroke="none" />
-					<span className="leading-none pt-0.5">{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></span>
+					{/* <StarIcon fill="var(--subtle)" size={15} stroke="none" /> */}
+					<RatingStars rating={book.average_rating} />
+					<span className="leading-none pt-0.5"><span className="text-subtle">({book.ratings_count})</span></span>
 				</div>
 			</div>
 		</div>

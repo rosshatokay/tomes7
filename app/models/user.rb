@@ -36,7 +36,8 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
   validates :username,
-            presence: { on: ONBOARDING_STEP },
+            # presence: { on: ONBOARDING_STEP },
+            presence: true,
             uniqueness: true,
             format: { with: /\A[\w]+\z/, message: "only allows letters, numbers, and underscores", allow_blank: true },
             length: {

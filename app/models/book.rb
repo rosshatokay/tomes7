@@ -78,7 +78,6 @@ class Book < ApplicationRecord
       title: title,
       cover: cover,
       author_names: author_names,
-      category: category.name,
       published: published,
       average_rating: average_rating,
       slug: slug,

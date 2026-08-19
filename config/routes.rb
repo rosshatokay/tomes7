@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   get "login", to: "sessions#new", as: :new_session
   get "signup", to: "registrations#new", as: :new_user_registration
+
+  post "/signup", to: "registrations#create", as: :registration
   delete "logout", to: "sessions#destroy", as: :logout
 
   scope "/@:username" do
@@ -42,8 +44,18 @@ Rails.application.routes.draw do
     end
   end
 
-  root "feeds#index", constraints: AuthenticatedConstraint.new, as: :authenticated_root
+  get "/community", to: "feeds#community"
+  get "/library", to: "feeds#library", as: :library
+
+  root to: redirect("/library"), constraints: AuthenticatedConstraint.new, as: :authenticated_root
   root to: redirect("/books")
+
+  resource :oauth, only: %i[], controller: "oauth" do
+    collection do
+      get :authorize
+      get :callback
+    end
+  end
 
   direct :rails_public_blob do |blob|
     if ENV["ACTIVE_STORAGE_ASSET_HOST"].present?

@@ -1,23 +1,24 @@
 import { LogoIcon } from "@/assets/LogoIcon";
 import { Button } from "../ui/button";
-import { BellIcon, SearchIcon } from "lucide-react";
+import { GlobeIcon, SearchIcon } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
 import { cn } from "@/lib/utils";
 import { AuthProps } from "@/interfaces/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SearchDialog } from "./SearchDialog";
 import { useState } from "react";
 import NotificationsPopover from "./NotificationsPopover";
 import TopProfileMenu from "./TopProfileMenu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function AppHeader(auth?: AuthProps) {
-	const { url } = usePage()
+	const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
+	const url = usePage().url.split("?")[0]
 	const user = auth?.user
+
 	const navLinks = [
-		{ label: user ? "Library" : "Books", path: "/" },
+		{ label: user ? "Library" : "Books", path: user ? "/library" : "/" },
 		{ label: "Authors", path: "/authors" }
 	]
-	const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
 
 	if (user) {
 		navLinks.splice(1, 0, { label: "Books", path: "/books" })
@@ -51,6 +52,10 @@ export default function AppHeader(auth?: AuthProps) {
 				</div>
 				{!!user && (
 					<div className="flex items-center gap-2 justify-end">
+						<Tooltip>
+							<TooltipTrigger delay={0} render={<Button variant={"ghost"} size={"icon"} nativeButton={false} render={<Link href={"/community"} />}><GlobeIcon /></Button>} />
+							<TooltipContent>Community</TooltipContent>
+						</Tooltip>
 						<NotificationsPopover />
 						<TopProfileMenu user={user} />
 					</div>

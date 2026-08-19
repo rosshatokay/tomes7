@@ -30,7 +30,7 @@ export default function LoginPage() {
 					<LogoIcon />
 					<div className="flex flex-col gap-2">
 						<h1 className="text-lg leading-none">Welcome back to Tomes</h1>
-						<p className="text-lg leading-none text-subtle">The details behind great design</p>
+						<p className="text-lg leading-none text-subtle">The greatest books of all time, for free.</p>
 					</div>
 					<Button size={"lg"} variant={"secondary"}>
 						<GoogleIcon />

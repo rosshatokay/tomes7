@@ -1,6 +1,5 @@
 import { BookCard } from "@/components/partials/BookCard"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
@@ -67,7 +66,7 @@ export default function AuthorPage({ author, books }: Props) {
 							<EmptyHeader>
 								<EmptyMedia variant={"icon"}><BookAlertIcon /></EmptyMedia>
 								<EmptyTitle>No books yet</EmptyTitle>
-								<EmptyDescription>Looks like none of {author.full_name}'s are currently available on Tomes. Check back again soon.</EmptyDescription>
+								<EmptyDescription>Looks like none of {author.full_name}'s books are currently available on Tomes. Check back again soon.</EmptyDescription>
 							</EmptyHeader>
 						</Empty>
 					)}
