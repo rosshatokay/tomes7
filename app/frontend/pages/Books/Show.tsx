@@ -10,9 +10,9 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
-import { createBreadcrumbs } from "@/lib/utils"
+import { cn, createBreadcrumbs, useIsMobile } from "@/lib/utils"
 import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
-import { GlassesIcon, HeartIcon, ShareIcon } from "lucide-react"
+import { ArrowUpRightIcon, GlassesIcon, HeartIcon, ShareIcon } from "lucide-react"
 import React, { useState } from "react"
 
 interface BookPageProps {
@@ -21,6 +21,7 @@ interface BookPageProps {
 		slug: string
 		title: string
 		cover_url: string
+		permalink: string
 		description: string
 		wiki_url: string
 		is_saved: boolean
@@ -58,6 +59,7 @@ function SimpleFormat(text: string) {
 
 
 export default function BookPage({ auth, book, category, authors, tags, similar_books }: BookPageProps) {
+	const isMobile = useIsMobile()
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const [isSaved, setIsSaved] = useState<boolean>(book.is_saved)
 	const crumbs = [
@@ -84,12 +86,12 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 			<Head>
 				<title>{book.title + " by " + authors.map(author => author.name).join(', ')}</title>
 			</Head>
-			<div>
-				<div className="large-container mt-2 mb-4">
+			<div className="lg:pt-0 pt-2">
+				<div className="large-container mt-2 mb-4 md:block hidden">
 					{createBreadcrumbs(crumbs)}
 				</div>
-				<div className="grid grid-cols-12 large-container">
-					<div className="h-[calc(100vh_-_120px)] max-h-[900px] col-span-7 sticky top-20 pb-5 flex flex-col gap-2 pr-12">
+				<div className="lg:grid grid-cols-12 large-container">
+					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[900px] col-span-7 w-full lg:sticky top-20 pb-5 flex flex-col gap-2 lg:pr-12 h-125">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 							<div className="relative h-full aspect-[4/6]">
 								<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
@@ -98,7 +100,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					</div>
 					<div className="pt-6 col-span-5 flex flex-col gap-12 pb-5">
 						<section>
-							<h1 className="text-4xl font-medium">{book.title}</h1>
+							<h1 className="md:text-4xl text-3xl font-medium">{book.title}</h1>
 							<h2 className="text-lg mt-0.5">
 								{authors.map((author, index) => (
 									<span key={index}>
@@ -149,7 +151,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 									<Badge key={tag.name} variant={"outline"} className="h-7 px-3 text-sm font-normal text-subtle">{tag.name}</Badge>
 								))}
 							</div>
-							<div className="mt-8">
+							<div className="mt-8 md:block hidden">
 								<Button size={"lg"} variant={"default"} className={"w-full h-10"}>Read</Button>
 							</div>
 						</section>
@@ -194,13 +196,16 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 				<div className="large-container mt-6">
 					<h3 className="text-xl mb-4">Similar to this book</h3>
 					<Deferred data={"similar_books"} fallback={<BooksSkeletons className="px-0 grid-cols-4" />}>
-						<div className="grid grid-cols-4 gap-2">
+						<div className="grid md:grid-cols-4 gap-2">
 							{similar_books?.map((book, index) => <BookCard key={index} book={book} />)}
 						</div>
 					</Deferred>
 				</div>
+				<div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:hidden z-2">
+					<Button className={"rounded-full h-11 px-6 shadow-lg"} size={"lg"}>Read the book <ArrowUpRightIcon /></Button>
+				</div>
 			</div>
-			<ShareDialog url="as" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
+			<ShareDialog url={`https://tomes.club${book.permalink}`} isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
 			<div className="pt-20"></div>
 			<hr />
 		</>

@@ -24,10 +24,12 @@ export default function AppHeader({ user }: AuthProps) {
 
 	return (
 		<div>
-			<header className="fixed top-0 left-0 h-16 w-full items-center px-5 grid grid-cols-3 z-2 bg-background">
+			<header className="fixed top-0 left-0 h-16 w-full items-center px-5 flex md:grid grid-cols-3 z-2 gap-4 bg-background">
 				<div className="flex items-center gap-6">
-					<LogoIcon size={20} />
-					<div className="flex gap-1">
+					<Link href={"/"}>
+						<LogoIcon size={20} />
+					</Link>
+					<div className="md:flex hidden gap-1">
 						{navLinks.map(item => {
 							const isActive = url === item.path
 
@@ -37,14 +39,14 @@ export default function AppHeader({ user }: AuthProps) {
 						})}
 					</div>
 				</div>
-				<div className="flex-center">
-					<div className="w-full max-w-sm">
+				<div className="flex-center min-w-0 w-full">
+					<div className="w-full md:max-w-sm">
 						<button
 							className="bg-black/5 w-3/4 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/15 transition focus-visible:ring-3 focus-visible:ring-ring/50 w-full h-10 flex items-center gap-3 px-4 rounded-full text-sm text-subtle"
 							onClick={() => setIsSearchOpen(true)}
 						>
 							<SearchIcon size={20} />
-							<span>Search for books / authors / genres</span>
+							<span className="truncate">Search for books / authors / genres</span>
 						</button>
 					</div>
 				</div>

@@ -117,7 +117,7 @@ export const SearchDialog = ({ isOpen, setIsOpen }: SearchDialogProps) => {
 
 	return (
 		<Dialog open={isOpen} onOpenChange={open => handleDialogClose(open)}>
-			<DialogContent showCloseButton={false} className={"p-0 !w-full !max-w-lg h-[65vh] flex flex-col gap-0"}>
+			<DialogContent showCloseButton={false} className={"p-0 !md:max-w-lg h-[65vh] flex flex-col gap-0"}>
 				<div className="relative h-fit border-b">
 					<SearchIcon size={20} className="absolute top-1/2 -translate-y-1/2 left-4 text-subtle" />
 					<input

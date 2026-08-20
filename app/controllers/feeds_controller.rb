@@ -5,19 +5,27 @@ class FeedsController < ApplicationController
       redirect_to library_path(tab: "reading")
       return
     end
+
     current_tab = params[:tab].presence || "reading"
+    saved_books = current_user.likees(Book.includes(:authors, cover_attachment: :blob)).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
+    currently_reading_books = current_user.currently_reading.map { |b| b.book.to_hash.merge({ permalink: book_path(b.book.slug) }) }
+    following_author_ids = current_user.followees(Author).pluck(:id)
+    following_author_books = Book.joins(:authorships)
+      .where(authorships: { author_id: following_author_ids })
+      .distinct
+      .includes(authors: [:authorships, avatar_attachment: :blob], cover_attachment: :blob)
+      .order(created_at: :desc)
+      .map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
 
     books = case current_tab
       when "reading"
-        current_user.currently_reading.map { |b| b.book.to_hash.merge({ permalink: book_path(b.book.slug) }) }
+        currently_reading_books
       when "following"
-        []
-        # Book.includes(:authors, cover_attachment: [:blob]).all.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
+        following_author_books
       when "saved"
-        []
-        current_user.likees(Book.includes(:authors, cover_attachment: :blob)).map { |b| b.to_hash }
+        saved_books
       else
-        current_user.currently_reading.map { |b| b.book.to_hash.merge({ permalink: book_path(b.book.slug) }) }
+        currently_reading_books
       end
 
     render inertia: "Feeds/Library", props: {

@@ -48,6 +48,7 @@ class BooksController < ApplicationController
         is_saved: current_user&.likes?(book) || false,
         average_rating: book.average_rating,
         ratings_count: book.ratings_count,
+        permalink: book_path(book.slug),
       },
       tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {

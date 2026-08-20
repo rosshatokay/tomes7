@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_16_152919) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_20_195741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -62,6 +62,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_16_152919) do
     t.string "wiki_url"
     t.integer "books_count", default: 0
     t.string "slug"
+    t.integer "followers_count", default: 0
     t.index ["full_name"], name: "index_authors_on_full_name", opclass: :gin_trgm_ops, using: :gin
   end
 

@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { Link } from "@inertiajs/react"
 import clsx, { type ClassValue } from "clsx"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 
 export interface Breadcrumb {
@@ -112,6 +112,31 @@ function fallbackCopyToClipboard(text: string) {
         // Always remove the temporary textarea from the DOM
         document.body.removeChild(textarea);
     }
+}
+
+export function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Define the media query matcher
+    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    
+    // Set initial state value safely on the client side
+    setIsMobile(mediaQuery.matches);
+
+    // Define a listener function to handle changes
+    const handleMediaQueryChange = (event: any) => {
+      setIsMobile(event.matches);
+    };
+
+    // Listen for window resize changes matching the query
+    mediaQuery.addEventListener('change', handleMediaQueryChange);
+
+    // Clean up event listener when the component unmounts
+    return () => mediaQuery.removeEventListener('change', handleMediaQueryChange);
+  }, [breakpoint]);
+
+  return isMobile;
 }
 
 export default copyToClipboard

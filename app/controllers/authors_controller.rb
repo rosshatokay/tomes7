@@ -29,12 +29,18 @@ class AuthorsController < ApplicationController
         bio: author.bio,
         slug: author.slug,
         is_followed: current_user&.follows?(author),
+        books_count: author.books_count,
+        followers_count: author.followers_count,
       },
       books: author.books.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
     }
   end
 
   def follow
+    if current_user.followees(Author).count >= User::MAX_FOLLOWABLE_AUTHORS_COUNT
+      render json: { errors: { author: ["You cannot follow more than 20 authors for now."] } }, status: :unprocessable_entity and return
+    end
+
     author = Author.friendly.find(params[:slug]) rescue nil
 
     unless author.present?

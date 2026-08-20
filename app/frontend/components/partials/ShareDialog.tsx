@@ -1,12 +1,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import copyToClipboard, { cn } from "@/lib/utils"
+import copyToClipboard, { cn, useIsMobile } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CopyIcon, MailIcon, MoreVerticalIcon } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { useState } from "react"
 import { FacebookIcon, RedditIcon, XIcon } from "@/assets/socials"
+import { toast } from "../ui/toast"
 
 interface ShareDialogProps {
 	url: string
@@ -49,16 +50,22 @@ const platforms = [
 ]
 
 export default function ShareDialog({ url, isOpen, setIsOpen }: ShareDialogProps) {
+	const isMobile = useIsMobile()
 	const [isCopied, setIsCopied] = useState<boolean>(false)
 	
 	const handleUrlCopy = () => {
 		setIsCopied(true)
 		copyToClipboard(url)
+
+		if (isMobile) {
+			setIsOpen(false)
+			toast.add({description: "Link copied"})
+		}
 	}
 	
 	return (
 		<Dialog open={isOpen} onOpenChange={(e) => !e ? setIsOpen(false) : undefined}>
-			<DialogContent className={"sm:max-w-md"}>
+			<DialogContent className={"sm:max-w-md"} autoFocus={false}>
 				<DialogHeader>
 					<DialogTitle>Share book</DialogTitle>
 				</DialogHeader>
@@ -66,7 +73,7 @@ export default function ShareDialog({ url, isOpen, setIsOpen }: ShareDialogProps
 					<Field>
 						<FieldLabel>Copy link</FieldLabel>
 						<Field orientation="horizontal">
-							<Input type="text" readOnly value={url} />
+							<Input tabIndex={-1} autoFocus={false} type="text" readOnly value={url} />
 							<Tooltip onOpenChange={(e) => !e ? setIsCopied(false) : null}>
 								<TooltipTrigger delay={0} closeOnClick={false} onClick={handleUrlCopy} render={<Button variant={"secondary"} size={"icon"}><CopyIcon /></Button>} />
 								<TooltipContent>{isCopied ? "URL Copied" : "Copy URL"}</TooltipContent>
@@ -75,9 +82,9 @@ export default function ShareDialog({ url, isOpen, setIsOpen }: ShareDialogProps
 					</Field>
 					<div>
 						<div className="font-medium">Share to</div>
-						<div className="grid grid-cols-5 gap-2">
+						<div className="grid grid-cols-5 md:gap-2">
 							{platforms.map((item, i) => (
-								<a href={`${item.shareLink}${url}`} target="_blank" className="flex flex-col gap-2 items-center p-4 group" onClick={() => item.onClick ? item.onClick() : undefined} key={i}>
+								<a href={`${item.shareLink}${url}`} target="_blank" className="flex flex-col gap-2 items-center md:p-4 p-2 group" onClick={() => item.onClick ? item.onClick() : undefined} key={i}>
 									<div className={cn("w-full aspect-square rounded-full flex-center", item.bgColor)}>
 										{item.icon}
 									</div>

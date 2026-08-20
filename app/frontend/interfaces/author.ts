@@ -6,5 +6,7 @@ export default interface Author {
 	books_count: number
 	is_followed: boolean
 	slug: string
+	followers_count: number
+	bio: string
 	permalink: string
 }

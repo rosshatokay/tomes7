@@ -74,7 +74,7 @@ export default function LibraryPage({ currentTab, books }: LibraryPageProps) {
 				</div>
 			)}
 			{books?.length > 0 && (
-				<div className="large-container pb-6 mt-2 grid grid-cols-4 gap-2">
+				<div className="large-container pb-6 mt-2 grid md:grid-cols-4 md:gap-2 gap-4">
 					{books.map((book, index) => <BookCard key={index} book={book} />)}
 				</div>
 			)}

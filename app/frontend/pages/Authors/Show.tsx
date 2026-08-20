@@ -5,25 +5,21 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import Author from "@/interfaces/author"
 import { Book } from "@/interfaces/book"
 import { createBreadcrumbs } from "@/lib/utils"
 import { Head, useHttp } from "@inertiajs/react"
 import { BookAlertIcon, MinusIcon, PlusIcon, ShareIcon } from "lucide-react"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 interface Props {
-	author: {
-		full_name: string
-		avatar_url: string
-		bio: string
-		slug: string
-		is_followed: boolean
-	}
+	author: Author
 	books: Book[]
 }
 
 export default function AuthorPage({ author, books }: Props) {
 	const [isFollowing, setIsFollowing] = useState<boolean>(author.is_followed)
+	const [followersCount, setFollowersCount] = useState<number>(author.followers_count)
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: "Authors", path: "/authors" },
@@ -37,6 +33,7 @@ export default function AuthorPage({ author, books }: Props) {
 				if (res.success) {
 					toast.add({ description: isFollowing ? "Stopped following author" : "Started following author" })
 					setIsFollowing(!isFollowing)
+					!isFollowing ? author.followers_count++ : author.followers_count--
 				}
 			},
 			onError(errors) {
@@ -44,6 +41,7 @@ export default function AuthorPage({ author, books }: Props) {
 			},
 		}).catch(err => toast.add({ description: "Something went wrong try again" }))
 	}
+
 
 	return (
 		<>
@@ -63,6 +61,11 @@ export default function AuthorPage({ author, books }: Props) {
 						<div className="text-center mb-2">
 							<h1 className="text-2xl mb-2">{author.full_name}</h1>
 							<p className="max-w-lg text-center text-subtle line-clamp-3">{author.bio}</p>
+							<div className="flex items-center gap-2 justify-center mt-2">
+								<h3 className="text-[15px] !font-normal">{author.followers_count} <span className="text-subtle/75">{author.followers_count === 1 ? "follower" : "followers"}</span></h3>
+								<span className="size-1 rouned-full bg-foreground/40 inline-flex mx-1"></span>
+								<h3 className="text-[15px] !font-normal">{author.books_count} <span className="text-subtle/75">{author.books_count === 1 ? "book" : "books"}</span></h3>
+							</div>
 						</div>
 						<div className="flex gap-2 items-center">
 							<Button

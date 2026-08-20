@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include Hashid::Rails
 
+  MAX_FOLLOWABLE_AUTHORS_COUNT = 10
   ONBOARDING_STEP = :onboarding
   BLACKLISTED_USERNAMES = File.readlines(Rails.root.join("config", "blacklist.txt")).map do |line|
     line.strip.downcase
@@ -51,6 +52,7 @@ class User < ApplicationRecord
               message: "not allowed",
             }
   validates :password, presence: true, length: { minimum: 8, message: "has to be at least 8 characters long" }, if: -> { password.present? }, allow_blank: true
+  validate :maximum_authors_limit, on: :update
 
   def currently_reading
     user_books.includes(:book).order(updated_at: :desc).where("user_books.progress < 1").references(:book).merge(Book.published)
@@ -95,5 +97,11 @@ class User < ApplicationRecord
     # We prepend the folder structure to the existing random key
     blob = avatar.blob
     blob.key = "#{Rails.env}/users/avatars/#{blob.key}"
+  end
+
+  def maximum_authors_limit
+    if following(Author).count >= MAX_FOLLOWABLE_AUTHORS_COUNT
+      errors.add(:base, "You cannot follow more than 10 authors.")
+    end
   end
 end
