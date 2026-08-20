@@ -28,7 +28,6 @@ Rails.application.routes.draw do
   end
 
   resource :session, only: [:create, :destroy]
-  resources :authors, only: [:show, :index]
   resources :users, only: [:show]
   resources :categories, only: [:show]
   resources :books, only: [:index, :show] do
@@ -36,15 +35,39 @@ Rails.application.routes.draw do
       post :save
     end
   end
+  resources :authors, only: [:show, :index] do
+    collection do
+      post :follow
+      post :unfollow
+    end
+  end
 
   namespace :api do
     namespace :v1 do
+      resources :authors, only: [] do
+        collection do
+          get :show
+        end
+      end
       resources :search, only: [:index]
       resources :notifications, only: [:index]
     end
   end
 
-  get "/community", to: "feeds#community"
+  namespace :admins do
+    resources :authors, only: [:index, :update] do
+      collection do
+        post :create
+      end
+    end
+
+    resources :users, only: [:index]
+    resources :books
+
+    root "dashboard#index"
+  end
+
+  # get "/community", to: "feeds#community"
   get "/library", to: "feeds#library", as: :library
 
   root to: redirect("/library"), constraints: AuthenticatedConstraint.new, as: :authenticated_root

@@ -1,7 +1,7 @@
 import { AuthProps } from "@/interfaces/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { GitPullRequestArrowIcon, HeartIcon, LogOutIcon, MailPlusIcon, UserIcon } from "lucide-react";
+import { GitPullRequestArrowIcon, GridIcon, HeartIcon, LogOutIcon, MailPlusIcon, UserIcon } from "lucide-react";
 import { Link } from "@inertiajs/react";
 
 interface Props {
@@ -17,8 +17,9 @@ export default function TopProfileMenu({ user }: Props) {
 			</Avatar>} />
 			<DropdownMenuContent className={"w-48"} align={"end"}>
 				<DropdownMenuGroup>
+					{user?.is_admin && <DropdownMenuItem nativeButton={false} render={<Link href={"/admins"} />}><GridIcon /> Dashboard</DropdownMenuItem>}
 					<DropdownMenuItem nativeButton={false} render={<Link href={`/@${user?.username}`} />}><UserIcon /> Profile</DropdownMenuItem>
-					<DropdownMenuItem><HeartIcon /> Saved</DropdownMenuItem>
+					<DropdownMenuItem nativeButton={false} render={<Link href={"/library?tab=saved"} />}><HeartIcon /> Saved</DropdownMenuItem>
 					<DropdownMenuItem><GitPullRequestArrowIcon /> Request a book</DropdownMenuItem>
 					<DropdownMenuItem><MailPlusIcon /> Invite a friend</DropdownMenuItem>
 				</DropdownMenuGroup>

@@ -1,16 +1,16 @@
 class Admins::BaseController < ApplicationController
   before_action :ensure_admin_user
 
-  inertia_share do
-    {
-      auth: {
-        admin: current_user&.admin? ? {
-          id: current_user.id,
-          email: current_user.email,
-        } : nil,
-      },
-    }
-  end
+  # inertia_share do
+  #   {
+  #     auth: {
+  #       admin: current_user&.admin? ? {
+  #         id: current_user.id,
+  #         email: current_user.email,
+  #       } : nil,
+  #     },
+  #   }
+  # end
 
   private
 

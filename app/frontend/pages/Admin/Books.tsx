@@ -1,67 +1,77 @@
+import CustomTable, { Column } from "@/components/partials/CustomTable";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Spinner } from "@/components/ui/spinner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Book } from "@/interfaces/book";
-import AdminLayout from "@/layouts/AdminLayout";
-import { Deferred, Link } from "@inertiajs/react";
+import { Deferred } from "@inertiajs/react";
+import { BookIcon, EyeIcon, FeatherIcon, ListIcon, MoreHorizontalIcon, ShapesIcon, UsersIcon } from "lucide-react";
 
 interface PageProps {
+	books_count: number
 	books: Book[]
 }
 
-export default function BooksPage(props: PageProps) {
-	console.log(props.books[0])
-	
+export default function BooksPage({ books, books_count }: PageProps) {
+	const columns: Column[] = [
+		{
+			key: "title",
+			label: {
+				icon: <BookIcon size={14} />,
+				text: "Book"
+			},
+			render: (row) => (
+				<div className="flex items-center gap-3 min-w-[300px]">
+					<img className="bg-card w-7 aspect-square object-cover rounded-sm" src={row.cover} />
+					<span className="truncate">{row.title}</span>
+				</div>
+			)
+		},
+		{
+			key: "author_names",
+			label: {
+				icon: <FeatherIcon size={14} />,
+				text: "Authors"
+			},
+		},
+		{
+			key: "visibility",
+			label: {
+				icon: <EyeIcon size={14} />,
+				text: "Visibility"
+			},
+			render: (row) => (
+				<Badge variant={"secondary"} className="text-sm font-normal">{row.published ? "Published" : "Draft"}</Badge>
+			)
+		},
+		{
+			key: "readers_count",
+			label: {
+				icon: <UsersIcon size={14} />,
+				text: "Readers"
+			},
+		},
+		{
+			key: "category",
+			label: {
+				icon: <ShapesIcon size={14} />,
+				text: "Category"
+			},
+		},
+	]
+
+	const handleRowClick = (row: Book) => {
+
+	}
+
 	return (
 		<>
-			<div className="max-w-5xl w-full mx-auto flex flex-col gap-12">
-				hey
-				<Deferred data="books" fallback={<div className="flex-center"><Spinner className="size-8"></Spinner></div>}>
-					<Table>
-						<TableHeader>
-							<TableRow className="border-none">
-								<TableHead className="text-neutral-400 text-base min-w-[400px]">Book</TableHead>
-								<TableHead className="text-neutral-400 text-base">Authors</TableHead>
-								<TableHead className="text-neutral-400 text-base">Visibility</TableHead>
-								<TableHead className="text-neutral-400 text-base"></TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{props.books?.map((book, i) => (
-								<TableRow key={i}>
-									<TableCell className="flex items-center gap-6 min-w-px">
-										<div className="w-12 rounded-lg aspect-book bg-surface" style={{ background: `url(${book.cover}) center / cover` }}></div>
-										<div>
-											<div className="font-normal text-base">{book.title}</div>
-										</div>
-									</TableCell>
-									<TableCell className="text-base">{book.author_names}</TableCell>
-									<TableCell className="text-base">
-										{
-											book.published ? 
-											<Badge variant="secondary" className="text-sm h-7 p-3 bg-green-500/20 text-green-900 dark:bg-green-400/10 dark:text-green-100">Published</Badge> 
-											: <Badge variant="secondary" className="text-sm h-7 p-3 bg-orange-500/20 text-orange-900 dark:bg-orange-400/10 dark:text-orange-100">Hidden</Badge> 
-										}
-									</TableCell>
-									<TableCell className="text-right">
-										<DropdownMenu>
-											<DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="size-8"><i className="ph ph-dots-three text-xl"></i></Button>}></DropdownMenuTrigger>
-											<DropdownMenuContent side="bottom" align="end">
-												<DropdownMenuItem render={<Link href={book.permalink} />}>View</DropdownMenuItem>
-												<DropdownMenuItem>Share</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+			<div className="h-full">
+				<div className="text-sm h-12 flex items-center px-4 border-b">
+					<span className="text-subtle flex items-center gap-2"><ListIcon size={16} /> All books • {books_count}</span>
+				</div>
+				<Deferred data="books" fallback={<div className="flex-center h-full"><Spinner className="size-6 text-subtle"></Spinner></div>}>
+					<CustomTable columns={columns} rows={books || []} onRowClick={handleRowClick} />
 				</Deferred>
 			</div>
 		</>
 	)
 }
-
-BooksPage.layout = (page: React.ReactNode) => <AdminLayout>{page}</AdminLayout>

@@ -1,15 +1,7 @@
 class Admins::DashboardController < Admins::BaseController
-  layout "dashboard"
+  # layout "dashboard"
 
   def index
-    # @most_read_books = Book.all.with_attached_cover.includes(:authors).order(readers_count: :desc).first(5)
-    # @chart_data = User.all.group_by_day(:created_at, range: @date_range, format: "%a %d").count
-    # @date_range_option_groups = [
-    #   {
-    #     label: "Date range",
-    #     options: [["Last 7 days", "weekly"], ["Last 30 days", "monthly"]],
-    #   },
-    # ]
     active_users_count = ->(range) {
       Session.where(created_at: range)
         .distinct(:user_id)
@@ -39,9 +31,6 @@ class Admins::DashboardController < Admins::BaseController
           },
         ],
         registrations: get_registartions_chart_data,
-      },
-      most_read_books: InertiaRails.defer {
-        AnalyticsService.most_read_books
       },
     }
   end

@@ -1,3 +1,4 @@
+import AdminLayout from '@/layouts/AdminLayout'
 import BaseLayout from '@/layouts/BaseLayout'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
@@ -5,7 +6,13 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 createInertiaApp({
   pages: "../pages",
   strictMode: true,
-	layout: () => BaseLayout,
+	layout: (name) => {
+		if (name.startsWith("Admin/")) {
+			return AdminLayout
+		}
+
+		return BaseLayout
+	},
 	title: (title) => title ? `${title} | Tomes` : 'Tomes',
   defaults: {
     form: {

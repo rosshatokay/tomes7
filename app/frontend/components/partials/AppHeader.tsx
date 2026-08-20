@@ -8,12 +8,10 @@ import { SearchDialog } from "./SearchDialog";
 import { useState } from "react";
 import NotificationsPopover from "./NotificationsPopover";
 import TopProfileMenu from "./TopProfileMenu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export default function AppHeader(auth?: AuthProps) {
+export default function AppHeader({ user }: AuthProps) {
 	const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
 	const url = usePage().url.split("?")[0]
-	const user = auth?.user
 
 	const navLinks = [
 		{ label: user ? "Library" : "Books", path: user ? "/library" : "/" },
@@ -52,10 +50,10 @@ export default function AppHeader(auth?: AuthProps) {
 				</div>
 				{!!user && (
 					<div className="flex items-center gap-2 justify-end">
-						<Tooltip>
+						{/* <Tooltip>
 							<TooltipTrigger delay={0} render={<Button variant={"ghost"} size={"icon"} nativeButton={false} render={<Link href={"/community"} />}><GlobeIcon /></Button>} />
 							<TooltipContent>Community</TooltipContent>
-						</Tooltip>
+						</Tooltip> */}
 						<NotificationsPopover />
 						<TopProfileMenu user={user} />
 					</div>

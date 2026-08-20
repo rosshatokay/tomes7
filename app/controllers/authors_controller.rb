@@ -1,8 +1,9 @@
 class AuthorsController < ApplicationController
-  allow_unauthenticated_access
+  allow_unauthenticated_access except: [:follow, :unfollow]
 
   def index
     authors = Author.includes(:books, avatar_attachment: :blob).all
+    followed_author_ids = current_user ? current_user.followees(Author).pluck(:id) : []
 
     render inertia: "Authors/Index", props: {
       authors: authors.map { |a|
@@ -11,6 +12,8 @@ class AuthorsController < ApplicationController
           avatar_url: a.avatar.attached? ? a.avatar.service.url(a.avatar.blob.key, transformation: [{ width: 250, height: 250 }]) : nil,
           books_count: a.books_count,
           permalink: author_path(a.slug),
+          is_followed: followed_author_ids.include?(a.id),
+          slug: a.slug,
         }
       },
     }
@@ -24,8 +27,34 @@ class AuthorsController < ApplicationController
         full_name: author.full_name,
         avatar_url: author.avatar.attached? ? author.avatar.service.url(author.avatar.blob.key, transformation: [{ width: 250, height: 250 }]) : nil,
         bio: author.bio,
+        slug: author.slug,
+        is_followed: current_user&.follows?(author),
       },
-      books: author.books.map { |b| b.to_hash },
+      books: author.books.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
     }
+  end
+
+  def follow
+    author = Author.friendly.find(params[:slug]) rescue nil
+
+    unless author.present?
+      render json: { errors: { author: ["Could not find author"] } }, status: :unprocessable_entity and return
+    end
+
+    current_user.follow!(author)
+
+    render json: { success: true }
+  end
+
+  def unfollow
+    author = Author.friendly.find(params[:slug]) rescue nil
+
+    unless author.present?
+      render json: { errors: { author: ["Could not find author"] } }, status: :unprocessable_entity and return
+    end
+
+    current_user.unfollow!(author)
+
+    render json: { success: true }
   end
 end

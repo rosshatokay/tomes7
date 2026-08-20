@@ -13,7 +13,7 @@ interface BaseLayoutProps {
 	auth?: AuthProps
 }
 
-interface FlashProps {
+export interface FlashProps {
 	toast?: {
 		title?: string
 		description?: string

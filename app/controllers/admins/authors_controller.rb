@@ -1,10 +1,21 @@
 require "csv"
 
 class Admins::AuthorsController < Admins::BaseController
-  layout "dashboard"
-
   def index
-    @authors = Author.with_attached_avatar.all
+    authors = Author.with_attached_avatar.all
+
+    render inertia: "Admin/Authors", props: {
+      authors_count: authors.count,
+      authors: authors.map { |a|
+        {
+          id: a.hashid,
+          full_name: a.full_name,
+          created_at: a.created_at,
+          avatar_url: a.get_avatar_url,
+          books_count: a.books_count,
+        }
+      },
+    }
   end
 
   def edit
@@ -38,14 +49,22 @@ class Admins::AuthorsController < Admins::BaseController
   end
 
   def update
-    @author = Author.find(params[:id])
+    author = Author.find(params[:author][:id]) rescue nil
 
-    if @author.update(author_params)
-      flash[:success] = "Author details saved"
-      redirect_to edit_admins_author_path(@author.hashid)
+    if author.nil?
+      flash.inertia[:toast] = { description: "Could not find author" }
+      redirect_to admins_authors_path, inertia: { errors: [{ author: "Not found" }] }
+      return
+    end
+
+    if author.update(author_params)
+      flash.inertia[:toast] = { description: "Author updated successfully" }
+      redirect_to admins_authors_path
     else
-      flash[:error] = "Something went wrong"
-      render :edit
+      flash.inertia[:toast] = { description: "Something went wrong" }
+      redirect_to admins_authors_path, inertia: {
+                                         errors: inertia_errors_for(author),
+                                       }
     end
   end
 

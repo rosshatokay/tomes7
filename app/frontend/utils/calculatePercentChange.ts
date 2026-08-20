@@ -6,9 +6,9 @@ export const calculatePercentChange = (current: number, previous: number): numbe
 }
 
 export const percentChangeColor = (change: number): string => {
-	// if (change > 0) {
-	// 	return "text-green-800 dark:text-green-300"
-	// }
+	if (change > 0) {
+		return "text-green-700 dark:text-green-300"
+	}
 	if (change < 0) {
 		return "text-red-800 dark:text-red-300"
 	}

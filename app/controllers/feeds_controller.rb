@@ -15,7 +15,7 @@ class FeedsController < ApplicationController
         # Book.includes(:authors, cover_attachment: [:blob]).all.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
       when "saved"
         []
-        # Book.includes(:authors, cover_attachment: [:blob]).all.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
+        current_user.likees(Book.includes(:authors, cover_attachment: :blob)).map { |b| b.to_hash }
       else
         current_user.currently_reading.map { |b| b.book.to_hash.merge({ permalink: book_path(b.book.slug) }) }
       end
@@ -27,17 +27,19 @@ class FeedsController < ApplicationController
 
   def community
     render inertia: "Feeds/Community", props: {
-      posts: fake_posts,
+      posts: Rating.includes(book: [:authors, cover_attachment: :blob], user: [avatar_attachment: :blob]).all.map { |r| r.to_community },
     }
   end
 
   private
 
   def fake_posts
-    user = User.all.shuffle.first
+    results = []
 
-    [
-      {
+    5.times do
+      user = User.includes(avatar_attachment: :blob).all.shuffle.first
+
+      results << {
         user: {
           username: user.username,
           avatar_url: user.get_avatar_url,
@@ -45,7 +47,9 @@ class FeedsController < ApplicationController
         post: {
           content: "A somewhat disappointing follow up after years of waiting. It lacks the naïveté and theatricality of her last two albums, instead opting for a consistently more somber tone that works against the rather simple and at times amateurish lyricism that she hasn’t really changed. While that lyricism previously had a certain charm and strong emotional pull, the production surrounding it here makes the whole thing feel like a bland Elliott Smith/Sun Kil Moon imitation, without the solid writing needed to carry it.",
         },
-      },
-    ]
+      }
+    end
+
+    results
   end
 end

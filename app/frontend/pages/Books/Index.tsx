@@ -21,7 +21,7 @@ export default function LandingPage(props: LandingPageProps) {
 
 	return (
 		<>
-			<div className={cn("flex-col flex-center", auth.user === null ? "h-[60vh]" : "h-[30vh]")}>
+			<div className={cn("flex-col flex-center", auth.user === null ? "h-[60vh] min-h-[400px]" : "h-[30vh]")}>
 				<div className="max-w-xl w-full text-center">
 					<h1 className="text-5xl font-medium mb-4">
 						{auth.user === null ?

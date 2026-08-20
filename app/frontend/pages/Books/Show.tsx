@@ -89,7 +89,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					{createBreadcrumbs(crumbs)}
 				</div>
 				<div className="grid grid-cols-12 large-container">
-					<div className="h-[calc(100vh_-_120px)] col-span-7 sticky top-20 pb-5 flex flex-col gap-2 pr-12">
+					<div className="h-[calc(100vh_-_120px)] max-h-[900px] col-span-7 sticky top-20 pb-5 flex flex-col gap-2 pr-12">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 							<div className="relative h-full aspect-[4/6]">
 								<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
@@ -150,7 +150,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 								))}
 							</div>
 							<div className="mt-8">
-								<Button size={"lg"} variant={"default"} className={"w-full h-10"}><GlassesIcon /> Read</Button>
+								<Button size={"lg"} variant={"default"} className={"w-full h-10"}>Read</Button>
 							</div>
 						</section>
 						<section>

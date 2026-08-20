@@ -59,6 +59,10 @@ class Book < ApplicationRecord
       .limit(limit)
   end
 
+  def get_cover_url(size = 500)
+    self.cover.attached? ? self.cover.service.url(self.cover.blob.key, transformation: [{ width: size }]) : nil
+  end
+
   def should_generate_new_friendly_id?
     title_changed? || super
   end
@@ -72,11 +76,9 @@ class Book < ApplicationRecord
   end
 
   def to_hash
-    cover = self.cover.attached? ? self.cover.service.url(self.cover.blob.key, transformation: [{ width: 500 }]) : nil
-
     {
       title: title,
-      cover: cover,
+      cover: get_cover_url,
       author_names: author_names,
       published: published,
       average_rating: average_rating,
@@ -120,6 +122,6 @@ class Book < ApplicationRecord
   def set_cover_path
     # We prepend the folder structure to the existing random key
     blob = cover.blob
-    blob.key = "books/covers/#{blob.key}"
+    blob.key = "#{Rails.env}/books/covers/#{blob.key}"
   end
 end

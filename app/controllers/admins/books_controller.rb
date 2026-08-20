@@ -1,8 +1,6 @@
 class Admins::BooksController < Admins::BaseController
   include Pagy::Method
 
-  layout "dashboard"
-
   def index
     scope = Book.with_attached_cover.includes(:authors, :category)
 
@@ -13,7 +11,17 @@ class Admins::BooksController < Admins::BaseController
     # @pagy, @books = pagy(scope.order(created_at: :desc), limit: 10)
 
     render inertia: "Admin/Books", props: {
-             books: scope.map { |book| book.to_hash.merge({ permalink: book_path(book.slug) }) },
+             books_count: Book.count,
+             books: InertiaRails.defer {
+               scope.map { |book|
+                 book.to_hash.merge({
+                   permalink: book_path(book.slug),
+                   id: book.hashid,
+                   category: book.category.name,
+                   readers_count: book.readers_count,
+                 })
+               }
+             },
            }
   end
 

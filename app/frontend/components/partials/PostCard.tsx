@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HeartIcon, MessageSquareIcon, MoreHorizontalIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Post } from "@/interfaces/post";
+import { format } from "timeago.js";
 
 export default function PostCard({ post }: { post: Post }) {
 	return (
@@ -12,19 +13,19 @@ export default function PostCard({ post }: { post: Post }) {
 					<AvatarImage src={post.user.avatar_url} />
 					<AvatarFallback>{post.user.username[0]}</AvatarFallback>
 				</Avatar>
-				<div className="flex flex-col gap-1.5">
+				<div className="flex flex-col gap-1">
 					<h3 className="leading-none">{post.user.username}</h3>
 					<p className="text-subtle text-sm leading-none">reviewed a book</p>
 				</div>
 			</div>
 			<div className="flex gap-4">
-				<div className="w-20 aspect-book bg-card rounded-sm"></div>
+				<img className="w-20 aspect-book bg-card rounded-sm" src={post.book.cover_url} alt={`${post.book.title}'s thumbnail`} />
 				<div className="flex flex-col flex-1 py-2">
-					<div className="font-medium">The Brothers Karamazov</div>
-					<div className="text-subtle">Fyodor Dostoyevsky</div>
+					<div className="font-medium">{post.book.title}</div>
+					<div className="text-subtle text-sm">{post.book.author_names}</div>
 					<div className="flex items-center gap-2 mt-auto">
-						<RatingStars rating={4} />
-						<div className="text-subtle/60 text-sm">4 seconds ago</div>
+						<RatingStars rating={post.score} />
+						<div className="text-subtle/60 text-sm">{format(post.created_at)}</div>
 					</div>
 				</div>
 			</div>

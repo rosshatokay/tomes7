@@ -9,6 +9,23 @@ class Rating < ApplicationRecord
   validates :score, presence: true, inclusion: { in: 1..5, message: "can only be betwen 1 and 5" }
   validates :user_id, uniqueness: { scope: :book_id, message: "has already rated this book" }
 
+  def to_community
+    {
+      user: {
+        username: user.username,
+        avatar_url: user.get_avatar_url(size: 100),
+      },
+      book: {
+        title: book.title,
+        cover_url: book.get_cover_url,
+        author_names: book.author_names,
+      },
+      created_at: created_at,
+      score: score,
+      body: body,
+    }
+  end
+
   private
 
   def update_book_score_sum
