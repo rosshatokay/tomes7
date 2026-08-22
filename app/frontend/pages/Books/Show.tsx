@@ -10,9 +10,9 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
-import { cn, createBreadcrumbs, useIsMobile } from "@/lib/utils"
+import { createBreadcrumbs, useIsMobile } from "@/lib/utils"
 import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
-import { ArrowUpRightIcon, GlassesIcon, HeartIcon, ShareIcon } from "lucide-react"
+import { ArrowUpRightIcon, HeartIcon, ShareIcon } from "lucide-react"
 import React, { useState } from "react"
 
 interface BookPageProps {
@@ -91,7 +91,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					{createBreadcrumbs(crumbs)}
 				</div>
 				<div className="lg:grid grid-cols-12 large-container">
-					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[900px] col-span-7 w-full lg:sticky top-20 pb-5 flex flex-col gap-2 lg:pr-12 h-125">
+					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-7 w-full lg:sticky top-20 pb-5 flex flex-col gap-2 lg:pr-12 h-110">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 							<div className="relative h-full aspect-[4/6]">
 								<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
@@ -100,8 +100,8 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					</div>
 					<div className="pt-6 col-span-5 flex flex-col gap-12 pb-5">
 						<section>
-							<h1 className="md:text-4xl text-3xl font-medium">{book.title}</h1>
-							<h2 className="text-lg mt-0.5">
+							<h1 className="md:text-4xl text-2xl font-medium">{book.title}</h1>
+							<h2 className="md:text-lg mt-0.5">
 								{authors.map((author, index) => (
 									<span key={index}>
 										<span className="font-normal"><a href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</a></span>
@@ -156,7 +156,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							</div>
 						</section>
 						<section>
-							<h3 className="text-subtle mb-2">Book details</h3>
+							<h3 className="text-subtle mb-2 !font-normal">Book details</h3>
 							<div className="flex flex-col gap-2 text-[15px]">
 								<div className="grid grid-cols-[170px_1fr]">
 									<h3 className="!font-normal">Original title</h3>
@@ -177,7 +177,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							</div>
 						</section>
 						<section>
-							<h3 className="text-subtle mb-2">About the {authors.length > 1 ? "authors" : "author"}</h3>
+							<h3 className="text-subtle mb-2 !font-normal">About the {authors.length > 1 ? "authors" : "author"}</h3>
 							{authors.map((author, index) => (
 								<div key={index}>
 									<Link href={author.permalink} className="flex items-center gap-3 mb-3 group w-fit">

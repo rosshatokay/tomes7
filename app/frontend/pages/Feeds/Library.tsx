@@ -34,7 +34,7 @@ export default function LibraryPage({ currentTab, books }: LibraryPageProps) {
 				<title>Library</title>
 			</Head>
 			<div className="large-container flex-center flex-col h-[30vh] min-h-50">
-				<h1 className="text-5xl mb-4">Library</h1>
+				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2">Library</h1>
 				<p className="text-subtle">Your collection of books</p>
 			</div>
 			<div className="large-container">
@@ -74,7 +74,7 @@ export default function LibraryPage({ currentTab, books }: LibraryPageProps) {
 				</div>
 			)}
 			{books?.length > 0 && (
-				<div className="large-container pb-6 mt-2 grid md:grid-cols-4 md:gap-2 gap-4">
+				<div className="large-container pb-6 mt-2 grid 2xl:grid-cols-5 md:grid-cols-4 md:gap-2 gap-4 md:mt-0 mt-6">
 					{books.map((book, index) => <BookCard key={index} book={book} />)}
 				</div>
 			)}

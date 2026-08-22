@@ -1,12 +1,12 @@
 import { useForm, useHttp } from "@inertiajs/react";
-import { Sheet, SheetHeader, SheetTitle, SheetDescription, SheetContent, SheetFooter, SheetClose } from "../ui/sheet";
+import { Sheet, SheetHeader, SheetTitle, SheetDescription, SheetContent, SheetFooter, SheetClose } from "../../ui/sheet";
 import { useEffect, useRef, useState } from "react";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
-import { Spinner } from "../ui/spinner";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
+import { Field, FieldError, FieldGroup, FieldLabel } from "../../ui/field";
+import { Input } from "../../ui/input";
+import { Spinner } from "../../ui/spinner";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Button } from "../../ui/button";
+import { Textarea } from "../../ui/textarea";
 
 const INITIAL_AUTHOR_STATE = {
   id: null as string | null,

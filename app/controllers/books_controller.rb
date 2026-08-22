@@ -2,9 +2,17 @@ class BooksController < ApplicationController
   allow_unauthenticated_access except: %i[ save ]
 
   def index
+    categories = JSON.parse(Category.all.take(4).to_json(only: [:name, :slug]))
+
+    if params[:tab].present?
+      category_tab = Category.find_by(slug: params[:tab])
+    end
+
+    scope = category_tab.present? ? Book.published.where(category_id: category_tab.id) : Book.published.all
+
     render inertia: "Books/Index", props: {
-      categories: JSON.parse(Category.all.take(4).to_json(only: [:name, :slug])),
-      books: Book.published.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
+      categories: categories,
+      books: scope.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
     }
   end
 

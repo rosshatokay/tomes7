@@ -1,9 +1,13 @@
+import { useAdminHeader } from "@/components/contexts/AdminHeaderContext";
+import BookSheet from "@/components/partials/admins/BookSheet";
 import CustomTable, { Column } from "@/components/partials/CustomTable";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Book } from "@/interfaces/book";
 import { Deferred } from "@inertiajs/react";
-import { BookIcon, EyeIcon, FeatherIcon, ListIcon, MoreHorizontalIcon, ShapesIcon, UsersIcon } from "lucide-react";
+import { BookIcon, EyeIcon, FeatherIcon, ListIcon, MoreHorizontalIcon, PlusIcon, ShapesIcon, UsersIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface PageProps {
 	books_count: number
@@ -11,6 +15,7 @@ interface PageProps {
 }
 
 export default function BooksPage({ books, books_count }: PageProps) {
+	const { setHeaderContent } = useAdminHeader()
 	const columns: Column[] = [
 		{
 			key: "title",
@@ -58,10 +63,21 @@ export default function BooksPage({ books, books_count }: PageProps) {
 		},
 	]
 
-	const handleRowClick = (row: Book) => {
+	const [activeBookId, setActiveBookId] = useState<string | null>(null)
 
-	}
+	useEffect(() => {
+    setHeaderContent(
+      <div className="flex items-center gap-2">
+        <Button size="sm" onClick={() => setActiveBookId('new')}>
+          <PlusIcon /> Add book
+        </Button>
+      </div>
+    );
 
+		// clean up to prevent leak
+    return () => setHeaderContent(null);
+  }, [setHeaderContent])
+	
 	return (
 		<>
 			<div className="h-full">
@@ -69,8 +85,9 @@ export default function BooksPage({ books, books_count }: PageProps) {
 					<span className="text-subtle flex items-center gap-2"><ListIcon size={16} /> All books • {books_count}</span>
 				</div>
 				<Deferred data="books" fallback={<div className="flex-center h-full"><Spinner className="size-6 text-subtle"></Spinner></div>}>
-					<CustomTable columns={columns} rows={books || []} onRowClick={handleRowClick} />
+					<CustomTable columns={columns} rows={books || []} onRowClick={(book: Book) => setActiveBookId(book.id)} />
 				</Deferred>
+				<BookSheet activeBookId={activeBookId} setActiveBookId={setActiveBookId} />
 			</div>
 		</>
 	)

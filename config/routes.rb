@@ -51,6 +51,15 @@ Rails.application.routes.draw do
       end
       resources :search, only: [:index]
       resources :notifications, only: [:index]
+
+      namespace :admins do
+        resources :categories, only: [] do
+          collection do
+            get :index
+            get :search
+          end
+        end
+      end
     end
   end
 

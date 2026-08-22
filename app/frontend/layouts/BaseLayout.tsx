@@ -50,12 +50,12 @@ export default function BaseLayout({ children, hideHeader, hideFooter, auth }: B
 				<div className="fixed left-0 right-0 bottom-0 top-auto z-3">
 					<div className="w-full h-full flex-center">
 						<div className="from-background absolute inset-0 w-full bg-gradient-to-t to-transparent"></div>
-						<div className="mb-8 h-15 w-[256px] min-w-[256px] max-w-[256px] rounded-full bg-foreground/20 backdrop-blur-md flex items-center justify-evenly">
-							<Button size={"icon-lg"} variant={"ghost"}><HomeIcon className="!size-6" /></Button>
-							<Button size={"icon-lg"} variant={"ghost"}><SearchIcon className="!size-6" /></Button>
-							<Button size={"icon-lg"} variant={"ghost"}><PlusIcon className="!size-6" /></Button>
-							<Button size={"icon-lg"} variant={"ghost"}><HeartIcon className="!size-6" /></Button>
-							<Button size={"icon-lg"} variant={"ghost"}><HomeIcon className="!size-6" /></Button>
+						<div className="mb-8 h-15 w-[256px] min-w-[256px] max-w-[256px] rounded-full bg-foreground/50 backdrop-blur-md flex items-center justify-evenly">
+							<Button size={"icon-lg"} variant={"ghost"}><HomeIcon className="!size-6 dark:text-foreground text-white" /></Button>
+							<Button size={"icon-lg"} variant={"ghost"}><SearchIcon className="!size-6 dark:text-foreground text-white" /></Button>
+							<Button size={"icon-lg"} variant={"ghost"}><PlusIcon className="!size-6 dark:text-foreground text-white" /></Button>
+							<Button size={"icon-lg"} variant={"ghost"}><HeartIcon className="!size-6 dark:text-foreground text-white" /></Button>
+							<Button size={"icon-lg"} variant={"ghost"}><HomeIcon className="!size-6 dark:text-foreground text-white" /></Button>
 						</div>
 					</div>
 				</div>

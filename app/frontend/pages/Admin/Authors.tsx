@@ -1,4 +1,4 @@
-import AuthorSheet from "@/components/partials/AuthorSheet"
+import AuthorSheet from "@/components/partials/admins/AuthorSheet"
 import CustomTable, { Column } from "@/components/partials/CustomTable"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"

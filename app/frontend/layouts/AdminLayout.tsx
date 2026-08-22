@@ -8,6 +8,7 @@ import TopProfileMenu from "@/components/partials/TopProfileMenu";
 import { AuthProps } from "@/interfaces/auth";
 import { toast, Toaster } from "@/components/ui/toast";
 import { FlashProps } from "./BaseLayout";
+import { AdminHeaderProvider, useAdminHeader } from "@/components/contexts/AdminHeaderContext";
 
 const links = [
 
@@ -43,11 +44,12 @@ const links = [
 	}
 ]
 
-export default function AdminLayout({ children }: PropsWithChildren) {
+function AdminLayoutContent({ children }: PropsWithChildren) {
 	const flash = usePage().flash as FlashProps
 	const { url } = usePage()
 	const auth = usePage().props.auth as AuthProps
 	const activeTab = links.filter(l => l.path === url)[0]
+	const { headerContent } = useAdminHeader()
 
 	useEffect(() => {
 		if (flash?.toast) {
@@ -57,7 +59,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 			})
 		}
 	})
-	
+
 	return (
 		<div className="grid md:grid-cols-[64px_1fr] grid-cols-1 w-full h-screen overflow-hidden">
 			<aside className="min-w-[64px] w-[64px] h-screen overflow-y-auto hidden md:flex flex-col gap-10 py-4 justify-between items-center">
@@ -100,7 +102,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 						</div>
 						<div className="text-sm">{activeTab.label}</div>
 					</div>
-					<div className="text-sm"><Button size={"sm"} variant={"default"}><PlusIcon /> Add book</Button></div>
+					{headerContent}
 				</div>
 				<div className="w-full h-full overflow-y-auto bg-white/70 dark:bg-white/4 rounded-lg border">
 					{children}
@@ -109,5 +111,13 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 			<Toaster />
 			<TooltipProvider />
 		</div>
+	)
+}
+
+export default function AdminLayout({children}: PropsWithChildren) {
+	return (
+		<AdminHeaderProvider>
+			<AdminLayoutContent>{children}</AdminLayoutContent>
+		</AdminHeaderProvider>
 	)
 }
