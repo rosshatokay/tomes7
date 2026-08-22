@@ -4,12 +4,6 @@ class Admins::BooksController < Admins::BaseController
   def index
     scope = Book.with_attached_cover.includes(:authors, :category)
 
-    # if params[:q].present?
-    #   scope = scope.where("title ILIKE ?", "%#{params[:q].downcase}%")
-    # end
-
-    # @pagy, @books = pagy(scope.order(created_at: :desc), limit: 10)
-
     render inertia: "Admin/Books", props: {
              books_count: Book.count,
              books: InertiaRails.defer {
@@ -47,23 +41,18 @@ class Admins::BooksController < Admins::BaseController
   end
 
   def create
-    @book = Book.build(book_params)
-    @book.authors = params[:authors]&.map { |id| Author.find(id) } || []
-    @categories = Category.order(:name).pluck(:name, :id)
+    book = Book.build(book_params)
+    author_ids = params[:book][:authors]&.pluck(:id) || []
+    book.authors = Author.find(author_ids)
 
-    if @book.save
-      flash.now[:success] = "Book created"
-      render turbo_stream: [
-               turbo_stream.update("flash", partial: "partials/flash"),
-               turbo_stream.replace("book_details", partial: "admins/books/form", locals: { book: Book.new }),
-             ]
+    if book.save
+      flash.inertia[:toast] = { description: "Book created successfully" }
+      redirect_to admins_books_path
     else
-      flash.now[:alert] = "There were problems saving the book."
-
-      render turbo_stream: [
-               turbo_stream.update("flash", partial: "partials/flash"),
-               turbo_stream.replace("book_details", partial: "form", locals: { book: @book }),
-             ], status: :unprocessable_entity
+      flash.inertia[:toast] = { description: "Something went wrong" }
+      redirect_to admins_books_path, inertia: {
+                                       errors: inertia_errors_for(book),
+                                     }
     end
   end
 

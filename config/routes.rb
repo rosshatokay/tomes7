@@ -44,11 +44,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :authors, only: [] do
-        collection do
-          get :show
-        end
-      end
       resources :search, only: [:index]
       resources :notifications, only: [:index]
 
@@ -56,6 +51,26 @@ Rails.application.routes.draw do
         resources :categories, only: [] do
           collection do
             get :index
+            get :search
+          end
+        end
+
+        resources :books, only: [] do
+          collection do
+            get :show
+            get :search
+          end
+        end
+
+        resources :authors, only: [] do
+          collection do
+            get :show
+            get :search
+          end
+        end
+
+        resources :tags, only: [] do
+          collection do
             get :search
           end
         end

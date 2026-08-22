@@ -1,21 +1,23 @@
-class Api::V1::AuthorsController < Admins::BaseController
+class Api::V1::Admins::AuthorsController < Admins::BaseController
   def search
     q = params[:q].to_s.strip.downcase
-    authors = Author.where("full_name ILIKE :q", q: "%#{q}%").limit(10)
+    authors = Author.includes(avatar_attachment: :blob).where("full_name ILIKE :q", q: "%#{q}%").limit(10)
     data = authors.map do |a|
       {
-        id: a.hashid,
+        id: a.id,
         full_name: a.full_name,
+        avatar_url: a.get_avatar_url,
       }
     end
 
-    render json: data
+    render json: {
+      results: data,
+    }
   end
 
   def show
     author = Author.find(params[:id])
 
-    sleep 0.1
     render json: {
       author: {
         id: author.hashid,

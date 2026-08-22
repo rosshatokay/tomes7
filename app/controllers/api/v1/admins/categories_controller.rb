@@ -1,4 +1,4 @@
-class Api::V1::Admins::CategoriesController < ApplicationController
+class Api::V1::Admins::CategoriesController < Admins::BaseController
   def index
     render json: {
       categories: JSON.parse(Category.all.to_json(only: [:name, :id])),

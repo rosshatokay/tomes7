@@ -14,7 +14,7 @@ const INITIAL_AUTHOR_STATE = {
   bio: "",
   wiki_url: "",
   avatar: null as File | string | null
-};
+}
 
 interface Props {
   // Pass 'new' to create, an ID string to edit, or null to close
@@ -84,7 +84,7 @@ export default function AuthorSheet({ activeAuthorId, setActiveAuthorId }: Props
     if (isEditing) {
       // Fetch author details for editing
       http.setData("id", activeAuthorId);
-      http.get("/api/v1/authors", {
+      http.get("/api/v1/admins/authors", {
         onSuccess: (res: any) => {
           setData("author", {
             id: res.author.id,

@@ -26,6 +26,7 @@ class Book < ApplicationRecord
   validates :title, presence: true
   validates :description, presence: true
   validates :epub, content_type: ["application/epub+zip"], size: { less_than: 100.megabytes }
+  validates :authors, presence: true
 
   scope :published, -> { includes(:category, :authors, cover_attachment: [:blob]).where(published: true) }
 

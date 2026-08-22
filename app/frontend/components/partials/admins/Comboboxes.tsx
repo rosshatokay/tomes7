@@ -1,98 +1,205 @@
-import { Combobox, ComboboxChip, ComboboxChips, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList, ComboboxValue, useComboboxAnchor } from "@/components/ui/combobox";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList, ComboboxValue, useComboboxAnchor } from "@/components/ui/combobox";
 import { useHttp } from "@inertiajs/react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { Fragment, useEffect, useState } from "react";
 
+type Author = {
+	id: number
+	full_name: string
+	avatar_url: string
+}
+
+type Tag = {
+	id: number
+	name: string
+}
+
 type Category = {
-  name: string
-  id: number
+	name: string
+	id: number | null
 }
 
-export function CategoryComboBox() {
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
-  const [categories, setCategories] = useState<Category[]>([])
-  const { get, processing } = useHttp({})
+export function CategoryComboBox({
+	defaultCategory,
+	onChange,
+	isInvalid = false
+}: {
+	defaultCategory?: Category,
+	onChange?: (category: Category) => void,
+	isInvalid?: boolean
+}) {
+	const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
+	const [categories, setCategories] = useState<Category[]>([])
+	const { get, processing } = useHttp({})
 
-  useEffect(() => {
-    get("/api/v1/admins/categories", {
-      onSuccess: (res: any) => setCategories(res.categories)
-    })
-  }, [])
+	useEffect(() => {
+		get("/api/v1/admins/categories", {
+			onSuccess: (res: any) => setCategories(res.categories)
+		})
+	}, [])
 
-  return (
-    <Combobox
-      items={categories}
-      value={selectedCategory}
-      onValueChange={(value) => setSelectedCategory(value)}
-      itemToStringLabel={(category: Category) => category?.name ?? ""}
-      itemToStringValue={(category: Category) => category ? String(category.id) : ""}
-    >
-      <ComboboxInput placeholder="Select a category" />
-      <ComboboxContent>
-        <ComboboxEmpty>
-          {processing ? "Searching..." : "No items found."}
-        </ComboboxEmpty>
-        <ComboboxList>
-          {(category) => (
-            <ComboboxItem key={category.id} value={category}>
-              {category.name}
-            </ComboboxItem>
-          )}
-        </ComboboxList>
-      </ComboboxContent>
-    </Combobox>
-  )
+	return (
+		<Combobox
+			items={categories}
+			value={selectedCategory || defaultCategory}
+			onValueChange={(value) => {
+				onChange ? onChange(value as any) : undefined
+				setSelectedCategory(value)
+			}}
+			itemToStringLabel={(category: Category) => category?.name ?? ""}
+			itemToStringValue={(category: Category) => category ? String(category.id) : ""}
+		>
+			<ComboboxInput placeholder="Select a category" aria-invalid={isInvalid} />
+			<ComboboxContent>
+				<ComboboxEmpty>
+					{processing ? "Searching..." : "No items found."}
+				</ComboboxEmpty>
+				<ComboboxList>
+					{(category) => (
+						<ComboboxItem key={category.id} value={category}>
+							{category.name}
+						</ComboboxItem>
+					)}
+				</ComboboxList>
+			</ComboboxContent>
+		</Combobox>
+	)
 }
 
-// export function CategoryComboBox() {
-// 	const [categories, setCategories] = useState<Category[]>([])
-// 	const [searchQuery, setSearchQuery] = useState<string>("")
-// 	const [activeCategory, setActiveCategory] = useState<Category | null>(null)
-// 	const { get, processing } = useHttp({})
+export function BookTagsComboBox() {
+	const [tags, setTags] = useState<Tag[]>([])
+	const [searchQuery, setSearchQuery] = useState<string>("")
+	const { get, processing } = useHttp({})
+	const anchor = useComboboxAnchor()
 
-// 	const debouncedSearchQuery = useDebounce(searchQuery, 300)
+	const debouncedSearchQuery = useDebounce(searchQuery, 300)
 
-// 	useEffect(() => {
-// 		if (debouncedSearchQuery.trim() === "") {
-// 			setCategories([])
-// 			return
-// 		}
+	useEffect(() => {
+		if (debouncedSearchQuery.trim() === "") {
+			setTags([])
+			return
+		}
 
-// 		get(`/api/v1/admins/categories/search?q=${encodeURIComponent(debouncedSearchQuery)}`, {
-// 			onSuccess: (res: any) => {
-// 				console.log(res.results)
-// 				setCategories(res.results as Category[])
-// 			}
-// 		})
-// 	}, [debouncedSearchQuery])
+		get(`/api/v1/admins/tags/search?q=${encodeURIComponent(debouncedSearchQuery)}`, {
+			onSuccess: (res: any) => {
+				console.log(res.results)
+				setTags(res.results as Tag[])
+			}
+		})
+	}, [debouncedSearchQuery])
 
-// 	return (
-// 		<Combobox
-// 			items={categories}
-// 			itemToStringValue={(category: Category) => category.name}
-// 			onValueChange={(category) => {
-// 				if (category) {
-// 					setSearchQuery(category.name)
-// 				}
-// 			}}
-// 		>
-// 			<ComboboxInput
-// 				placeholder="Select a category"
-// 				onChange={(e) => setSearchQuery(e.target.value)}
-// 				value={searchQuery}
-// 			/>
-// 			<ComboboxContent>
-// 				<ComboboxEmpty>
-// 					{processing ? "Searching..." : "No items found."}
-// 				</ComboboxEmpty>
-// 				<ComboboxList>
-// 					{(category) => (
-// 						<ComboboxItem key={category.id} value={category}>
-// 							{category.name}
-// 						</ComboboxItem>
-// 					)}
-// 				</ComboboxList>
-// 			</ComboboxContent>
-// 		</Combobox>
-// 	)
-// }
+	return (
+		<Combobox
+			items={tags}
+			itemToStringValue={(tag: Tag) => tag.name}
+			autoHighlight
+			multiple
+		>
+			<ComboboxChips ref={anchor} className={"w-full"}>
+				<ComboboxValue>
+					{(tags: Tag[]) => (
+						<Fragment>
+							{tags.map((tag) => (
+								<ComboboxChip key={tag.id}>{tag.name}</ComboboxChip>
+							))}
+							<ComboboxChipsInput placeholder="Search for a tag" className={"p-0 border-none !shadow-[none] text-sm ring-none"} onChange={(e) => setSearchQuery(e.target.value)} />
+						</Fragment>
+					)}
+				</ComboboxValue>
+			</ComboboxChips>
+			<ComboboxContent anchor={anchor}>
+				<ComboboxEmpty>
+					{processing ? "Searching..." : "No items found."}
+				</ComboboxEmpty>
+				<ComboboxList>
+					{(tag) => (
+						<ComboboxItem key={tag.id} value={tag}>
+							{tag.name}
+						</ComboboxItem>
+					)}
+				</ComboboxList>
+			</ComboboxContent>
+		</Combobox>
+	)
+}
+
+export function AuthorsCombobox({
+	defaultAuthors,
+	onChange,
+	isInvalid = false
+}: {
+	defaultAuthors: Author[],
+	onChange?: (authors: Author[] | null) => void,
+	isInvalid?: boolean
+}) {
+	const [authors, setAuthors] = useState<Author[]>([])
+	const [searchQuery, setSearchQuery] = useState<string>("")
+	const [selectedAuthors, setSelectedAuthors] = useState<Author[] | null>(null)
+	const { get, processing } = useHttp({})
+	const anchor = useComboboxAnchor()
+
+	const debouncedSearchQuery = useDebounce(searchQuery, 300)
+
+	useEffect(() => {
+		if (debouncedSearchQuery.trim() === "") {
+			setAuthors([])
+			return
+		}
+
+		get(`/api/v1/admins/authors/search?q=${encodeURIComponent(debouncedSearchQuery)}`, {
+			onSuccess: (res: any) => {
+				setAuthors(res.results as Author[])
+			}
+		})
+	}, [debouncedSearchQuery])
+
+	return (
+		<Combobox
+			items={authors}
+			itemToStringValue={(author: Author) => author.full_name}
+			autoHighlight
+			multiple
+			onValueChange={(v) => {
+				setSelectedAuthors(v)
+				onChange ? onChange(v) : undefined
+			}}
+			value={selectedAuthors || defaultAuthors}
+		>
+			<ComboboxChips ref={anchor} className={"w-full"}>
+				<ComboboxValue>
+					{(authors: Author[]) => (
+						<Fragment>
+							{authors.map((author) => (
+								<ComboboxChip key={author.id}>
+									<Avatar className={"size-5"}>
+										<AvatarImage src={author.avatar_url} />
+										<AvatarFallback>{author.full_name[0]}</AvatarFallback>
+									</Avatar>
+									{author.full_name}
+								</ComboboxChip>
+							))}
+							<ComboboxChipsInput aria-invalid={isInvalid} placeholder="Search for an author" className={"p-0 border-none !shadow-[none] text-sm ring-none"} onChange={(e) => setSearchQuery(e.target.value)} />
+						</Fragment>
+					)}
+				</ComboboxValue>
+			</ComboboxChips>
+			<ComboboxContent anchor={anchor}>
+				<ComboboxEmpty>
+					{processing ? "Searching..." : "No items found."}
+				</ComboboxEmpty>
+				<ComboboxList>
+					{(author) => (
+						<ComboboxItem key={author.id} value={author}>
+							<Avatar className={"size-5"}>
+								<AvatarImage src={author.avatar_url} />
+								<AvatarFallback>{author.full_name[0]}</AvatarFallback>
+							</Avatar>
+							{author.full_name}
+						</ComboboxItem>
+					)}
+				</ComboboxList>
+			</ComboboxContent>
+		</Combobox>
+	)
+}

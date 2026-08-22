@@ -26,9 +26,9 @@ export function createBreadcrumbs(breadcrumbs: Breadcrumb[]) {
 								<React.Fragment key={i}>
 									<BreadcrumbItem>
 										{
-											(i < breadcrumbs.length - 1) 
-											? <BreadcrumbLink render={<Link href={item.path}></Link>}>{finalLabel}</BreadcrumbLink>
-											: <BreadcrumbPage>{item.label}</BreadcrumbPage>
+											(i < breadcrumbs.length - 1)
+												? <BreadcrumbLink render={<Link href={item.path}></Link>}>{finalLabel}</BreadcrumbLink>
+												: <BreadcrumbPage>{item.label}</BreadcrumbPage>
 										}
 									</BreadcrumbItem>
 									{i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
@@ -44,28 +44,28 @@ export function createBreadcrumbs(breadcrumbs: Breadcrumb[]) {
 }
 
 const copyToClipboard = async (text: string) => {
-    // Attempt to use the modern Clipboard API first.
-    // This is the preferred method for security and user experience.
-    if (navigator.clipboard && window.isSecureContext) {
-        // The writeText() method returns a Promise, so we can use async/await
-        // to handle the result.
-        return navigator.clipboard.writeText(text)
-            .then(() => {
-                console.log('Text successfully copied to clipboard using the modern API!');
-            })
-            .catch(err => {
-                console.error('Could not copy text to clipboard using the modern API: ', err);
-                // Fallback to the traditional method if the modern API fails.
-                fallbackCopyToClipboard(text);
-            });
-    } else {
-        // Fallback to the traditional method for non-secure contexts or older browsers.
-        console.warn('Clipboard API not available. Falling back to the traditional method.');
-        return new Promise<void>((resolve) => {
-            fallbackCopyToClipboard(text);
-            resolve();
-        });
-    }
+	// Attempt to use the modern Clipboard API first.
+	// This is the preferred method for security and user experience.
+	if (navigator.clipboard && window.isSecureContext) {
+		// The writeText() method returns a Promise, so we can use async/await
+		// to handle the result.
+		return navigator.clipboard.writeText(text)
+			.then(() => {
+				console.log('Text successfully copied to clipboard using the modern API!');
+			})
+			.catch(err => {
+				console.error('Could not copy text to clipboard using the modern API: ', err);
+				// Fallback to the traditional method if the modern API fails.
+				fallbackCopyToClipboard(text);
+			});
+	} else {
+		// Fallback to the traditional method for non-secure contexts or older browsers.
+		console.warn('Clipboard API not available. Falling back to the traditional method.');
+		return new Promise<void>((resolve) => {
+			fallbackCopyToClipboard(text);
+			resolve();
+		});
+	}
 }
 
 /**
@@ -75,68 +75,82 @@ const copyToClipboard = async (text: string) => {
  * @param {string} text - The string to be copied.
  */
 function fallbackCopyToClipboard(text: string) {
-    // Create a temporary textarea element
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
+	// Create a temporary textarea element
+	const textarea = document.createElement('textarea');
+	textarea.value = text;
 
-    // Make the textarea invisible and non-interactive
-    textarea.style.position = 'fixed';
-    textarea.style.top = "0";
-    textarea.style.left = "0";
-    textarea.style.width = '2em';
-    textarea.style.height = '2em';
-    textarea.style.padding = "0";
-    textarea.style.border = 'none';
-    textarea.style.outline = 'none';
-    textarea.style.boxShadow = 'none';
-    textarea.style.background = 'transparent';
-    textarea.readOnly = true;
+	// Make the textarea invisible and non-interactive
+	textarea.style.position = 'fixed';
+	textarea.style.top = "0";
+	textarea.style.left = "0";
+	textarea.style.width = '2em';
+	textarea.style.height = '2em';
+	textarea.style.padding = "0";
+	textarea.style.border = 'none';
+	textarea.style.outline = 'none';
+	textarea.style.boxShadow = 'none';
+	textarea.style.background = 'transparent';
+	textarea.readOnly = true;
 
-    // Append the textarea to the document body
-    document.body.appendChild(textarea);
+	// Append the textarea to the document body
+	document.body.appendChild(textarea);
 
-    // Select the text within the textarea
-    textarea.select();
+	// Select the text within the textarea
+	textarea.select();
 
-    try {
-        // Execute the copy command
-        const successful = document.execCommand('copy');
-        if (successful) {
-            console.log('Text successfully copied to clipboard using fallback method!');
-        } else {
-            console.error('Fallback method failed to copy text.');
-        }
-    } catch (err) {
-        console.error('Error in fallback clipboard copy: ', err);
-    } finally {
-        // Always remove the temporary textarea from the DOM
-        document.body.removeChild(textarea);
-    }
+	try {
+		// Execute the copy command
+		const successful = document.execCommand('copy');
+		if (successful) {
+			console.log('Text successfully copied to clipboard using fallback method!');
+		} else {
+			console.error('Fallback method failed to copy text.');
+		}
+	} catch (err) {
+		console.error('Error in fallback clipboard copy: ', err);
+	} finally {
+		// Always remove the temporary textarea from the DOM
+		document.body.removeChild(textarea);
+	}
 }
 
 export function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(false);
+	const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    // Define the media query matcher
-    const mediaQuery = window.matchMedia(`(max-width: ${breakpoint}px)`);
-    
-    // Set initial state value safely on the client side
-    setIsMobile(mediaQuery.matches);
+	useEffect(() => {
+		// Define the media query matcher
+		const mediaQuery = window.matchMedia(`(max-width: ${breakpoint}px)`);
 
-    // Define a listener function to handle changes
-    const handleMediaQueryChange = (event: any) => {
-      setIsMobile(event.matches);
-    };
+		// Set initial state value safely on the client side
+		setIsMobile(mediaQuery.matches);
 
-    // Listen for window resize changes matching the query
-    mediaQuery.addEventListener('change', handleMediaQueryChange);
+		// Define a listener function to handle changes
+		const handleMediaQueryChange = (event: any) => {
+			setIsMobile(event.matches);
+		};
 
-    // Clean up event listener when the component unmounts
-    return () => mediaQuery.removeEventListener('change', handleMediaQueryChange);
-  }, [breakpoint]);
+		// Listen for window resize changes matching the query
+		mediaQuery.addEventListener('change', handleMediaQueryChange);
 
-  return isMobile;
+		// Clean up event listener when the component unmounts
+		return () => mediaQuery.removeEventListener('change', handleMediaQueryChange);
+	}, [breakpoint]);
+
+	return isMobile;
 }
 
 export default copyToClipboard
+
+export function formatBytes(bytes: number, decimals = 2, useSi = true) {
+	if (bytes === 0) return '0 Bytes';
+
+	const k = useSi ? 1000 : 1024;
+	const dm = decimals < 0 ? 0 : decimals;
+	const sizes = useSi
+		? ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
+		: ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+
+	const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+	return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
