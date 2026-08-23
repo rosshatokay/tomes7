@@ -67,7 +67,7 @@ export default function Dashboard(props: DashboardProps) {
 							const perChangeColor = percentChangeColor(percChange)
 
 							return (
-								<div className="bg-card p-5 rounded-xl" key={i}>
+								<div className="border p-5 rounded-xl" key={i}>
 									<div className="font-medium">{ch.label}</div>
 									<div className="text-subtle text-sm">{ch.period_label}</div>
 									<div className="pt-6 flex flex-col">
@@ -81,8 +81,11 @@ export default function Dashboard(props: DashboardProps) {
 							)
 						})}
 					</div>
-					<div className="bg-card p-5 rounded-xl mt-4">
-						<div className="text-lg">Registrations over time</div>
+					<div className="border p-5 rounded-xl mt-4">
+						<div className="flex items-center gap-3 mb-4">
+							<div className="w-2 rounded-[2px] aspect-square bg-foreground"></div>
+							<div className="font-medium">Registrations over time</div>
+						</div>
 						<div>
 							<ChartContainer className="w-full h-[320px]" config={chartConfig}>
 								<BarChart accessibilityLayer data={formattedRegistrations} height={40}>

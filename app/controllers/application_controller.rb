@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Pagy::Method
   include Authentication
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   # allow_browser versions: :modern
@@ -58,5 +59,15 @@ class ApplicationController < ActionController::Base
     record.errors.to_hash.transform_keys do |key|
       "#{prefix}.#{key}"
     end.transform_values(&:first)
+  end
+
+  def create_pagination(pagy)
+    {
+      current_page: pagy.page,
+      next_page: pagy.next,
+      prev_page: pagy.previous,
+      total_pages: pagy.pages,
+      total_count: pagy.count,
+    }
   end
 end

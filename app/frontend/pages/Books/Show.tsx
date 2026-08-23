@@ -10,7 +10,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
-import { createBreadcrumbs, useIsMobile } from "@/lib/utils"
+import { createBreadcrumbs, SimpleFormat, useIsMobile } from "@/lib/utils"
 import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
 import { ArrowUpRightIcon, HeartIcon, ShareIcon } from "lucide-react"
 import React, { useState } from "react"
@@ -41,22 +41,6 @@ interface BookPageProps {
 	}]
 	similar_books: Book[]
 }
-
-function SimpleFormat(text: string) {
-	if (!text) return null;
-
-	return text.split(/\n\n+/).map((paragraph: string, pIndex: number) => (
-		<p key={pIndex}>
-			{paragraph.split('\n').map((line, lIndex) => (
-				<React.Fragment key={lIndex}>
-					{line}
-					{lIndex < paragraph.split('\n').length - 1 && <br />}
-				</React.Fragment>
-			))}
-		</p>
-	));
-}
-
 
 export default function BookPage({ auth, book, category, authors, tags, similar_books }: BookPageProps) {
 	const isMobile = useIsMobile()

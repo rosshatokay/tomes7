@@ -154,3 +154,52 @@ export function formatBytes(bytes: number, decimals = 2, useSi = true) {
 
 	return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+export function useOperatingSystem() {
+	const [os, setOs] = useState<"Unknown" | "macOS" | "iOS" | "Windows" | "Android" | "Linux">('Unknown');
+
+	useEffect(() => {
+		// 1. Try modern, privacy-friendly UserAgentData API first
+		const nav = window.navigator as any;
+		if (nav.userAgentData?.platform) {
+			setOs(nav.userAgentData.platform);
+			return;
+		}
+
+		// 2. Fallback to traditional User Agent string parsing
+		const userAgent = window.navigator.userAgent;
+		const platform = window.navigator.platform;
+		const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+		const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+		const iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+
+		if (macosPlatforms.includes(platform)) {
+			setOs('macOS');
+		} else if (iosPlatforms.includes(platform)) {
+			setOs('iOS');
+		} else if (windowsPlatforms.includes(platform)) {
+			setOs('Windows');
+		} else if (/Android/.test(userAgent)) {
+			setOs('Android');
+		} else if (/Linux/.test(platform)) {
+			setOs('Linux');
+		}
+	}, []);
+
+	return os;
+}
+
+export function SimpleFormat(text: string) {
+	if (!text) return null;
+
+	return text.split(/\n\n+/).map((paragraph: string, pIndex: number) => (
+		<p key={pIndex}>
+			{paragraph.split('\n').map((line, lIndex) => (
+				<React.Fragment key={lIndex}>
+					{line}
+					{lIndex < paragraph.split('\n').length - 1 && <br />}
+				</React.Fragment>
+			))}
+		</p>
+	));
+}

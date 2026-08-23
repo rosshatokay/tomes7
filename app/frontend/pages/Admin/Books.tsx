@@ -1,20 +1,27 @@
 import { useAdminHeader } from "@/components/contexts/AdminHeaderContext";
 import BookSheet from "@/components/partials/admins/BookSheet";
 import CustomTable, { Column } from "@/components/partials/CustomTable";
+import { TablePagination } from "@/components/partials/TablePagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Spinner } from "@/components/ui/spinner";
 import { Book } from "@/interfaces/book";
-import { Deferred } from "@inertiajs/react";
-import { BookIcon, EyeIcon, FeatherIcon, ListIcon, MoreHorizontalIcon, PlusIcon, ShapesIcon, UsersIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { PaginationMeta } from "@/interfaces/pagination";
+import adminSearch from "@/lib/adminSearch";
+import { Deferred, router } from "@inertiajs/react";
+import { useDebounce } from "@uidotdev/usehooks";
+import { BookIcon, DownloadIcon, EyeIcon, FeatherIcon, FilterIcon, ListIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, ShapesIcon, UsersIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface PageProps {
 	books_count: number
 	books: Book[]
+	pagination: PaginationMeta
 }
 
-export default function BooksPage({ books, books_count }: PageProps) {
+export default function BooksPage({ books, books_count, pagination }: PageProps) {
 	const { setHeaderContent } = useAdminHeader()
 	const columns: Column[] = [
 		{
@@ -44,7 +51,7 @@ export default function BooksPage({ books, books_count }: PageProps) {
 				text: "Visibility"
 			},
 			render: (row) => (
-				<Badge variant={"secondary"} className="text-sm font-normal">{row.published ? "Published" : "Draft"}</Badge>
+				<Badge variant={row.published ? "outline" : "secondary"} className="text-sm font-normal">{row.published ? "Published" : "Draft"}</Badge>
 			)
 		},
 		{
@@ -64,30 +71,46 @@ export default function BooksPage({ books, books_count }: PageProps) {
 	]
 
 	const [activeBookId, setActiveBookId] = useState<string | null>(null)
+	const { setSearchQuery } = adminSearch()
 
 	useEffect(() => {
-    setHeaderContent(
-      <div className="flex items-center gap-2">
-        <Button size="sm" onClick={() => setActiveBookId('new')}>
-          <PlusIcon /> Add book
-        </Button>
-      </div>
-    );
+		setHeaderContent(
+			<div className="flex items-center gap-2">
+				<InputGroup>
+					<InputGroupAddon><SearchIcon /></InputGroupAddon>
+					<InputGroupInput
+						type="text"
+						placeholder="Search for a book"
+						onChange={(e) => setSearchQuery(e.target.value)}
+					></InputGroupInput>
+				</InputGroup>
+				<Button onClick={() => setActiveBookId('new')}>
+					<PlusIcon /> Book
+				</Button>
+			</div>
+		);
 
 		// clean up to prevent leak
-    return () => setHeaderContent(null);
-  }, [setHeaderContent])
-	
+		return () => setHeaderContent(null);
+	}, [setHeaderContent])
+
 	return (
 		<>
-			<div className="h-full">
-				<div className="text-sm h-12 flex items-center px-4 border-b">
+			<div className="h-full flex flex-col">
+				<div className="text-sm min-h-12 h-12 flex items-center justify-between px-4 border-b">
 					<span className="text-subtle flex items-center gap-2"><ListIcon size={16} /> All books • {books_count}</span>
+					<div className="flex gap-1">
+						<Button size={"sm"} variant={"ghost"}><FilterIcon /> Filter</Button>
+						<Button size={"icon-sm"} variant={"ghost"}><DownloadIcon /></Button>
+					</div>
 				</div>
 				<Deferred data="books" fallback={<div className="flex-center h-full"><Spinner className="size-6 text-subtle"></Spinner></div>}>
-					<CustomTable columns={columns} rows={books || []} onRowClick={(book: Book) => setActiveBookId(book.id)} />
+					<div className="w-full h-full overflow-y-auto">
+						<CustomTable columns={columns} rows={books || []} onRowClick={(book: Book) => setActiveBookId(book.id)} />
+					</div>
 				</Deferred>
 				<BookSheet activeBookId={activeBookId} setActiveBookId={setActiveBookId} />
+				<TablePagination meta={pagination} />
 			</div>
 		</>
 	)

@@ -4,7 +4,7 @@ class Feedback < ApplicationRecord
 
   before_validation :normalize_body
   validates :body, presence: true
-  validates_length_of :body, maximum: 75, message: "too long"
+  validates_length_of :body, maximum: 300, message: "too long"
 
   def formatted_subject
     "requested a book" if subject == "book_request"

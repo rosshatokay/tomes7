@@ -2,7 +2,13 @@ require "csv"
 
 class Admins::AuthorsController < Admins::BaseController
   def index
-    authors = Author.with_attached_avatar.all
+    scope = Author.with_attached_avatar.all
+
+    if params[:q].present?
+      scope = scope.where("full_name ILIKE ?", "%#{params[:q]}%")
+    end
+
+    @pagy, authors = pagy(scope, limit: 5)
 
     render inertia: "Admin/Authors", props: {
       authors_count: authors.count,
@@ -15,6 +21,7 @@ class Admins::AuthorsController < Admins::BaseController
           books_count: a.books_count,
         }
       },
+      pagination: create_pagination(@pagy),
     }
   end
 

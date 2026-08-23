@@ -1,13 +1,17 @@
 class Admins::BooksController < Admins::BaseController
-  include Pagy::Method
-
   def index
     scope = Book.with_attached_cover.includes(:authors, :category)
+
+    if params[:q]
+      scope = scope.where("title ILIKE ?", "%#{params[:q]}%")
+    end
+
+    @pagy, books = pagy(scope, limit: 15)
 
     render inertia: "Admin/Books", props: {
              books_count: Book.count,
              books: InertiaRails.defer {
-               scope.map { |book|
+               books.map { |book|
                  book.to_hash.merge({
                    permalink: book_path(book.slug),
                    id: book.hashid,
@@ -16,6 +20,7 @@ class Admins::BooksController < Admins::BaseController
                  })
                }
              },
+             pagination: create_pagination(@pagy),
            }
   end
 

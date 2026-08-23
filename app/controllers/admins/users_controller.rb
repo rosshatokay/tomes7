@@ -4,19 +4,12 @@ class Admins::UsersController < Admins::BaseController
   def index
     users_scope = User.with_attached_avatar.includes(:sessions, :identities).all
     users_scope = apply_filters(users_scope)
-    # @pagy, @users = pagy(users_scope, limit: 10)
-
-    # @sort_option_groups = [
-    #   {
-    #     label: "Joined at",
-    #     options: [["Newest first", "newest-first"], ["Earliest first", "earliest-first"]],
-    #   },
-    # ]
+    @pagy, users = pagy(users_scope, limit: 15)
 
     render inertia: "Admin/Users", props: {
       users_count: users_scope.count,
       users: InertiaRails.defer {
-        users_scope.map { |u|
+        users.map { |u|
           {
             id: u.hashid,
             avatar_url: u.get_avatar_url,
@@ -28,6 +21,7 @@ class Admins::UsersController < Admins::BaseController
           }
         }
       },
+      pagination: create_pagination(@pagy),
     }
   end
 

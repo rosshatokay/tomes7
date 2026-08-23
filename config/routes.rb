@@ -85,6 +85,11 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :inbox, only: [:index] do
+      collection do
+        delete :destroy
+      end
+    end
     resources :users, only: [:index]
     resources :books
 

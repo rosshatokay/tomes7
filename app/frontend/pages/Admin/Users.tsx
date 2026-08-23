@@ -1,9 +1,11 @@
 import { GoogleIcon } from "@/assets/socials/GoogleIcon";
+import { TablePagination } from "@/components/partials/TablePagination";
 import CustomTable, { Column } from "@/components/partials/CustomTable";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { PaginationMeta } from "@/interfaces/pagination";
 import { User } from "@/interfaces/user";
 import { Deferred, Head } from "@inertiajs/react";
 import { AtSignIcon, CalendarIcon, ClockIcon, FingerprintPatternIcon, ListIcon, MailIcon, UserIcon } from "lucide-react";
@@ -12,9 +14,10 @@ import { format } from "timeago.js";
 interface Props {
 	users_count: number
 	users: User[]
+	pagination: PaginationMeta
 }
 
-export default function UsersPage({ users_count, users }: Props) {
+export default function UsersPage({ users_count, users, pagination }: Props) {
 	const cols: Column[] = [
 		{
 			key: "username",
@@ -46,7 +49,6 @@ export default function UsersPage({ users_count, users }: Props) {
 				text: "Provider"
 			},
 			render: (row) => {
-				console.log(row)
 				return (
 					<Badge variant={"secondary"} className="text-[13px] font-normal">
 						{row.provider === null ? <AtSignIcon /> : <GoogleIcon />}
@@ -82,13 +84,16 @@ export default function UsersPage({ users_count, users }: Props) {
 			<Head>
 				<title>Users</title>
 			</Head>
-			<div className="h-full">
+			<div className="h-full flex flex-col">
 				<div className="text-sm h-12 flex items-center justify-between px-4 border-b">
 					<span className="text-subtle flex items-center gap-2"><ListIcon size={16} /> All users • {users_count}</span>
 				</div>
 				<Deferred data={"users"} fallback={<div className="flex-center h-full"><Spinner className="size-6 text-subtle" /></div>}>
-					<CustomTable columns={cols} rows={users || []} />
+					<div className="w-full h-full overflow-y-auto">
+						<CustomTable columns={cols} rows={users || []} />
+					</div>
 				</Deferred>
+				<TablePagination meta={pagination} />
 			</div>
 		</>
 	)

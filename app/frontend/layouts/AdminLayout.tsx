@@ -48,7 +48,7 @@ function AdminLayoutContent({ children }: PropsWithChildren) {
 	const flash = usePage().flash as FlashProps
 	const { url } = usePage()
 	const auth = usePage().props.auth as AuthProps
-	const activeTab = links.filter(l => l.path === url)[0]
+	const activeTab = links.filter(l => l.path === url.split("?")[0])[0]
 	const { headerContent } = useAdminHeader()
 
 	useEffect(() => {
@@ -70,7 +70,7 @@ function AdminLayoutContent({ children }: PropsWithChildren) {
 					<div className="flex flex-col h-full items-center">
 						<div className="flex flex-col">
 							{links.map(l => {
-								const isActive = url === l.path
+								const isActive = url.split('?')[0] === l.path
 
 								return (
 									<Tooltip key={l.path} >
@@ -98,9 +98,9 @@ function AdminLayoutContent({ children }: PropsWithChildren) {
 				<div className="flex items-center h-13 justify-between">
 					<div className="flex items-center gap-3">
 						<div className="bg-card size-7 rounded-md flex-center">
-							{activeTab.icon(16)}
+							{activeTab?.icon(16)}
 						</div>
-						<div className="text-sm">{activeTab.label}</div>
+						<div className="text-sm">{activeTab?.label}</div>
 					</div>
 					{headerContent}
 				</div>
