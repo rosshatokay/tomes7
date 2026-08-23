@@ -57,25 +57,18 @@ class Admins::BooksController < Admins::BaseController
   end
 
   def update
-    @book = Book.find(params[:id])
-    @book.authors = params[:authors]&.map { |id| Author.find(id) } || []
-    @categories = Category.order(:name).pluck(:name, :id)
+    book = Book.find(params[:id])
+    author_ids = params[:book][:authors]&.pluck(:id) || []
+    book.authors = Author.find(author_ids)
 
-    if @book.update(book_params)
-      flash.now[:success] = "Book updated"
-      render turbo_stream: [
-               turbo_stream.update("flash", partial: "partials/flash"),
-               # Usually, you'd also want to clear the form or append the new item
-               turbo_stream.replace("book_details", partial: "admins/books/form", locals: { book: @book, is_edit: true }),
-             ]
+    if book.update(book_params)
+      flash.inertia[:toast] = { description: "Book updated successfully" }
+      redirect_to admins_books_path
     else
-      flash.now[:error] = "Something went wrong"
-      # render :edit, status: :unprocessable_entity
-      render turbo_stream: [
-               turbo_stream.update("flash", partial: "partials/flash"),
-               # Usually, you'd also want to clear the form or append the new item
-               turbo_stream.replace("book_details", partial: "admins/books/form", locals: { book: @book, is_edit: true }),
-             ], status: :unprocessable_entity
+      flash.inertia[:toast] = { description: "Something went wrong" }
+      redirect_to admins_books_path, inertia: {
+                                       errors: inertia_errors_for(book),
+                                     }
     end
   end
 

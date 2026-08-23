@@ -158,7 +158,6 @@ export default function AuthorSheet({ activeAuthorId, setActiveAuthorId }: Props
               <Textarea
                 placeholder="Enter the author's bio"
                 value={data.author.bio}
-                className="bg-input"
                 onChange={(e) => setData("author.bio", e.target.value)}
               />
             </Field>
@@ -169,7 +168,6 @@ export default function AuthorSheet({ activeAuthorId, setActiveAuthorId }: Props
                 id="wiki_url"
                 placeholder="Enter the Wikipedia page URL"
                 value={data.author.wiki_url}
-                className="bg-input"
                 onChange={(e) => setData("author.wiki_url", e.target.value)}
               />
             </Field>

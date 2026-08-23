@@ -1,4 +1,3 @@
-import { Combobox } from "@/components/ui/combobox"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -7,10 +6,11 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { AuthorsCombobox, BookTagsComboBox, CategoryComboBox } from "./Comboboxes"
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment"
 import { Spinner } from "@/components/ui/spinner"
-import { FileTextIcon, XIcon } from "lucide-react"
+import { FileTextIcon, ImagePlusIcon, LockOpenIcon, UploadCloudIcon, XIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { formatBytes } from "@/lib/utils"
+import { Switch } from "@/components/ui/switch"
 
 const INITIAL_BOOK_STATE = {
 	id: null as string | null,
@@ -26,7 +26,8 @@ const INITIAL_BOOK_STATE = {
 	epub: null as File | null | {
 		filename: string
 		byte_size: number
-	}
+	},
+	published: false
 }
 
 interface Props {
@@ -43,20 +44,40 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 	const http = useHttp({ id: "" })
 	const isEditing = activeBookId !== null && activeBookId !== "new"
 	const isOpen = activeBookId !== null
-	const [attachedEpubDetails, setAttachedEpubDetails] = useState<attachedEpub | null>(null)
+
+	const epubFileInputRef = useRef<HTMLInputElement>(null)
 	const imageFileInputRef = useRef<HTMLInputElement>(null)
+	const [attachedEpubDetails, setAttachedEpubDetails] = useState<attachedEpub | null>(null)
 	const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null)
 
-	const { data, setData, processing, reset, transform, progress, patch, post, cancel, errors, clearErrors } = useForm({
+	const { data, setData, processing, reset, transform, progress, put, post, cancel, errors, clearErrors } = useForm({
 		book: INITIAL_BOOK_STATE
 	})
+
+	const handleEpubFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0]
+		if (!file) return
+
+		setData('book.epub', file)
+
+		setAttachedEpubDetails({
+			filename: file.name,
+			byte_size: file.size
+		})
+	}
 
 	const handleSubmit = () => {
 		transform((latestData) => {
 			const payload: Record<string, any> = { ...latestData.book }
 
+			// if not new file, don't send it as raw file
 			if (!(payload.cover instanceof File)) {
 				delete payload.cover
+			}
+
+			// if not new file, don't send it as raw file
+			if (!(payload.epub instanceof File)) {
+				delete payload.epub
 			}
 
 			payload.category_id = payload.category.id
@@ -65,7 +86,10 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 		})
 
 		if (isEditing) {
-			patch(`/admins/books/${activeBookId}`)
+			put(`/admins/books/${activeBookId}`, {
+				onSuccess: (res) => handleClose(),
+				onError: (e) => console.error(e)
+			})
 		} else {
 			post(`/admins/books`, {
 				onSuccess: () => handleClose(),
@@ -78,6 +102,20 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 		setActiveBookId(null)
 		reset()
 		setPreviewImageUrl(null)
+	}
+
+	const handleUploadImageBtnClick = () => {
+	}
+
+	const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0]
+		if (!file) return
+
+		if (file && file.type.startsWith("image/")) {
+			const url = URL.createObjectURL(file)
+			setPreviewImageUrl(url)
+			setData("book.cover", file)
+		}
 	}
 
 	useEffect(() => {
@@ -95,9 +133,11 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 						description: res.book.description,
 						cover: null,
 						wiki_url: res.book.wiki_url,
-						epub: null
+						epub: null,
+						published: res.book.published
 					})
 
+          setPreviewImageUrl(res.book.cover_url ?? null);
 					setAttachedEpubDetails(res.book.epub)
 				}
 			})
@@ -121,7 +161,24 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 					</div>
 				)}
 				{!http.processing && (
-					<FieldGroup className="flex flex-col auto-rows-min px-4 flex-1 overflow-y-auto">
+					<FieldGroup className="flex flex-col auto-rows-min px-4 flex-1 overflow-y-auto gap-5">
+						<Field orientation={"horizontal"} className="gap-4">
+							{previewImageUrl ? (
+								<div className="w-16 aspect-book rounded-sm bg-card" style={{ background: `url(${previewImageUrl}) center / cover` }}></div>
+							) : (
+								<div className="w-16 aspect-book rounded-sm bg-card flex-center text-subtle"><ImagePlusIcon size={16} /></div>
+							)}
+							<Input
+								ref={imageFileInputRef}
+								onChange={handleImageFileChange}
+								type="file"
+								accept="image/*"
+								className="hidden"
+							/>
+							<Button onClick={() => imageFileInputRef.current?.click()} variant={"secondary"}>
+								Upload image
+							</Button>
+						</Field>
 						<Field>
 							<FieldLabel>Title</FieldLabel>
 							<Input
@@ -167,36 +224,76 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 						</Field>
 						<Field>
 							<FieldLabel>Epub file</FieldLabel>
-							<Attachment state="idle">
-								<AttachmentMedia>
-									{/* <Spinner /> */}
-									<FileTextIcon />
-								</AttachmentMedia>
-								<AttachmentContent>
-									{attachedEpubDetails !== null && (
-										<Fragment>
-											<AttachmentTitle>{attachedEpubDetails.filename.split('.')[0]}</AttachmentTitle>
-											<AttachmentDescription>{attachedEpubDetails.filename.split('.').pop()?.toUpperCase()} • {formatBytes(attachedEpubDetails.byte_size)}</AttachmentDescription>
-										</Fragment>
-									)}
-								</AttachmentContent>
-								<AttachmentActions>
-									<AttachmentAction><XIcon /></AttachmentAction>
-								</AttachmentActions>
-							</Attachment>
+							{(data.book.epub !== null || attachedEpubDetails !== null) && (
+								<Attachment state="idle">
+									<AttachmentMedia>
+										{progress ? <Spinner /> : <FileTextIcon />}
+									</AttachmentMedia>
+									<AttachmentContent>
+										{attachedEpubDetails !== null && (
+											<Fragment>
+												<AttachmentTitle>{attachedEpubDetails.filename.split('.')[0]}</AttachmentTitle>
+												{progress ? (
+													<AttachmentDescription>Uploading • {Math.trunc(progress.percentage || 0)}%</AttachmentDescription>
+												) : (
+
+													<AttachmentDescription>{attachedEpubDetails.filename.split('.').pop()?.toUpperCase()} • {formatBytes(attachedEpubDetails.byte_size)}</AttachmentDescription>
+												)}
+											</Fragment>
+										)}
+									</AttachmentContent>
+									<AttachmentActions>
+										<AttachmentAction><XIcon /></AttachmentAction>
+									</AttachmentActions>
+								</Attachment>
+							)}
+							{data.book.epub === null && attachedEpubDetails === null && (
+								<Fragment>
+									<Input
+										ref={epubFileInputRef}
+										onChange={(e) => {
+											handleEpubFile(e)
+											clearErrors("book.epub")
+										}}
+										accept="application/epub+zip"
+										type="file"
+										className="hidden"
+									/>
+									<div className="border border-dashed p-4 pt-5 rounded-lg flex-center flex-col gap-2" onClick={() => epubFileInputRef.current?.click()}>
+										<UploadCloudIcon size={20} />
+										<div className="text-xs">Click to upload</div>
+									</div>
+								</Fragment>
+							)}
+							{errors["book.epub"] && <FieldError>{errors["book.epub"]}</FieldError>}
 						</Field>
+						<div>
+							<div className="text-sm text-subtle mb-2">Access</div>
+							<div className="flex items-center justify-between">
+								<div className="flex items-center gap-3">
+									<div className="w-10 aspect-square rounded-md border border-foreground/10 flex-center">
+										<LockOpenIcon size={16} className="text-subtle" />
+									</div>
+									<div>
+										<div>Mark published</div>
+										<div className="text-xs text-subtle">Make the book visible to everyone.</div>
+									</div>
+								</div>
+								<Switch checked={data.book.published} onCheckedChange={(checked) => setData('book.published', checked)} />
+							</div>
+						</div>
 					</FieldGroup>
 				)}
 				{!http.processing && (
-					<SheetFooter>
+					<SheetFooter className="flex flex-row justify-end">
+						<SheetClose render={<Button variant={"secondary"} onClick={cancel} />}>Cancel</SheetClose>
 						<Button variant={processing ? "secondary" : "default"} disabled={processing} onClick={handleSubmit}>
 							{processing && <Spinner />}
 							{processing ? "Processing" : "Create"}
 						</Button>
-						<SheetClose render={<Button variant={"secondary"} onClick={cancel} />}>Cancel</SheetClose>
 					</SheetFooter>
 				)}
 			</SheetContent>
-		</Sheet>
+		</Sheet >
 	)
 }
