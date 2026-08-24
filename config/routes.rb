@@ -34,7 +34,17 @@ Rails.application.routes.draw do
     collection do
       post :save
     end
+
+    get "/read", to: "books#read", as: "read"
+    get "/epub", to: "books#epub", as: "epub_file"
   end
+
+  resources :feedbacks, only: [] do
+    collection do
+      post "book-request", to: "feedbacks#book_request"
+    end
+  end
+
   resources :authors, only: [:show, :index] do
     collection do
       post :follow
