@@ -10,6 +10,7 @@ import { FacebookIcon, RedditIcon, XIcon } from "@/assets/socials"
 import { toast } from "../ui/toast"
 
 interface ShareDialogProps {
+	title: string
 	url: string
 	isOpen: boolean
 	setIsOpen: (state: boolean) => void
@@ -49,7 +50,7 @@ const platforms = [
 	},
 ]
 
-export default function ShareDialog({ url, isOpen, setIsOpen }: ShareDialogProps) {
+export default function ShareDialog({ title, url, isOpen, setIsOpen }: ShareDialogProps) {
 	const isMobile = useIsMobile()
 	const [isCopied, setIsCopied] = useState<boolean>(false)
 	
@@ -67,7 +68,7 @@ export default function ShareDialog({ url, isOpen, setIsOpen }: ShareDialogProps
 		<Dialog open={isOpen} onOpenChange={(e) => !e ? setIsOpen(false) : undefined}>
 			<DialogContent className={"sm:max-w-md"} autoFocus={false}>
 				<DialogHeader>
-					<DialogTitle>Share book</DialogTitle>
+					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
 				<div className="flex flex-col gap-5 pt-2">
 					<Field>

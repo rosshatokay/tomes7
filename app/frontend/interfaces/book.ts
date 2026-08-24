@@ -8,5 +8,6 @@ export interface Book {
 	id: string
 	readers_count?: number
 	average_rating: number
+	share_url: string
 	ratings_count: number
 }
