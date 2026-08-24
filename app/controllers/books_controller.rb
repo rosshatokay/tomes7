@@ -43,6 +43,34 @@ class BooksController < ApplicationController
     render json: { success: true }
   end
 
+  def read
+    book = Book.friendly.find(params[:book_id])
+
+    if user_signed_in?
+      user_book = current_user.user_books.find_or_create_by(book: book)
+
+      if user_book.previously_new_record?
+        Activities::Logger.started_reading(user: current_user, book: book)
+      end
+    end
+
+    render inertia: "Books/Read", props: {
+      book: book.to_hash.merge(
+        epub_file_path: book.epub.attached? ? rails_public_blob_url(book.epub, disposition: "inline") : nil,
+      ),
+    }
+  end
+
+  def epub
+    book = Book.friendly.find(params[:book_id])
+
+    if book.epub.attached?
+      redirect_to rails_public_blob_url(book.epub, disposition: "inline"), allow_other_host: true
+    else
+      render plain: "Book not found", status: :not_found
+    end
+  end
+
   private
 
   def format_book(book)
@@ -56,12 +84,13 @@ class BooksController < ApplicationController
         is_saved: current_user&.likes?(book) || false,
         average_rating: book.average_rating,
         ratings_count: book.ratings_count,
-        permalink: book_path(book.slug),
+        share_url: book_url(book.slug),
+        read_path: book_read_path(book.slug),
       },
       tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {
         name: book.category.name,
-        permalink: "/",
+        permalink: books_path(tab: book.category.slug),
       },
       authors: book.authors.map { |a|
         {

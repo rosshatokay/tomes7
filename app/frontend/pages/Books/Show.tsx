@@ -21,7 +21,8 @@ interface BookPageProps {
 		slug: string
 		title: string
 		cover_url: string
-		permalink: string
+		read_path: string
+		share_url: string
 		description: string
 		wiki_url: string
 		is_saved: boolean
@@ -130,13 +131,15 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 								<div className="text-[15px] text-neutral-700 dark:text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
 								{book.wiki_url && <p className="text-sm mt-2 text-subtle">Read more at <LinkUnderline href={book.wiki_url} className="text-foreground" target="_blank">Wikipedia</LinkUnderline>.</p>}
 							</div>
-							<div className="flex flex-wrap gap-2 mt-4">
-								{tags.map(tag => (
-									<Badge key={tag.name} variant={"outline"} className="h-7 px-3 text-sm font-normal text-subtle">{tag.name}</Badge>
-								))}
-							</div>
+							{tags?.length > 0 && (
+								<div className="flex flex-wrap gap-2 mt-4">
+									{tags.map(tag => (
+										<Badge key={tag.name} variant={"outline"} className="h-7 px-3 text-sm font-normal text-subtle">{tag.name}</Badge>
+									))}
+								</div>
+							)}
 							<div className="mt-8 md:block hidden">
-								<Button size={"lg"} variant={"default"} className={"w-full h-10"}>Read</Button>
+								<Button size={"lg"} variant={"default"} className={"w-full h-10"} nativeButton={false} render={<Link href={book.read_path} />}>Read</Button>
 							</div>
 						</section>
 						<section>
@@ -189,7 +192,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					<Button className={"rounded-full h-11 px-6 shadow-lg"} size={"lg"}>Read the book <ArrowUpRightIcon /></Button>
 				</div>
 			</div>
-			<ShareDialog url={`https://tomes.club${book.permalink}`} isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
+			<ShareDialog url={book.share_url} title="Share book" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
 			<div className="pt-20"></div>
 			<hr />
 		</>
