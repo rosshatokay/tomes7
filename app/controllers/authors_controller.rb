@@ -26,11 +26,13 @@ class AuthorsController < ApplicationController
       author: {
         full_name: author.full_name,
         avatar_url: author.avatar.attached? ? author.avatar.service.url(author.avatar.blob.key, transformation: [{ width: 250, height: 250 }]) : nil,
+        wiki_url: author.wiki_url,
         bio: author.bio,
         slug: author.slug,
         is_followed: current_user&.follows?(author),
         books_count: author.books_count,
         followers_count: author.followers_count,
+        share_url: author_url(author.slug),
       },
       books: author.books.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
     }

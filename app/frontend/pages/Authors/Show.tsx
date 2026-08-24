@@ -1,4 +1,6 @@
+import { WikipediaIcon } from "@/assets/socials"
 import { BookCard } from "@/components/partials/BookCard"
+import ShareDialog from "@/components/partials/ShareDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
@@ -8,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import Author from "@/interfaces/author"
 import { Book } from "@/interfaces/book"
 import { createBreadcrumbs } from "@/lib/utils"
-import { Head, useHttp } from "@inertiajs/react"
+import { Head, useHttp, usePage } from "@inertiajs/react"
 import { BookAlertIcon, MinusIcon, PlusIcon, ShareIcon } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
@@ -20,6 +22,8 @@ interface Props {
 export default function AuthorPage({ author, books }: Props) {
 	const [isFollowing, setIsFollowing] = useState<boolean>(author.is_followed)
 	const [followersCount, setFollowersCount] = useState<number>(author.followers_count)
+	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
+	const { url } = usePage()
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: "Authors", path: "/authors" },
@@ -41,7 +45,6 @@ export default function AuthorPage({ author, books }: Props) {
 			},
 		}).catch(err => toast.add({ description: "Something went wrong try again" }))
 	}
-
 
 	return (
 		<>
@@ -83,8 +86,26 @@ export default function AuthorPage({ author, books }: Props) {
 									</React.Fragment>
 								)}
 							</Button>
+							{author.wiki_url && (
+								<Tooltip>
+									<TooltipTrigger delay={0} render={<Button
+										variant={"outline"}
+										size={"icon"}
+										className={"rounded-full"}
+										nativeButton={false}
+										render={<a href={author.wiki_url} target="_blank" />}
+									><WikipediaIcon fill="var(--foreground)" />
+									</Button>} />
+									<TooltipContent>Wikipedia</TooltipContent>
+								</Tooltip>
+							)}
 							<Tooltip>
-								<TooltipTrigger delay={0} render={<Button variant={"outline"} size={"icon"} className={"rounded-full"}><ShareIcon /></Button>} />
+								<TooltipTrigger delay={0} render={<Button
+									variant={"outline"}
+									size={"icon"}
+									onClick={() => setIsShareOpen(true)}
+									className={"rounded-full"}><ShareIcon />
+								</Button>} />
 								<TooltipContent>Share</TooltipContent>
 							</Tooltip>
 						</div>
@@ -104,6 +125,11 @@ export default function AuthorPage({ author, books }: Props) {
 						</Empty>
 					)}
 				</div>
+				<ShareDialog
+					title="Share author"
+					url={author.share_url}
+					isOpen={isShareOpen}
+					setIsOpen={setIsShareOpen} />
 			</div>
 		</>
 	)
