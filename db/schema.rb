@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_24_172756) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_25_194038) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -89,6 +89,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_24_172756) do
     t.integer "sum_of_scores", default: 0
     t.boolean "published", default: false
     t.integer "readers_count", default: 0
+    t.jsonb "details", default: {}, null: false
     t.index ["category_id"], name: "index_books_on_category_id"
     t.index ["slug"], name: "index_books_on_slug_unique", unique: true
     t.index ["title"], name: "index_books_on_title", opclass: :gin_trgm_ops, using: :gin

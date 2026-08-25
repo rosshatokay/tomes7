@@ -7,6 +7,8 @@ class Api::V1::Admins::BooksController < Admins::BaseController
       description: book.description,
       published: book.published,
       cover_url: book.get_cover_url,
+      wiki_url: book.wiki_url,
+      details: book.details,
       category: {
         name: book.category.name,
         id: book.category.id,

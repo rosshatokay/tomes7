@@ -78,7 +78,7 @@ class BooksController < ApplicationController
       book: {
         title: book.title,
         slug: book.slug,
-        cover_url: book.cover.attached? ? book.cover.service.url(book.cover.blob.key, transformation: [{ width: 600 }]) : nil,
+        cover_url: book.get_cover_url(1000),
         description: book.description,
         wiki_url: book.wiki_url,
         is_saved: current_user&.likes?(book) || false,
@@ -86,6 +86,7 @@ class BooksController < ApplicationController
         ratings_count: book.ratings_count,
         share_url: book_url(book.slug),
         read_path: book_read_path(book.slug),
+        details: book.get_details,
       },
       tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {

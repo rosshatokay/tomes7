@@ -76,6 +76,10 @@ class Book < ApplicationRecord
     ratings.where(user_id: user.id)&.first
   end
 
+  def get_details
+    details.delete_if { |key, value| value == "" }
+  end
+
   def to_hash
     {
       title: title,

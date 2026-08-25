@@ -6,7 +6,7 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { AuthorsCombobox, BookTagsComboBox, CategoryComboBox } from "./Comboboxes"
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment"
 import { Spinner } from "@/components/ui/spinner"
-import { FileTextIcon, ImagePlusIcon, LockOpenIcon, UploadCloudIcon, XIcon } from "lucide-react"
+import { FileTextIcon, ImagePlusIcon, LockOpenIcon, TrashIcon, UploadCloudIcon, XIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { formatBytes } from "@/lib/utils"
@@ -28,6 +28,7 @@ const INITIAL_BOOK_STATE = {
 		filename: string
 		byte_size: number
 	},
+	details: {} as Record<string, string>,
 	published: false
 }
 
@@ -99,15 +100,6 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 		}
 	}
 
-	const handleClose = () => {
-		setActiveBookId(null)
-		reset()
-		setPreviewImageUrl(null)
-	}
-
-	const handleUploadImageBtnClick = () => {
-	}
-
 	const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (!file) return
@@ -117,6 +109,47 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 			setPreviewImageUrl(url)
 			setData("book.cover", file)
 		}
+	}
+
+	const handleClose = () => {
+		setActiveBookId(null)
+		reset()
+		setPreviewImageUrl(null)
+	}
+
+	const handleRemoveDetail = (keyToRemove: string) => {
+		const updatedDetails = { ...data.book.details }
+		delete updatedDetails[keyToRemove]
+
+		setData('book', {
+			...data.book,
+			details: updatedDetails
+		})
+	}
+
+	const handleDetailChange = (oldKey: string, newKey: string, value: string) => {
+		const updatedDetails: Record<string, string> = {}
+
+		// Rebuild object in original key order
+		for (const [key, val] of Object.entries(data.book.details)) {
+			if (key === oldKey) {
+				updatedDetails[newKey] = value
+			} else {
+				updatedDetails[key] = val
+			}
+		}
+
+		setData('book', {
+			...data.book,
+			details: updatedDetails,
+		})
+	}
+
+	const handleAddDetail = () => {
+		setData('book', {
+			...data.book,
+			details: { ...data.book.details, '': '' }
+		})
 	}
 
 	useEffect(() => {
@@ -135,10 +168,17 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 						cover: null,
 						wiki_url: res.book.wiki_url,
 						epub: null,
-						published: res.book.published
+						published: res.book.published,
+						details: {
+							"Title": "",
+							"Translator": "",
+							"Language": "",
+							"Publication date": "",
+							...(res.book.details || {})
+						}
 					})
 
-					setPreviewImageUrl(res.book.cover_url ?? null);
+					setPreviewImageUrl(res.book.cover_url ?? null)
 					setAttachedEpubDetails(res.book.epub)
 				}
 			})
@@ -147,25 +187,13 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 		}
 	}, [activeBookId])
 
+	console.log(data.book.details)
+
 	return (
-		// <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-		// 	<DialogContent className={"!max-w-3xl w-full"}>
-		// 		<DialogHeader>
-		// 			<DialogTitle>Edit book</DialogTitle>
-		// 		</DialogHeader>
-		// 		<div className="grid grid-cols-[120px_1fr] gap-6 p-2">
-		// 			<div className="bg-card w-full aspect-book rounded-md"></div>
-		// 			asd
-		// 		</div>
-		// 	</DialogContent>
-		// </Dialog>
 		<Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
 			<DialogContent className={"!max-w-3xl w-full h-full max-h-[90vh] flex flex-col"}>
 				<DialogHeader className="pb-4">
 					<DialogTitle>{isEditing ? "Edit book" : "Add book"}</DialogTitle>
-					{/* <SheetDescription>
-						{isEditing ? "Make changes to the book details." : "Add a new book to the database."}
-					</SheetDescription> */}
 				</DialogHeader>
 				{http.processing && (
 					<div className="flex-center h-full">
@@ -176,7 +204,7 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 					<div className="overflow-y-auto -m-4">
 						<div className="grid grid-cols-[150px_1fr] pt-0 p-4 gap-8">
 							<Field className="gap-4">
-								<div 
+								<div
 									onClick={() => imageFileInputRef.current?.click()}
 									className="w-16 aspect-book rounded-sm bg-card border-2 border-transparent hover:border-foreground/50 transition cursor-pointer">
 									{previewImageUrl ? (
@@ -232,7 +260,12 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 								</Field>
 								<Field>
 									<FieldLabel>Wiki URL</FieldLabel>
-									<Input type="text" onChange={(e) => setData("book.wiki_url", e.target.value)} placeholder="Enter the book's wikipedia URL" />
+									<Input
+										type="text"
+										onChange={(e) => setData("book.wiki_url", e.target.value)}
+										placeholder="Enter the book's wikipedia URL"
+										value={data.book.wiki_url}
+									/>
 								</Field>
 								<Field>
 									<FieldLabel>Description</FieldLabel>
@@ -243,6 +276,46 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 										aria-invalid={!!errors["book.description"]}
 									/>
 									{errors["book.description"] && <FieldError>{errors["book.description"]}</FieldError>}
+								</Field>
+								<Field>
+									<div className="flex items-center justify-between mb-2">
+										<FieldLabel>Additional details</FieldLabel>
+										<button
+											type="button"
+											onClick={handleAddDetail}
+											className="text-sm text-foreground hover:underline"
+										>
+											+ Add Detail
+										</button>
+									</div>
+
+									<div className="space-y-2">
+										{Object.entries(data.book.details).map(([key, value], index) => (
+											<div key={index} className="flex gap-2 items-center">
+												<Input
+													type="text"
+													placeholder="Key (e.g. Translator)"
+													value={key}
+													onChange={(e) => handleDetailChange(key, e.target.value, value)}
+												/>
+												<Input
+													type="text"
+													placeholder="Value"
+													value={value}
+													onChange={(e) => handleDetailChange(key, key, e.target.value)}
+												/>
+												<Button
+													type="button"
+													onClick={() => handleRemoveDetail(key)}
+													variant={"ghost"}
+													size={"icon-sm"}
+												><TrashIcon /></Button>
+											</div>
+										))}
+										{Object.keys(data.book.details).length === 0 && (
+											<p className="text-sm text-gray-500 italic">No additional details added yet.</p>
+										)}
+									</div>
 								</Field>
 								<Field>
 									<FieldLabel>Epub file</FieldLabel>

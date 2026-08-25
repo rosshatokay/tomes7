@@ -10,10 +10,10 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
-import { createBreadcrumbs, SimpleFormat, useIsMobile } from "@/lib/utils"
+import { cn, createBreadcrumbs, SimpleFormat, useIsMobile } from "@/lib/utils"
 import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
 import { ArrowUpRightIcon, HeartIcon, ShareIcon } from "lucide-react"
-import React, { useState } from "react"
+import { useState } from "react"
 
 interface BookPageProps {
 	auth: AuthProps
@@ -28,6 +28,7 @@ interface BookPageProps {
 		is_saved: boolean
 		average_rating: number
 		ratings_count: number
+		details: Record<string, string>
 	}
 	tags: [{ name: string }]
 	category: {
@@ -44,7 +45,6 @@ interface BookPageProps {
 }
 
 export default function BookPage({ auth, book, category, authors, tags, similar_books }: BookPageProps) {
-	const isMobile = useIsMobile()
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const [isSaved, setIsSaved] = useState<boolean>(book.is_saved)
 	const crumbs = [
@@ -52,9 +52,9 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 		{ label: category.name, path: category.permalink },
 		{ label: book.title, path: "" },
 	]
+	const bookDetailsKeys = Object.keys(book.details)
 
 	const saveHttp = useHttp({ slug: book.slug })
-
 	const handleSaveBtn = () => {
 		saveHttp.post('/books/save', {
 			onSuccess: (res: any) => {
@@ -63,7 +63,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					setIsSaved(!isSaved)
 				}
 			}
-		}).catch(err => toast.add({ description: "Something went wrong try again" }))
+		}).catch(_ => toast.add({ description: "Something went wrong try again" }))
 	}
 
 	return (
@@ -140,31 +140,26 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							)}
 							<div className="mt-8 md:block hidden">
 								<Button size={"lg"} variant={"default"} className={"w-full h-10"} nativeButton={false} render={<Link href={book.read_path} />}>Read</Button>
+								{/* <div className="flex justify-center mt-2">
+									<div className="text-sm text-subtle">321 currently reading</div>
+								</div> */}
 							</div>
 						</section>
+						{bookDetailsKeys?.length > 0 && (
+							<section>
+								<h3 className="text-base mb-2">About the original edition</h3>
+								<div className="flex flex-col gap-2 text-[15px]">
+									{bookDetailsKeys.map((bk, i) => (
+										<div key={i} className="grid grid-cols-[170px_1fr]">
+											<h3 className={cn("!font-normal", i > 0 && "text-subtle")}>{bk}</h3>
+											<h3 className="!font-normal">{book.details[bk]}</h3>
+										</div>
+									))}
+								</div>
+							</section>
+						)}
 						<section>
-							<h3 className="text-subtle mb-2 !font-normal">Book details</h3>
-							<div className="flex flex-col gap-2 text-[15px]">
-								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="!font-normal">Original title</h3>
-									<h3 className="!font-normal">Le mythe de Sisyphe</h3>
-								</div>
-								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="text-subtle !font-normal">Translator</h3>
-									<h3 className="!font-normal">Justin O'Brien</h3>
-								</div>
-								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="text-subtle !font-normal">Language</h3>
-									<h3 className="!font-normal">French</h3>
-								</div>
-								<div className="grid grid-cols-[170px_1fr]">
-									<h3 className="text-subtle !font-normal">Publication date</h3>
-									<h3 className="!font-normal">21 February 1848</h3>
-								</div>
-							</div>
-						</section>
-						<section>
-							<h3 className="text-subtle mb-2 !font-normal">About the {authors.length > 1 ? "authors" : "author"}</h3>
+							<h3 className="text-base mb-2">About the {authors.length > 1 ? "authors" : "author"}</h3>
 							{authors.map((author, index) => (
 								<div key={index}>
 									<Link href={author.permalink} className="flex items-center gap-3 mb-3 group w-fit">
@@ -177,6 +172,33 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 									<div className="text-[15px] text-neutral-700 dark:text-neutral-300 line-clamp-3">{author.bio}</div>
 								</div>
 							))}
+						</section>
+						<section>
+							<div className="flex items-center gap-4 mb-2">
+								<h3 className="text-base">Reviews</h3>
+								<div className="flex items-center gap-2">
+									<RatingStars rating={3} />
+									<div className="text-sm">{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></div>
+								</div>
+							</div>
+							<div className="grid grid-cols-2 gap-4">
+								<div>
+									<div className="font-medium mb-1">Janice</div>
+									<div className="flex items-center gap-2 mb-2">
+										<RatingStars rating={3} />
+										<div className="text-sm text-subtle">Nov 24, 2025</div>
+									</div>
+									<p className="text-[15px]">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
+								</div>
+								<div>
+									<div className="font-medium mb-1">Janice</div>
+									<div className="flex items-center gap-2 mb-2">
+										<RatingStars rating={3} />
+										<div className="text-sm text-subtle">Nov 24, 2025</div>
+									</div>
+									<p className="text-[15px]">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
+								</div>
+							</div>
 						</section>
 					</div>
 				</div>

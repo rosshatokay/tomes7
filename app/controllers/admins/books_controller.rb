@@ -80,6 +80,17 @@ class Admins::BooksController < Admins::BaseController
   private
 
   def book_params
-    params.require(:book).permit(:title, :description, :category_id, :wiki_url, :epub, :cover, :published, authors: [], tag_names: [])
+    params.require(:book).permit(
+      :title,
+      :description,
+      :category_id,
+      :wiki_url,
+      :epub,
+      :cover,
+      :published,
+      authors: [],
+      tag_names: [],
+      details: {},
+    )
   end
 end
