@@ -2,7 +2,7 @@ class BooksController < ApplicationController
   allow_unauthenticated_access except: %i[ save ]
 
   def index
-    categories = JSON.parse(Category.all.take(4).to_json(only: [:name, :slug]))
+    categories = JSON.parse(Category.all.to_json(only: [:name, :slug]))
 
     if params[:tab].present?
       category_tab = Category.find_by(slug: params[:tab])

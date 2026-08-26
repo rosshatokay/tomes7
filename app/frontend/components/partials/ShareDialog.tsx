@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import copyToClipboard, { cn, useIsMobile } from "@/lib/utils"
+import copyToClipboard, { cn, handleNativeShare, useIsMobile } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CopyIcon, MailIcon, MoreVerticalIcon } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
@@ -45,25 +45,25 @@ const platforms = [
 		icon: <MoreVerticalIcon />,
 		bgColor: "bg-card",
 		label: "More",
-		shareLink: "https://wa.me/?text=",
-		onClick: () => console.log("clicked")
+		// shareLink: "https://wa.me/?text=",
+		onClick: (url: string) => handleNativeShare({url: url})
 	},
 ]
 
 export default function ShareDialog({ title, url, isOpen, setIsOpen }: ShareDialogProps) {
 	const isMobile = useIsMobile()
 	const [isCopied, setIsCopied] = useState<boolean>(false)
-	
+
 	const handleUrlCopy = () => {
 		setIsCopied(true)
 		copyToClipboard(url)
 
 		if (isMobile) {
 			setIsOpen(false)
-			toast.add({description: "Link copied"})
+			toast.add({ description: "Link copied" })
 		}
 	}
-	
+
 	return (
 		<Dialog open={isOpen} onOpenChange={(e) => !e ? setIsOpen(false) : undefined}>
 			<DialogContent className={"sm:max-w-md"} autoFocus={false}>
@@ -84,14 +84,31 @@ export default function ShareDialog({ title, url, isOpen, setIsOpen }: ShareDial
 					<div>
 						<div className="font-medium">Share to</div>
 						<div className="grid grid-cols-5 md:gap-2">
-							{platforms.map((item, i) => (
-								<a href={`${item.shareLink}${url}`} target="_blank" className="flex flex-col gap-2 items-center md:p-4 p-2 group" onClick={() => item.onClick ? item.onClick() : undefined} key={i}>
-									<div className={cn("w-full aspect-square rounded-full flex-center", item.bgColor)}>
-										{item.icon}
-									</div>
-									<span className="!text-xs text-subtle group-hover:text-foreground transition">{item.label}</span>
-								</a>
-							))}
+							{platforms.map((item, i) => {
+								if (item.onClick !== undefined) {
+									return (
+										<button
+											key={i}
+											className="flex flex-col gap-2 items-center md:p-4 p-2 group"
+											onClick={() => item.onClick(url)}
+										>
+											<div className={cn("w-full aspect-square rounded-full flex-center", item.bgColor)}>
+												{item.icon}
+											</div>
+											<span className="!text-xs text-subtle group-hover:text-foreground transition">{item.label}</span>
+										</button>
+									)
+								} else {
+									return (
+										<a href={`${item.shareLink}${url}`} target="_blank" className="flex flex-col gap-2 items-center md:p-4 p-2 group" key={i}>
+											<div className={cn("w-full aspect-square rounded-full flex-center", item.bgColor)}>
+												{item.icon}
+											</div>
+											<span className="!text-xs text-subtle group-hover:text-foreground transition">{item.label}</span>
+										</a>
+									)
+								}
+							})}
 						</div>
 					</div>
 				</div>

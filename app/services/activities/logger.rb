@@ -7,6 +7,14 @@ class Activities::Logger
     )
   end
 
+  def self.followed_an_author(user:, author:)
+    Activity.create!(
+      user: user,
+      subject: author,
+      action: "followed_an_author",
+    )
+  end
+
   def self.added_a_review(user:, book:)
     Activity.create!(
       user: user,

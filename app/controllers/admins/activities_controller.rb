@@ -1,11 +1,25 @@
 class Admins::ActivitiesController < Admins::BaseController
-  include Pagy::Method
-  layout "dashboard"
-
   def index
     scope = Activity.includes(:subject, user: [avatar_attachment: :blob]).all
-    # scope = apply_filters(scope)
-    @pagy, @activities = pagy(scope.order(created_at: :desc), limit: 10)
+    scope = apply_filters(scope)
+    @pagy, activities = pagy(scope.order(created_at: :desc), limit: 10)
+
+    render inertia: "Admin/Activities", props: {
+      activities: InertiaRails.defer {
+        activities.map { |a|
+          {
+            id: a.hashid,
+            user: {
+              avatar_url: a.user.get_avatar_url(size: 32),
+              username: a.user.username,
+            },
+            action: a.action,
+            subject: a.format_subject,
+          }
+        }
+      },
+      pagination: create_pagination(@pagy),
+    }
   end
 
   private

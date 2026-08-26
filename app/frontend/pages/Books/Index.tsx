@@ -2,6 +2,7 @@ import { BookCard } from "@/components/partials/BookCard"
 import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
 import { AuthProps } from "@/interfaces/auth"
@@ -10,13 +11,18 @@ import { Category } from "@/interfaces/category"
 import { cn } from "@/lib/utils"
 import { Deferred, Link, usePage } from "@inertiajs/react"
 import { ArrowRight, InfoIcon, XCircleIcon, XIcon } from "lucide-react"
-import { useEffect, useRef } from "react"
+import { Fragment, useEffect, useRef } from "react"
 
 interface LandingPageProps {
 	categories: Category[]
 	books: Book[]
 	auth: AuthProps
 }
+
+// const sortByItems = [
+// 	{ label: "Top rated", value: "top-rated" },
+// 	{ label: "Most recent", value: "most-recent" },
+// ]
 
 export default function LandingPage(props: LandingPageProps) {
 	const auth = props.auth
@@ -25,8 +31,10 @@ export default function LandingPage(props: LandingPageProps) {
 	const activeTab = searchParams.get('tab')
 	const categoryRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
 
+	console.log(searchParams)
+
 	useEffect(() => {
-		// 2. Fetch the specific active DOM node from the map
+		// fetch the specific active DOM node from the map
 		const activeNode = activeTab ? categoryRefs.current.get(activeTab) : null
 
 		if (activeNode) {
@@ -61,50 +69,55 @@ export default function LandingPage(props: LandingPageProps) {
 				</div>
 			</div>
 			<div className="large-container mb-2">
-				<div className="flex gap-1 min-w-0 overflow-x-auto no-scrollbar">
-					{props.categories.map(cat => {
-						const isActive = activeTab === cat.slug
+				<div className="flex gap-6">
+					<div className="scroll-fade-x scrollbar-none overflow-x-auto">
+						<div className="flex gap-1 min-w-0">
+							{props.categories.map(cat => {
+								const isActive = activeTab === cat.slug
 
-						return (
-							<Button
-								ref={(el) => {
-									if (el) {
-										categoryRefs.current.set(cat.slug, el)
-									} else {
-										categoryRefs.current.delete(cat.slug)
-									}
-								}}
-								variant={isActive ? "outline" : "secondary"}
-								className={cn("text-[15px] rounded-full", isActive ? "!border-foreground border-2 pr-1.5" : "")}
-								key={cat.slug}
-								nativeButton={false}
-								render={<Link href={isActive ? "/books" : `/books?tab=${cat.slug}`} preserveState={true} />}
-							>
-								<span>{cat.name}</span>
-								{isActive && (
-									<div className="flex-center size-5 bg-foreground rounded-full">
-										<XIcon stroke="var(--background)" className="size-3" />
-									</div>
-								)}
-							</Button>
-						)
-					})}
+								return (
+									<Button
+										ref={(el) => {
+											if (el) {
+												categoryRefs.current.set(cat.slug, el)
+											} else {
+												categoryRefs.current.delete(cat.slug)
+											}
+										}}
+										variant={isActive ? "outline" : "secondary"}
+										className={cn("text-[15px] rounded-full", isActive ? "!border-foreground border-2 pr-1.5" : "")}
+										key={cat.slug}
+										nativeButton={false}
+										render={<Link href={isActive ? "/books" : `/books?tab=${cat.slug}`} preserveState={true} />}
+									>
+										<span>{cat.name}</span>
+										{isActive && (
+											<div className="flex-center size-5 bg-foreground rounded-full">
+												<XIcon stroke="var(--background)" className="size-3" />
+											</div>
+										)}
+									</Button>
+								)
+							})}
+						</div>
+					</div>
 				</div>
 			</div>
 			{props.books?.length == 0 && (
-
-				<Empty className="border">
-					<EmptyHeader>
-						<EmptyMedia variant={"icon"}><InfoIcon /></EmptyMedia>
-						<EmptyTitle>No books here</EmptyTitle>
-						<EmptyDescription>Looks like there aren't any published books under this genre.</EmptyDescription>
-					</EmptyHeader>
-				</Empty>
+				<div className="large-container">
+					<Empty className="border">
+						<EmptyHeader>
+							<EmptyMedia variant={"icon"}><InfoIcon /></EmptyMedia>
+							<EmptyTitle>No books here</EmptyTitle>
+							<EmptyDescription>Looks like there aren't any published books under this genre.</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				</div>
 			)}
 			{props.books?.length > 0 && (
 				<div className="large-container pb-8 grid 2xl:grid-cols-5 md:grid-cols-4 gap-2 md:mt-0 mt-6">
 					{props.books?.map((book, index) => (
-						<div key={index}><BookCard book={book} /></div>
+						<Fragment key={index}><BookCard book={book} /></Fragment>
 					))}
 				</div>
 			)}

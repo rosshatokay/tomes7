@@ -51,6 +51,8 @@ class AuthorsController < ApplicationController
 
     current_user.follow!(author)
 
+    Activities::Logger.followed_an_author(user: current_user, author: author)
+
     render json: { success: true }
   end
 

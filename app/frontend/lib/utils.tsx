@@ -1,6 +1,8 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import { toast } from "@/components/ui/toast"
 import { Link } from "@inertiajs/react"
 import clsx, { type ClassValue } from "clsx"
+import { describe } from "node:test"
 import React, { useEffect, useState } from "react"
 import { twMerge } from "tailwind-merge"
 
@@ -202,4 +204,23 @@ export function SimpleFormat(text: string) {
 			))}
 		</p>
 	));
+}
+
+// native share
+export async function handleNativeShare(data: { title?: string, text?: string, url?: string, files?: File[] }) {
+	if (!navigator.share) {
+		toast.add({ description: "Web Share API is not supported in this browser" })
+		return
+	}
+
+	try {
+		await navigator.share(data)
+	} catch (error) {
+		if (error instanceof Error && error.name === "AbortError") {
+			// toast.add({ description: "Share action cancelled" })
+			console.log("Share action cancelled")
+		} else {
+			toast.add({ description: "An error ocurred while sharing" })
+		}
+	}
 }

@@ -89,7 +89,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 							<h2 className="md:text-lg mt-0.5">
 								{authors.map((author, index) => (
 									<span key={index}>
-										<span className="font-normal"><a href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</a></span>
+										<span className="font-normal"><Link href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</Link></span>
 										{index < authors.length - 1 && <span className="text-subtle">, </span>}
 									</span>
 								))}
@@ -147,12 +147,12 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 						</section>
 						{bookDetailsKeys?.length > 0 && (
 							<section>
-								<h3 className="text-base mb-2">About the original edition</h3>
+								<h3 className="text-base mb-2">Original edition details</h3>
 								<div className="flex flex-col gap-2 text-[15px]">
 									{bookDetailsKeys.map((bk, i) => (
 										<div key={i} className="grid grid-cols-[170px_1fr]">
-											<h3 className={cn("!font-normal", i > 0 && "text-subtle")}>{bk}</h3>
-											<h3 className="!font-normal">{book.details[bk]}</h3>
+											<h3 className={cn("!font-normal text-[15px]", i > 0 && "text-subtle")}>{bk}</h3>
+											<h3 className="!font-normal text-[15px]">{book.details[bk]}</h3>
 										</div>
 									))}
 								</div>
@@ -181,23 +181,26 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 									<div className="text-sm">{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></div>
 								</div>
 							</div>
-							<div className="grid grid-cols-2 gap-4">
+							<div className="grid md:grid-cols-2 gap-4">
 								<div>
-									<div className="font-medium mb-1">Janice</div>
+									<div className="font-normal mb-1">Janice</div>
 									<div className="flex items-center gap-2 mb-2">
 										<RatingStars rating={3} />
 										<div className="text-sm text-subtle">Nov 24, 2025</div>
 									</div>
-									<p className="text-[15px]">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
+									<p className="text-[15px] line-clamp-3">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
 								</div>
 								<div>
-									<div className="font-medium mb-1">Janice</div>
+									<div className="font-normal mb-1">Janice</div>
 									<div className="flex items-center gap-2 mb-2">
 										<RatingStars rating={3} />
 										<div className="text-sm text-subtle">Nov 24, 2025</div>
 									</div>
-									<p className="text-[15px]">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
+									<p className="text-[15px] line-clamp-3">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
 								</div>
+							</div>
+							<div className="mt-4">
+								<Button className={"w-full"} variant={"secondary"} size={"lg"}>See all reviews</Button>
 							</div>
 						</section>
 					</div>

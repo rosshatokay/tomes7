@@ -95,6 +95,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :activities, only: [:index]
+
     resources :inbox, only: [:index] do
       collection do
         delete :destroy

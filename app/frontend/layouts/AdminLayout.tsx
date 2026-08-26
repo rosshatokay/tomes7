@@ -38,7 +38,7 @@ const links = [
 		icon: (size = 20) => <UsersIcon size={size} />
 	},
 	{
-		path: '/admins_activities_path',
+		path: '/admins/activities',
 		label: "Activities",
 		icon: (size = 20) => <ActivityIcon size={size} />
 	}

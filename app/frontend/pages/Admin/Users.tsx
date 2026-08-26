@@ -85,7 +85,7 @@ export default function UsersPage({ users_count, users, pagination }: Props) {
 				<title>Users</title>
 			</Head>
 			<div className="h-full flex flex-col">
-				<div className="text-sm h-12 flex items-center justify-between px-4 border-b">
+				<div className="text-sm min-h-12 h-12 flex items-center justify-between px-4 border-b">
 					<span className="text-subtle flex items-center gap-2"><ListIcon size={16} /> All users • {users_count}</span>
 				</div>
 				<Deferred data={"users"} fallback={<div className="flex-center h-full"><Spinner className="size-6 text-subtle" /></div>}>

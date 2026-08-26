@@ -63,7 +63,7 @@ export default function InboxPage({ messages, messages_count }: Props) {
 			)
 		}
 	]
-	const [messageIdsToDelete, setMessageIdsToDelete] = useState<string[]>([""])
+	const [messageIdsToDelete, setMessageIdsToDelete] = useState<string[] | []>([])
 
 	const handleRowClick = (message: Message) => setActiveMessage(message)
 

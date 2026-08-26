@@ -1,4 +1,6 @@
 class Activity < ApplicationRecord
+  include Hashid::Rails
+
   belongs_to :user
   belongs_to :subject, polymorphic: true
 
@@ -8,5 +10,14 @@ class Activity < ApplicationRecord
 
     # fallback
     action.humanize.downcase
+  end
+
+  def format_subject
+    case action
+    when "followed_an_author"
+      {
+        label: subject.full_name,
+      }
+    end
   end
 end

@@ -169,7 +169,7 @@
 	}
 
 	.large-container {
-		@apply w-full px-5 mx-auto
+		@apply w-full px-5 mx-auto max-w-[1440px]
 	}
 }
 
