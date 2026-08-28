@@ -4,14 +4,15 @@ import { Spinner } from "@/components/ui/spinner"
 import { Book } from "@/interfaces/book"
 import ReaderLayout from "@/layouts/ReaderLayout"
 import { useHttp } from "@inertiajs/react"
-import { ALargeSmallIcon, ArrowLeftIcon, BookmarkIcon, ChevronLeftIcon, ChevronRightIcon, ListIcon, MenuIcon, MoreHorizontalIcon, SearchIcon, ShareIcon } from "lucide-react"
+import { AArrowUpIcon, ALargeSmallIcon, ArrowLeftIcon, BookmarkIcon, ChevronLeftIcon, ChevronRightIcon, CornerUpRightIcon, FullscreenIcon, HomeIcon, ListIcon, MenuIcon, MoreHorizontalIcon, SearchIcon, ShareIcon, SlidersHorizontalIcon, SquareArrowRightExitIcon, StarPlusIcon } from "lucide-react"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { EpubViewer, ReactEpubViewer, ViewerRef } from "react-epub-viewer"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { goBack } from '@/lib/utils';
 import ChaptersSheet from '@/components/partials/dialogs/ChaptersSheet';
 import Navigation, { NavItem } from 'epubjs/types/navigation';
-import { DropdownMenu, DropdownMenuContent } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 
 interface WithEpub extends Book {
 	epub_file_path: string
@@ -86,7 +87,58 @@ export default function ReadBookPage({ book }: Props) {
 						</Tooltip>
 					))}
 					<DropdownMenu>
-						<DropdownMenuContent></DropdownMenuContent>
+						<DropdownMenuTrigger render={<Button size={"icon"} variant={"ghost"} />}><MoreHorizontalIcon /></DropdownMenuTrigger>
+						<DropdownMenuContent className={"w-54"}>
+							<DropdownMenuGroup>
+								<DropdownMenuLabel>Actions</DropdownMenuLabel>
+								<DropdownMenuItem>
+									<SearchIcon />
+									Search
+									<DropdownMenuShortcut>S</DropdownMenuShortcut>
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<CornerUpRightIcon />
+									Go to page
+									<DropdownMenuShortcut>G</DropdownMenuShortcut>
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<StarPlusIcon />
+									Add review
+								</DropdownMenuItem>
+							</DropdownMenuGroup>
+							<DropdownMenuSeparator />
+							<DropdownMenuGroup>
+								<DropdownMenuLabel>Display</DropdownMenuLabel>
+								<DropdownMenuItem closeOnClick={false}>
+									<AArrowUpIcon />
+									Large text
+									<Switch className={"ml-auto"} />
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<FullscreenIcon />
+									Fullscreen
+									<Switch className={"ml-auto"} />
+								</DropdownMenuItem>
+								<DropdownMenuItem>
+									<SlidersHorizontalIcon />
+									Customize display
+								</DropdownMenuItem>
+							</DropdownMenuGroup>
+							<DropdownMenuSeparator />
+							<DropdownMenuGroup>
+								<DropdownMenuItem>
+									<SquareArrowRightExitIcon />
+									Exit to home
+									<DropdownMenuShortcut>F</DropdownMenuShortcut>
+								</DropdownMenuItem>
+							</DropdownMenuGroup>
+							<DropdownMenuSeparator />
+							<DropdownMenuGroup className={"p-2 text-xs text-subtle flex flex-col gap-1"}>
+								<div className="">840 words</div>
+								<div className="">16 hour read time</div>
+								<div className="">Read 85%</div>
+							</DropdownMenuGroup>
+						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
 			</div>
