@@ -1,6 +1,6 @@
 class Api::V1::Admins::BooksController < Admins::BaseController
   def show
-    book = Book.with_attached_epub.with_attached_cover.includes(authors: [avatar_attachment: :blob]).find(params[:id])
+    book = Book.with_attached_epub.with_attached_cover.includes(:tags, authors: [avatar_attachment: :blob]).find(params[:id])
     data = {
       title: book.title,
       id: book.id,
@@ -9,6 +9,7 @@ class Api::V1::Admins::BooksController < Admins::BaseController
       cover_url: book.get_cover_url,
       wiki_url: book.wiki_url,
       details: book.details,
+      tags: book.tags.select(:id, :name),
       category: {
         name: book.category.name,
         id: book.category.id,

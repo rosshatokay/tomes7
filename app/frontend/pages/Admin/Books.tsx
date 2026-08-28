@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Book } from "@/interfaces/book";
 import { PaginationMeta } from "@/interfaces/pagination";
 import adminSearch from "@/lib/adminSearch";
+import { cn } from "@/lib/utils";
 import { Deferred, router } from "@inertiajs/react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { BookIcon, DownloadIcon, EyeIcon, FeatherIcon, FilterIcon, ListIcon, MoreHorizontalIcon, PlusIcon, SearchIcon, ShapesIcon, UsersIcon } from "lucide-react";
@@ -51,7 +52,7 @@ export default function BooksPage({ books, books_count, pagination }: PageProps)
 				text: "Visibility"
 			},
 			render: (row) => (
-				<Badge variant={row.published ? "outline" : "secondary"} className="text-sm font-normal">{row.published ? "Published" : "Draft"}</Badge>
+				<Badge variant={"secondary"} className={cn("text-sm font-normal", row.published ? "bg-green-300/20 text-green-100" : "")}>{row.published ? "Published" : "Draft"}</Badge>
 			)
 		},
 		{

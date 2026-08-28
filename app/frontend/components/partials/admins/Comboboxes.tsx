@@ -11,7 +11,7 @@ type Author = {
 }
 
 type Tag = {
-	id: number
+	id: number | string
 	name: string
 }
 
@@ -67,8 +67,17 @@ export function CategoryComboBox({
 	)
 }
 
-export function BookTagsComboBox() {
+export function BookTagsComboBox({
+	defaultTags,
+	onChange,
+	isInvalid = false
+}: {
+	defaultTags: Tag[],
+	onChange?: (tags: Tag[] | null) => void,
+	isInvalid?: boolean
+}) {
 	const [tags, setTags] = useState<Tag[]>([])
+	const [selectedTags, setSelectedTags] = useState<Tag[] | null>(null)
 	const [searchQuery, setSearchQuery] = useState<string>("")
 	const { get, processing } = useHttp({})
 	const anchor = useComboboxAnchor()
@@ -83,27 +92,60 @@ export function BookTagsComboBox() {
 
 		get(`/api/v1/admins/tags/search?q=${encodeURIComponent(debouncedSearchQuery)}`, {
 			onSuccess: (res: any) => {
-				console.log(res.results)
 				setTags(res.results as Tag[])
 			}
 		})
 	}, [debouncedSearchQuery])
 
+	const currentTags = selectedTags || defaultTags
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter" && searchQuery.trim() !== "") {
+			e.preventDefault()
+			const trimmedQuery = searchQuery.trim().toLowerCase()
+
+			const alreadySelected = currentTags.some(
+				(tag) => tag.name.toLowerCase() === trimmedQuery
+			)
+
+			if (!alreadySelected) {
+				const newTag: Tag = { id: `temp-${Date.now()}`, name: trimmedQuery }
+
+				const updated = [...currentTags, newTag]
+				setSelectedTags(updated)
+				onChange?.(updated)
+				setSearchQuery("")
+				setTags([])
+			}
+		}
+	}
+
 	return (
 		<Combobox
 			items={tags}
 			itemToStringValue={(tag: Tag) => tag.name}
+			onValueChange={(v) => {
+				setSelectedTags(v)
+				onChange ? onChange(v) : undefined
+			}}
 			autoHighlight
 			multiple
+			value={currentTags}
 		>
 			<ComboboxChips ref={anchor} className={"w-full"}>
 				<ComboboxValue>
 					{(tags: Tag[]) => (
 						<Fragment>
-							{tags.map((tag) => (
+							{tags?.map((tag) => (
 								<ComboboxChip key={tag.id}>{tag.name}</ComboboxChip>
 							))}
-							<ComboboxChipsInput placeholder="Search for a tag" className={"p-0 border-none !shadow-[none] text-sm ring-none"} onChange={(e) => setSearchQuery(e.target.value)} />
+							<ComboboxChipsInput
+								aria-invalid={isInvalid}
+								placeholder="Search for a tag"
+								className={"p-0 border-none !shadow-[none] text-sm ring-none"}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								onKeyDown={handleKeyDown}
+							/>
 						</Fragment>
 					)}
 				</ComboboxValue>

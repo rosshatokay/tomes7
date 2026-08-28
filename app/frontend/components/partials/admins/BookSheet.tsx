@@ -21,6 +21,7 @@ const INITIAL_BOOK_STATE = {
 		id: null
 	},
 	authors: [],
+	tags: [],
 	description: "",
 	cover: null as File | string | null,
 	wiki_url: "",
@@ -152,6 +153,16 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 		})
 	}
 
+	const handleRemoveEpub = () => {
+		setData('book.epub', null)
+		setAttachedEpubDetails(null)
+
+		// Clear file input value so selecting the same file again triggers onChange
+		if (epubFileInputRef.current) {
+			epubFileInputRef.current.value = ''
+		}
+	}
+
 	useEffect(() => {
 		if (!isOpen) return
 
@@ -169,6 +180,7 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 						wiki_url: res.book.wiki_url,
 						epub: null,
 						published: res.book.published,
+						tags: res.book.tags,
 						details: {
 							"Title": "",
 							"Translator": "",
@@ -186,8 +198,6 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 			reset()
 		}
 	}, [activeBookId])
-
-	console.log(data.book.details)
 
 	return (
 		<Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
@@ -240,10 +250,13 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 								</Field>
 								<Field>
 									<FieldLabel>Authors</FieldLabel>
-									<AuthorsCombobox defaultAuthors={data.book.authors} onChange={(authors) => {
-										setData('book.authors', authors as any)
-										clearErrors('book.authors')
-									}} isInvalid={!!errors["book.authors"]} />
+									<AuthorsCombobox
+										defaultAuthors={data.book.authors}
+										onChange={(authors) => {
+											setData('book.authors', authors as any)
+											clearErrors('book.authors')
+										}}
+										isInvalid={!!errors["book.authors"]} />
 									{errors['book.authors'] && <FieldError>{errors["book.authors"]}</FieldError>}
 								</Field>
 								<Field>
@@ -256,7 +269,15 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 								</Field>
 								<Field>
 									<FieldLabel>Tags</FieldLabel>
-									<BookTagsComboBox />
+									<BookTagsComboBox
+										defaultTags={data.book.tags}
+										onChange={(tags) => {
+											setData('book.tags', tags as any)
+											clearErrors('book.tags')
+										}}
+										isInvalid={!!errors['book.authors']}
+									/>
+									{errors['book.tags'] && <FieldError>{errors["book.tags"]}</FieldError>}
 								</Field>
 								<Field>
 									<FieldLabel>Wiki URL</FieldLabel>
@@ -338,7 +359,7 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 												)}
 											</AttachmentContent>
 											<AttachmentActions>
-												<AttachmentAction><XIcon /></AttachmentAction>
+												<AttachmentAction type="button" onClick={handleRemoveEpub}><XIcon /></AttachmentAction>
 											</AttachmentActions>
 										</Attachment>
 									)}
@@ -354,7 +375,7 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 												type="file"
 												className="hidden"
 											/>
-											<div className="border border-dashed p-4 pt-5 rounded-lg flex-center flex-col gap-2" onClick={() => epubFileInputRef.current?.click()}>
+											<div className="border border-dashed hover:border-blue-300 hover:text-blue-300 transition text-subtle p-4 pt-5 rounded-lg flex-center flex-col gap-2" onClick={() => epubFileInputRef.current?.click()}>
 												<UploadCloudIcon size={20} />
 												<div className="text-xs">Click to upload</div>
 											</div>

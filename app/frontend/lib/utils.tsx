@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { toast } from "@/components/ui/toast"
-import { Link } from "@inertiajs/react"
+import { Link, router } from "@inertiajs/react"
 import clsx, { type ClassValue } from "clsx"
 import { describe } from "node:test"
 import React, { useEffect, useState } from "react"
@@ -222,5 +222,15 @@ export async function handleNativeShare(data: { title?: string, text?: string, u
 		} else {
 			toast.add({ description: "An error ocurred while sharing" })
 		}
+	}
+}
+
+export const goBack = () => {
+	// Check if the user has a history inside this tab, and if the referrer matches your domain
+	if (window.history.length > 1 && document.referrer.includes(window.location.host)) {
+		window.history.back();
+	} else {
+		// Fallback: Safely redirect to the app's root path using Inertia
+		router.visit('/');
 	}
 }

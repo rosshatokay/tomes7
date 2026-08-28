@@ -2,7 +2,6 @@ import { LogoIcon } from "@/assets/LogoIcon"
 import AppHeader from "@/components/partials/AppHeader"
 import { Footer } from "@/components/partials/Footer"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { toast, Toaster } from "@/components/ui/toast"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { AuthProps } from "@/interfaces/auth"
@@ -16,6 +15,7 @@ interface BaseLayoutProps {
 	hideHeader?: boolean
 	hideFooter?: boolean
 	auth?: AuthProps
+	hideMobileNav?: boolean
 }
 
 export interface FlashProps {
@@ -26,12 +26,13 @@ export interface FlashProps {
 	}
 }
 
-export default function BaseLayout({ children, hideHeader, hideFooter, auth }: BaseLayoutProps) {
+export default function BaseLayout({ children, hideHeader, hideFooter, hideMobileNav }: BaseLayoutProps) {
 	const flash = usePage().flash as FlashProps
 	const isMobile = useIsMobile()
 	const [isReady, setIsReady] = useState(false)
 	const shouldHideFooter = false
-
+	const auth = usePage().props.auth as AuthProps
+		
 	useEffect(() => {
 		if (flash?.toast) {
 			toast.add({
@@ -46,6 +47,8 @@ export default function BaseLayout({ children, hideHeader, hideFooter, auth }: B
 			setIsReady(true)
 		}, 600);
 	}, [])
+
+	hideHeader = hideHeader && isMobile
 
 	return (
 		<div>
@@ -62,7 +65,7 @@ export default function BaseLayout({ children, hideHeader, hideFooter, auth }: B
 					<main id="main" className="transition">
 						{children}
 					</main>
-					{isMobile && (
+					{isMobile && !hideMobileNav && (
 						<div className="fixed left-0 right-0 bottom-0 top-auto z-3">
 							<div className="w-full h-full flex-center">
 								<div className="from-background absolute inset-0 w-full bg-gradient-to-t to-transparent"></div>

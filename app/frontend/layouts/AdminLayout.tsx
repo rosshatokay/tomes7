@@ -97,7 +97,7 @@ function AdminLayoutContent({ children }: PropsWithChildren) {
 			<main className="w-full h-full overflow-hidden p-2 pt-1 flex flex-col">
 				<div className="flex items-center h-13 justify-between">
 					<div className="flex items-center gap-3">
-						<div className="bg-card size-7 rounded-md flex-center">
+						<div className="bg-card text-subtle size-7 rounded-md flex-center">
 							{activeTab?.icon(16)}
 						</div>
 						<div className="text-sm">{activeTab?.label}</div>

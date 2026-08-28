@@ -1,6 +1,7 @@
 import { BookCard } from "@/components/partials/BookCard"
 import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { LinkUnderline } from "@/components/partials/LinkUnderline"
+import BackBtnHeader from "@/components/partials/nav/BackBtnHeader"
 import { RatingStars } from "@/components/partials/RatingStars"
 import ShareDialog from "@/components/partials/ShareDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,9 +11,10 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
-import { cn, createBreadcrumbs, SimpleFormat, useIsMobile } from "@/lib/utils"
+import BaseLayout from "@/layouts/BaseLayout"
+import { cn, createBreadcrumbs, SimpleFormat } from "@/lib/utils"
 import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
-import { ArrowUpRightIcon, HeartIcon, ShareIcon } from "lucide-react"
+import { ArrowUpRightIcon, HeartIcon, MoreHorizontalIcon, ShareIcon } from "lucide-react"
 import { useState } from "react"
 
 interface BookPageProps {
@@ -71,6 +73,9 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 			<Head>
 				<title>{book.title + " by " + authors.map(author => author.name).join(', ')}</title>
 			</Head>
+			<BackBtnHeader>
+				<Button size={"icon-lg"} variant={"secondary"}><MoreHorizontalIcon /></Button>
+			</BackBtnHeader>
 			<div className="lg:pt-0 pt-2">
 				<div className="large-container mt-2 mb-4 md:block hidden">
 					{createBreadcrumbs(crumbs)}
@@ -150,7 +155,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 								<h3 className="text-base mb-2">Original edition details</h3>
 								<div className="flex flex-col gap-2 text-[15px]">
 									{bookDetailsKeys.map((bk, i) => (
-										<div key={i} className="grid grid-cols-[170px_1fr]">
+										<div key={i} className="grid md:grid-cols-[170px_1fr] grid-cols-[140px_1fr] gap-2">
 											<h3 className={cn("!font-normal text-[15px]", i > 0 && "text-subtle")}>{bk}</h3>
 											<h3 className="!font-normal text-[15px]">{book.details[bk]}</h3>
 										</div>
@@ -214,7 +219,14 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					</Deferred>
 				</div>
 				<div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:hidden z-2">
-					<Button className={"rounded-full h-11 px-6 shadow-lg"} size={"lg"}>Read the book <ArrowUpRightIcon /></Button>
+					<Button
+						className={"rounded-full h-11 px-6 shadow-lg"}
+						size={"lg"}
+						render={<Link href={book.read_path} />}
+						nativeButton={false}
+					>
+						Read the book <ArrowUpRightIcon />
+					</Button>
 				</div>
 			</div>
 			<ShareDialog url={book.share_url} title="Share book" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
@@ -223,3 +235,5 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 		</>
 	)
 }
+
+BookPage.layout = (page: React.ReactNode) => <BaseLayout hideHeader={true} hideMobileNav={true}>{page}</BaseLayout>
