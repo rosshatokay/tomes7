@@ -5,7 +5,9 @@ InertiaRails.configure do |config|
   config.encrypt_history = true
   config.always_include_errors_hash = true
   config.use_script_element_for_initial_page = true
+  config.server_head = true
   config.use_data_inertia_head_attribute = true
+  config.meta_title_template = ->(title) { title ? "#{title} – Tomes" : "Tomes" }
 
   if Rails.env.production?
     # Production: Talk to your Foreman-managed standalone Node process

@@ -21,10 +21,6 @@ export default function LoginPage() {
 
 	return (
 		<>
-			<Head>
-				<title>Log in</title>
-				<meta name="description" content="Log in to your Tomes account."></meta>
-			</Head>
 			<div className="w-full min-h-svh py-8 flex-center">
 				<div className="max-w-sm w-full flex flex-col gap-6">
 					<LogoIcon />
@@ -88,4 +84,4 @@ export default function LoginPage() {
 	)
 }
 
-LoginPage.layout = (page: React.ReactNode) => <BaseLayout hideHeader={true} hideFooter={true}>{page}</BaseLayout>
+LoginPage.layout = (page: React.ReactNode) => <BaseLayout hideHeaderForced={true} hideFooter={true}>{page}</BaseLayout>

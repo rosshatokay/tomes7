@@ -29,8 +29,10 @@ class FeedsController < ApplicationController
       end
 
     render inertia: "Feeds/Library", props: {
-      books: books,
-    }
+             books: books,
+           }, meta: seo_tags(
+             title: "Library",
+           )
   end
 
   def community

@@ -5,6 +5,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 
 createInertiaApp({
   pages: "../pages",
+	serverHead: true,
   strictMode: true,
 	layout: (name) => {
 		if (name.startsWith("Admin/")) {
@@ -13,7 +14,7 @@ createInertiaApp({
 
 		return BaseLayout
 	},
-	title: (title) => title ? `${title} | Tomes` : 'Tomes',
+	// title: (title) => title ? `${title} | Tomes` : 'Tomes',
   defaults: {
     form: {
       forceIndicesArrayFormatInFormData: false,

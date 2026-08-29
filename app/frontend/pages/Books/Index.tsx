@@ -9,7 +9,7 @@ import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
 import { Category } from "@/interfaces/category"
 import { cn } from "@/lib/utils"
-import { Deferred, Link, usePage } from "@inertiajs/react"
+import { Deferred, Head, Link, usePage } from "@inertiajs/react"
 import { ArrowRight, InfoIcon, XCircleIcon, XIcon } from "lucide-react"
 import { Fragment, useEffect, useRef } from "react"
 

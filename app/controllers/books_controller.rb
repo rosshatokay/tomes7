@@ -13,18 +13,24 @@ class BooksController < ApplicationController
     fake_data.map { |f| data << f }
 
     render inertia: "Books/Index", props: {
-      categories: categories,
-      books: data,
-    }
+             categories: categories,
+             books: data,
+           }, meta: [
+             { title: user_signed_in? ? "Books" : "Read the greatest books of all time. For free." },
+           ]
   end
 
   def show
     book = Book.with_attached_cover.includes(:category, authors: :avatar_attachment).friendly.find(params[:id])
 
     render inertia: "Books/Show", props: {
-      **format_book(book),
-      similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
-    }
+             **format_book(book),
+             similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
+           }, meta: seo_tags(
+             title: book.title,
+             description: "Read #{book.title} by #{book.authors.first.full_name} for free, on Tomes.",
+             image: book.get_cover_url,
+           )
   end
 
   def save
@@ -59,6 +65,7 @@ class BooksController < ApplicationController
     render inertia: "Books/Read", props: {
       book: book.to_hash.merge(
         epub_file_path: book.epub.attached? ? rails_public_blob_url(book.epub, disposition: "inline") : nil,
+        share_url: book_url(book.slug),
       ),
     }
   end

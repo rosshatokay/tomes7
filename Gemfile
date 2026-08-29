@@ -30,7 +30,7 @@ gem "socialization"
 gem "chartkick"
 gem "groupdate"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem "inertia_rails"
+gem "inertia_rails", github: "inertiajs/inertia-rails", branch: "master"
 
 gem "bootsnap", require: false
 

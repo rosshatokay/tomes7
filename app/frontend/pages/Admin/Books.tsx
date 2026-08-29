@@ -52,7 +52,7 @@ export default function BooksPage({ books, books_count, pagination }: PageProps)
 				text: "Visibility"
 			},
 			render: (row) => (
-				<Badge variant={"secondary"} className={cn("text-sm font-normal", row.published ? "bg-green-300/20 text-green-100" : "")}>{row.published ? "Published" : "Draft"}</Badge>
+				<Badge variant={"secondary"} className={cn("text-sm font-normal", row.published ? "bg-green-500/20 text-green-700 dark:bg-green-300/20 dark:text-green-100" : "")}>{row.published ? "Published" : "Draft"}</Badge>
 			)
 		},
 		{

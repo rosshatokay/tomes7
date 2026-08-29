@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 %html
 	%head
-		%title{'data-inertia': ''}= content_for(:title) || "Tomes"
+		-# %title{'data-inertia': ''}= content_for(:title) || "Tomes"
 		%meta(name="viewport" content="width=device-width,initial-scale=1")
 		%meta(name="apple-mobile-web-app-capable" content="yes")
 		%meta(name="application-name" content="highligh.cv")
@@ -150,9 +150,10 @@
 			Theme.initialize()
 			window.Theme = Theme
 
+		= inertia_ssr_head
+		= inertia_meta_tags
 		= vite_stylesheet_tag "application"
 		= vite_react_refresh_tag
-		= inertia_ssr_head
 		= vite_typescript_tag 'application.tsx'
 		
 

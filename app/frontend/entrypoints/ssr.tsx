@@ -9,13 +9,14 @@ createServer((page) =>
   createInertiaApp({
     page,
     render: ReactDOMServer.renderToString,
+		serverHead: true,
 		layout: (name) => {
       if (name.startsWith("Admin/")) {
         return AdminLayout
       }
       return BaseLayout
     },
-    title: (title) => (title ? `${title} - Tomes` : "Tomes"),
+    // title: (title) => (title ? `${title} - Tomes` : "Tomes"),
     resolve: (name) => {
       // Use Vite's import.meta.glob to eagerly load pages for SSR
       const pages = import.meta.glob("../pages/**/*.tsx", { eager: true })

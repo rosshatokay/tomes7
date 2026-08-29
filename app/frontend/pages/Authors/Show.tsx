@@ -10,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import Author from "@/interfaces/author"
 import { Book } from "@/interfaces/book"
 import { createBreadcrumbs } from "@/lib/utils"
-import { Head, useHttp, usePage } from "@inertiajs/react"
+import { useHttp, usePage } from "@inertiajs/react"
 import { BookAlertIcon, MinusIcon, PlusIcon, ShareIcon } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
@@ -48,9 +48,6 @@ export default function AuthorPage({ author, books }: Props) {
 
 	return (
 		<>
-			<Head>
-				<title>{author.full_name}</title>
-			</Head>
 			<div>
 				<div className="large-container mt-2 mb-4">
 					{createBreadcrumbs(crumbs)}

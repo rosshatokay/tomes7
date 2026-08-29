@@ -70,4 +70,33 @@ class ApplicationController < ActionController::Base
       total_count: pagy.count,
     }
   end
+
+  def seo_tags(title: "", description: "", image: "")
+    arr = []
+
+    if title.present?
+      arr << { title: title }
+      arr << { proprety: "og:title", content: "#{title} – Tomes" }
+    end
+
+    if description.present?
+      arr << { name: "description", content: description }
+      arr << { property: "og:description", content: description }
+
+      arr << { name: "twitter:description", content: description }
+    end
+
+    if image.present?
+      arr << { property: "og:image", content: image }
+      arr << { name: "twitter:image", content: image }
+    end
+
+    arr << { name: "twitter:card", content: "summary" }
+    [
+      { property: "og:site_name", content: "Tomes" },
+      { property: "og:url", content: request.url },
+    ].map { |item| arr << item }
+
+    arr
+  end
 end

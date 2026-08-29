@@ -70,9 +70,6 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 
 	return (
 		<>
-			<Head>
-				<title>{book.title + " by " + authors.map(author => author.name).join(', ')}</title>
-			</Head>
 			<BackBtnHeader>
 				<Button size={"icon-lg"} variant={"secondary"}><MoreHorizontalIcon /></Button>
 			</BackBtnHeader>
@@ -107,7 +104,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 									</Button>
 								</div>
 								{!auth.user && (
-									<Button variant={"ghost"} className={"px-2 text-[15px]"} render={<Link href={"/login"} />}>
+									<Button nativeButton={false} variant={"ghost"} className={"px-2 text-[15px]"} render={<Link href={"/login"} />}>
 										<HeartIcon />
 										Save
 									</Button>

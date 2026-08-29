@@ -3,16 +3,16 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Book } from "@/interfaces/book"
 import ReaderLayout from "@/layouts/ReaderLayout"
-import { useHttp } from "@inertiajs/react"
-import { AArrowUpIcon, ALargeSmallIcon, ArrowLeftIcon, BookmarkIcon, ChevronLeftIcon, ChevronRightIcon, CornerUpRightIcon, FullscreenIcon, HomeIcon, ListIcon, MenuIcon, MoreHorizontalIcon, SearchIcon, ShareIcon, SlidersHorizontalIcon, SquareArrowRightExitIcon, StarPlusIcon } from "lucide-react"
-import { Fragment, useEffect, useRef, useState } from "react"
-import { EpubViewer, ReactEpubViewer, ViewerRef } from "react-epub-viewer"
+import { ALargeSmallIcon, ArrowLeftIcon, ListIcon, ShareIcon, } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { EpubViewer, ViewerRef } from "react-epub-viewer"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { goBack } from '@/lib/utils';
 import ChaptersSheet from '@/components/partials/dialogs/ChaptersSheet';
 import Navigation, { NavItem } from 'epubjs/types/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
+import ShareDialog from '@/components/partials/ShareDialog';
 
 interface WithEpub extends Book {
 	epub_file_path: string
@@ -29,11 +29,13 @@ export default function ReadBookPage({ book }: Props) {
 	const [rendition, setRendition] = useState<Rendition>()
 	const [currChapter, setCurrChapter] = useState<NavItem | null>(null)
 	const [isChaptersOpen, setIsChaptersOpen] = useState(false)
+	const [isShareOpen, setIsShareOpen] = useState(false)
 
 	const rightSideButtons = [
 		{
 			icon: <ShareIcon />,
-			label: "Share"
+			label: "Share",
+			onClick: () => setIsShareOpen(true)
 		},
 		{
 			icon: <ALargeSmallIcon />,
@@ -86,7 +88,42 @@ export default function ReadBookPage({ book }: Props) {
 							<TooltipContent>{b.label}</TooltipContent>
 						</Tooltip>
 					))}
-					<DropdownMenu>
+				</div>
+			</div>
+			<div className="bg-white dark:bg-card border rounded-lg h-full overflow-hidden">
+				{isReady ? (
+					<div className="flex flex-col h-full py-12">
+						<EpubViewer
+							epubOptions={{ allowScriptedContent: true }}
+							url={book.epub_file_path}
+							ref={viewerRef}
+							rendtionChanged={(r) => setRendition(r)}
+							epubFileOptions={{ openAs: "epub" }}
+							bookChanged={(book) => {
+								book.loaded.navigation.then((toc) => {
+									setToc(toc.toc)
+								})
+							}}
+						/>
+					</div>
+				) : (<div className="flex-center h-full"><Spinner className="size-6" /></div>)}
+			</div>
+			<ChaptersSheet
+				isOpen={isChaptersOpen}
+				setIsOpen={setIsChaptersOpen}
+				toc={toc}
+				currentChapter={currChapter}
+				rendition={rendition}
+			/>
+			<ShareDialog url={book.share_url} title="Share book" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
+		</div>
+	)
+}
+
+ReadBookPage.layout = (page: React.ReactNode) => <ReaderLayout>{page}</ReaderLayout>
+
+
+{/* <DropdownMenu>
 						<DropdownMenuTrigger render={<Button size={"icon"} variant={"ghost"} />}><MoreHorizontalIcon /></DropdownMenuTrigger>
 						<DropdownMenuContent className={"w-54"}>
 							<DropdownMenuGroup>
@@ -139,36 +176,4 @@ export default function ReadBookPage({ book }: Props) {
 								<div className="">Read 85%</div>
 							</DropdownMenuGroup>
 						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
-			</div>
-			<div className="bg-white dark:bg-card border rounded-lg h-full overflow-hidden">
-				{isReady ? (
-					<div className="flex flex-col h-full py-12">
-						<EpubViewer
-							epubOptions={{ allowScriptedContent: true }}
-							url={book.epub_file_path}
-							ref={viewerRef}
-							rendtionChanged={(r) => setRendition(r)}
-							epubFileOptions={{ openAs: "epub" }}
-							bookChanged={(book) => {
-								book.loaded.navigation.then((toc) => {
-									setToc(toc.toc)
-								})
-							}}
-						/>
-					</div>
-				) : (<div className="flex-center h-full"><Spinner className="size-6" /></div>)}
-			</div>
-			<ChaptersSheet
-				isOpen={isChaptersOpen}
-				setIsOpen={setIsChaptersOpen}
-				toc={toc}
-				currentChapter={currChapter}
-				rendition={rendition}
-			/>
-		</div>
-	)
-}
-
-ReadBookPage.layout = (page: React.ReactNode) => <ReaderLayout>{page}</ReaderLayout>
+					</DropdownMenu> */}

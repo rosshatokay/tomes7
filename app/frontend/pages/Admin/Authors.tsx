@@ -9,7 +9,7 @@ import { Spinner } from "@/components/ui/spinner"
 import Author from "@/interfaces/author"
 import { PaginationMeta } from "@/interfaces/pagination"
 import adminSearch from "@/lib/adminSearch"
-import { Deferred, Head } from "@inertiajs/react"
+import { Deferred } from "@inertiajs/react"
 import { CalendarIcon, FeatherIcon, HashIcon, ListIcon, PlusIcon, SearchIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { format } from "timeago.js"
@@ -86,9 +86,6 @@ export default function AuthorsPage({ authors, authors_count, pagination }: Page
 
 	return (
 		<>
-			<Head>
-				<title>Authors</title>
-			</Head>
 			<div className="h-full flex flex-col">
 				<div className="text-sm min-h-12 h-12 flex items-center justify-between px-4 border-b">
 					<span className="text-subtle flex items-center gap-2"><ListIcon size={16} /> All authors • {authors_count}</span>

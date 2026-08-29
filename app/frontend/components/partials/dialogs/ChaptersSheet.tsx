@@ -1,5 +1,5 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Fragment, RefObject } from "react";
+import { Fragment, RefObject, useEffect, useState } from "react";
 import Navigation, { NavItem } from 'epubjs/types/navigation';
 import { cn } from "@/lib/utils";
 import { Rendition } from "epubjs";
@@ -32,10 +32,29 @@ function groupTocHier(tocArr: NavItem[]): FileGroupedToc {
 }
 
 export default function ChaptersSheet({ isOpen, setIsOpen, toc, currentChapter, rendition }: Props) {
+	const [hoveredChapterIndex, setHoveredChapterIndex] = useState<number | null>(null)
+	const [activeIndex, setActiveIndex] = useState<number | null>()
+
 	const handleTocClick = async (href: string) => {
 		rendition?.display(href)
 		setIsOpen(false)
 	}
+
+	// const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+	// 	if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault()
+
+	// 	if (hoveredChapterIndex) {
+	// 		if (e.key === "ArrowUp") hoveredChapterIndex > 1 && setHoveredChapterIndex(hoveredChapterIndex - 1)
+	// 		if (e.key === "ArrowDown") hoveredChapterIndex > 1 && setHoveredChapterIndex(hoveredChapterIndex + 1)
+	// 	}
+
+	// 	console.log(hoveredChapterIndex)
+	// }
+
+	useEffect(() => {
+		if (!toc || !currentChapter) return
+		setActiveIndex(toc ?.findIndex(n => n.id === currentChapter?.id) || 0)
+	}, [toc, currentChapter])
 	
 	return (
 		<Sheet open={isOpen} onOpenChange={open => !open && setIsOpen(false)}>
@@ -47,12 +66,20 @@ export default function ChaptersSheet({ isOpen, setIsOpen, toc, currentChapter, 
 					<div className="flex flex-col gap-0.5 px-2">
 						{toc?.map((item, index) => {
 							const isActive = item.id === currentChapter?.id
+							// const isHovered = hoveredChapterIndex ? index === (hoveredChapterIndex) - 1 : null
 
 							return (
 								<Fragment key={index}>
-									<button onClick={() => handleTocClick(item.href)} className={
-										cn("flex cursor-pointer items-center gap-2 p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-md",
-											isActive ? "bg-black/5" : "")}
+									<button
+										onClick={() => handleTocClick(item.href)}
+										onMouseEnter={() => setHoveredChapterIndex(index)}
+										onMouseLeave={() => {
+											setHoveredChapterIndex(activeIndex ? activeIndex + 1 : 0 || null)
+										}}
+										className={
+											cn("flex cursor-pointer items-center gap-2 p-2  rounded-md transition hover:bg-black/5",
+												(isActive) ? "bg-black/5" : "")
+										}
 									>
 										<div className="bg-white/10 w-5 min-w-5 flex-center px-2 text-[11px] text-subtle rounded-sm">{++index}</div>
 										<div className="truncate">{item.label}</div>

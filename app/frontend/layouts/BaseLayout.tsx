@@ -16,6 +16,7 @@ interface BaseLayoutProps {
 	hideFooter?: boolean
 	auth?: AuthProps
 	hideMobileNav?: boolean
+	hideHeaderForced?: boolean
 }
 
 export interface FlashProps {
@@ -26,13 +27,13 @@ export interface FlashProps {
 	}
 }
 
-export default function BaseLayout({ children, hideHeader, hideFooter, hideMobileNav }: BaseLayoutProps) {
+export default function BaseLayout({ children, hideHeader, hideHeaderForced, hideFooter, hideMobileNav }: BaseLayoutProps) {
 	const flash = usePage().flash as FlashProps
 	const isMobile = useIsMobile()
 	const [isReady, setIsReady] = useState(false)
 	const shouldHideFooter = false
 	const auth = usePage().props.auth as AuthProps
-		
+
 	useEffect(() => {
 		if (flash?.toast) {
 			toast.add({
@@ -48,7 +49,7 @@ export default function BaseLayout({ children, hideHeader, hideFooter, hideMobil
 		}, 600);
 	}, [])
 
-	hideHeader = hideHeader && isMobile
+	hideHeader = hideHeaderForced ? hideHeaderForced : (hideHeader && isMobile)
 
 	return (
 		<div>

@@ -2,7 +2,7 @@ import { BookCard } from "@/components/partials/BookCard";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Book } from "@/interfaces/book";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { InfoIcon } from "lucide-react";
 
 interface LibraryPageProps {
@@ -30,9 +30,6 @@ export default function LibraryPage({ currentTab, books }: LibraryPageProps) {
 
 	return (
 		<>
-			<Head>
-				<title>Library</title>
-			</Head>
 			<div className="large-container flex-center flex-col h-[30vh] min-h-50">
 				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2">Library</h1>
 				<p className="text-subtle">Your collection of books</p>
