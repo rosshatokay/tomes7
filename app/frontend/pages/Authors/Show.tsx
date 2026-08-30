@@ -59,7 +59,7 @@ export default function AuthorPage({ author, books }: Props) {
 							<AvatarFallback className={"text-xl"}>{author.full_name[0]}</AvatarFallback>
 						</Avatar>
 						<div className="text-center mb-2">
-							<h1 className="text-2xl mb-2">{author.full_name}</h1>
+							<h1 className="text-3xl mb-2 font-headline">{author.full_name}</h1>
 							<p className="max-w-lg text-center text-subtle line-clamp-3">{author.bio}</p>
 							<div className="flex items-center gap-2 justify-center mt-2">
 								<h3 className="text-[15px] !font-normal">{author.followers_count} <span className="text-subtle/75">{author.followers_count === 1 ? "follower" : "followers"}</span></h3>

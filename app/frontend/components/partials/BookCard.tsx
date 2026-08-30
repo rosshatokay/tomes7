@@ -1,15 +1,12 @@
 import { Book } from "@/interfaces/book";
 import { Link } from "@inertiajs/react";
-import { StarIcon } from "lucide-react";
 import { RatingStars } from "./RatingStars";
-import { useIsMobile } from "@/lib/utils";
 
 interface BookProps {
 	book: Book
 }
 
 export const BookCard = ({ book }: BookProps) => {
-	const isMobile = useIsMobile()
 
 	return (
 		<div className="bg-card rounded-xl md:p-5 p-4 flex md:flex-col md:gap-6 gap-4 relative hover:bg-black/5 dark:hover:bg-white/10 transition">

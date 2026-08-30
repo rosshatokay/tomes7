@@ -169,7 +169,7 @@
 	}
 
 	.large-container {
-		@apply w-full px-5 mx-auto max-w-[1440px]
+		@apply w-full px-6 mx-auto max-w-[1440px]
 	}
 }
 
@@ -247,4 +247,8 @@
 
 h1, h2, h3 {
 	@apply font-medium
+}
+
+.font-headline {
+	font-family: "Hedvig Letters Serif"
 }

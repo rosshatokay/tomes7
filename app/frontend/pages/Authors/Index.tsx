@@ -13,7 +13,7 @@ export default function AuthorsPage({ authors }: PageProps) {
 	return (
 		<>
 			<div className="large-container flex-center flex-col h-[30vh] min-h-50 text-center">
-				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2">Authors</h1>
+				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2 font-headline">Authors</h1>
 				<p className="text-subtle">Discover the authors behind the greatest works</p>
 			</div>
 			<div className="large-container pb-6">

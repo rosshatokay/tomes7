@@ -40,6 +40,13 @@ class Book < ApplicationRecord
     BookWithToc.find(id).toc
   end
 
+  def score_frequencies
+    base_counts = (1..5).index_with(0)
+    actual_counts = ratings.group(:score).count
+
+    base_counts.merge(actual_counts)
+  end
+
   def average_rating
     return 0.0 if ratings_count.zero?
 

@@ -1,28 +1,15 @@
-class Api::V1::BooksController < Admins::BaseController
-  before_action :find_book
+class Api::V1::BooksController < ApplicationController
+  allow_unauthenticated_access
 
-  def toc
+  def ratings
+    book = Book.includes(ratings: [user: [avatar_attachment: :blob]]).friendly.find(params[:book_slug])
+    ratings = book.ratings.formatted
+
     render json: {
-      generated: !@book.toc.nil?,
-      toc: @book.toc,
+      ratings_count: book.ratings_count,
+      average_rating: book.average_rating,
+      score_frequencies: book.score_frequencies,
+      ratings: ratings * 2,
     }
-  end
-
-  def generate_toc
-    toc = TocGenerator.new(@book)
-
-    begin
-      chapters = toc.generate
-
-      render json: chapters
-    rescue => e
-      render json: "Error occurred: #{e}"
-    end
-  end
-
-  private
-
-  def find_book
-    @book = Book.find(params[:book_id])
   end
 end

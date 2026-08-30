@@ -31,7 +31,7 @@ export default function LibraryPage({ currentTab, books }: LibraryPageProps) {
 	return (
 		<>
 			<div className="large-container flex-center flex-col h-[30vh] min-h-50">
-				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2">Library</h1>
+				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2 font-headline">Library</h1>
 				<p className="text-subtle">Your collection of books</p>
 			</div>
 			<div className="large-container">

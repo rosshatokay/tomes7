@@ -56,6 +56,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :search, only: [:index]
       resources :notifications, only: [:index]
+      resources :books, only: [] do
+        collection do
+          get :ratings
+        end
+      end
 
       namespace :admins do
         resources :categories, only: [] do

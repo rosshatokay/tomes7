@@ -2,6 +2,7 @@ import { BookCard } from "@/components/partials/BookCard"
 import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { LinkUnderline } from "@/components/partials/LinkUnderline"
 import BackBtnHeader from "@/components/partials/nav/BackBtnHeader"
+import RatingsSheet from "@/components/partials/RatingsSheet"
 import { RatingStars } from "@/components/partials/RatingStars"
 import ShareDialog from "@/components/partials/ShareDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -11,15 +12,18 @@ import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
+import Rating from "@/interfaces/ratings"
 import BaseLayout from "@/layouts/BaseLayout"
 import { cn, createBreadcrumbs, SimpleFormat } from "@/lib/utils"
 import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
-import { ArrowUpRightIcon, HeartIcon, MoreHorizontalIcon, ShareIcon } from "lucide-react"
+import { ArrowUpRightIcon, GlassesIcon, HeartIcon, MoreHorizontalIcon, ShareIcon } from "lucide-react"
 import { useState } from "react"
+import strftime from "strftime"
 
 interface BookPageProps {
 	auth: AuthProps
 	book: {
+		id: string
 		slug: string
 		title: string
 		cover_url: string
@@ -44,9 +48,19 @@ interface BookPageProps {
 		permalink: string
 	}]
 	similar_books: Book[]
+	ratings_snippet: Rating[]
 }
 
-export default function BookPage({ auth, book, category, authors, tags, similar_books }: BookPageProps) {
+export default function BookPage({
+	auth,
+	book,
+	category,
+	authors,
+	tags,
+	similar_books,
+	ratings_snippet
+}: BookPageProps) {
+	const [isRatingsSheetOpen, setIsRatingsSheetOpen] = useState(false)
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const [isSaved, setIsSaved] = useState<boolean>(book.is_saved)
 	const crumbs = [
@@ -78,17 +92,17 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 					{createBreadcrumbs(crumbs)}
 				</div>
 				<div className="lg:grid grid-cols-12 large-container">
-					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-7 w-full lg:sticky top-20 pb-5 flex flex-col gap-2 lg:pr-12 h-110">
+					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-8 w-full lg:sticky top-20 pb-5 flex flex-col gap-2 lg:pr-8 h-110">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 							<div className="relative h-full aspect-[4/6]">
 								<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} alt={`${book.title}'s cover`} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
 							</div>
 						</div>
 					</div>
-					<div className="pt-6 col-span-5 flex flex-col gap-12 pb-5">
+					<div className="pt-6 col-span-4 flex flex-col gap-12 pb-5">
 						<section>
-							<h1 className="md:text-4xl text-2xl font-medium">{book.title}</h1>
-							<h2 className="md:text-lg mt-0.5">
+							<h1 className="md:text-[40px] leading-none text-2xl font-headline">{book.title}</h1>
+							<h2 className="md:text-lg mt-2">
 								{authors.map((author, index) => (
 									<span key={index}>
 										<span className="font-normal"><Link href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</Link></span>
@@ -100,7 +114,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 								<div className="-ml-2">
 									<Button variant={"ghost"} className={"px-2 text-[15px]"}>
 										<RatingStars rating={book.average_rating} />
-										<span>{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></span>
+										<span className="text-subtle">({book.ratings_count})</span>
 									</Button>
 								</div>
 								{!auth.user && (
@@ -129,19 +143,33 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 									<span>Share</span>
 								</Button>
 							</div>
-							<div className="mt-4">
-								<div className="text-[15px] text-neutral-700 dark:text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
+							<div className="mt-6">
+								<div className="text-neutral-700 dark:text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
 								{book.wiki_url && <p className="text-sm mt-2 text-subtle">Read more at <LinkUnderline href={book.wiki_url} className="text-foreground" target="_blank">Wikipedia</LinkUnderline>.</p>}
 							</div>
 							{tags?.length > 0 && (
-								<div className="flex flex-wrap gap-2 mt-4">
+								<div className="flex flex-wrap gap-2 mt-6">
 									{tags.map(tag => (
-										<Badge key={tag.name} variant={"outline"} className="h-7 px-3 text-sm font-normal text-subtle">{tag.name}</Badge>
+										<Badge key={tag.name} variant={"secondary"} className="h-7 px-3 text-sm font-normal text-foreground/75 capitalize">{tag.name}</Badge>
 									))}
 								</div>
 							)}
 							<div className="mt-8 md:block hidden">
-								<Button size={"lg"} variant={"default"} className={"w-full h-10"} nativeButton={false} render={<Link href={book.read_path} />}>Read</Button>
+								<Button size={"lg"} variant={"default"} className={"w-full h-11 text-[15px]"} nativeButton={false} render={<Link href={book.read_path} />}>Read now</Button>
+								<div className="flex items-center mt-3 justify-center gap-2">
+									<div className="flex items-center">
+										<Avatar className={"grayscale border border-2 border-background size-6"}>
+											<AvatarImage src="https://images.unsplash.com/photo-1755311901850-f1412f67219a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfHw0fHx8MA%3D%3D" />
+										</Avatar>
+										<Avatar className={"grayscale border border-2 border-background size-6 -ml-2"}>
+											<AvatarImage src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fHww" />
+										</Avatar>
+										<Avatar className={"grayscale border border-2 border-background size-6 -ml-2"}>
+											<AvatarImage src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D" />
+										</Avatar>
+									</div>
+									<div className="text-sm text-subtle">+2,412 currently reading</div>
+								</div>
 								{/* <div className="flex justify-center mt-2">
 									<div className="text-sm text-subtle">321 currently reading</div>
 								</div> */}
@@ -150,11 +178,11 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 						{bookDetailsKeys?.length > 0 && (
 							<section>
 								<h3 className="text-base mb-2">Original edition details</h3>
-								<div className="flex flex-col gap-2 text-[15px]">
+								<div className="flex flex-col gap-2 text-base">
 									{bookDetailsKeys.map((bk, i) => (
 										<div key={i} className="grid md:grid-cols-[170px_1fr] grid-cols-[140px_1fr] gap-2">
-											<h3 className={cn("!font-normal text-[15px]", i > 0 && "text-subtle")}>{bk}</h3>
-											<h3 className="!font-normal text-[15px]">{book.details[bk]}</h3>
+											<h3 className={cn("!font-normal", i > 0 && "text-subtle")}>{bk}</h3>
+											<h3 className="!font-normal">{book.details[bk]}</h3>
 										</div>
 									))}
 								</div>
@@ -169,40 +197,39 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 											<AvatarImage src={author.avatar_url} alt={author.name}></AvatarImage>
 											<AvatarFallback>{author.name[0]}</AvatarFallback>
 										</Avatar>
-										<h3 className="text-[15px] group-hover:text-foreground/80 transition">{author.name}</h3>
+										<h3 className="text-base group-hover:text-foreground/80 transition">{author.name}</h3>
 									</Link>
-									<div className="text-[15px] text-neutral-700 dark:text-neutral-300 line-clamp-3">{author.bio}</div>
+									<div className="text-base text-neutral-700 dark:text-neutral-300 line-clamp-3">{author.bio}</div>
 								</div>
 							))}
 						</section>
 						<section>
-							<div className="flex items-center gap-4 mb-2">
+							<div className="flex items-center gap-2 mb-2">
 								<h3 className="text-base">Reviews</h3>
-								<div className="flex items-center gap-2">
-									<RatingStars rating={3} />
-									<div className="text-sm">{book.average_rating} <span className="text-subtle">({book.ratings_count})</span></div>
-								</div>
+								<div className="text-sm text-subtle">{book.average_rating} out of 5 stars</div>
 							</div>
-							<div className="grid md:grid-cols-2 gap-4">
-								<div>
-									<div className="font-normal mb-1">Janice</div>
-									<div className="flex items-center gap-2 mb-2">
-										<RatingStars rating={3} />
-										<div className="text-sm text-subtle">Nov 24, 2025</div>
+							<div className="flex flex-col gap-4">
+								{ratings_snippet?.map((rating, index) => (
+									<div key={index}>
+										<div className="flex items-center gap-3 mb-2">
+											<Avatar>
+												<AvatarImage src={rating.user.avatar_url} />
+												<AvatarFallback>{rating.user.username[0]}</AvatarFallback>
+											</Avatar>
+											<div>
+												<div className="font-normal">{rating.user.username}</div>
+												<div className="flex items-center gap-2">
+													<RatingStars rating={rating.score} />
+													<div className="text-sm text-subtle">{strftime('%b %d, %Y', new Date(rating.created_at))}</div>
+												</div>
+											</div>
+										</div>
+										<p className="line-clamp-3">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
 									</div>
-									<p className="text-[15px] line-clamp-3">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
-								</div>
-								<div>
-									<div className="font-normal mb-1">Janice</div>
-									<div className="flex items-center gap-2 mb-2">
-										<RatingStars rating={3} />
-										<div className="text-sm text-subtle">Nov 24, 2025</div>
-									</div>
-									<p className="text-[15px] line-clamp-3">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
-								</div>
+								))}
 							</div>
 							<div className="mt-4">
-								<Button className={"w-full"} variant={"secondary"} size={"lg"}>See all reviews</Button>
+								<Button className={"w-full"} variant={"secondary"} size={"lg"} onClick={() => setIsRatingsSheetOpen(true)}>See all reviews</Button>
 							</div>
 						</section>
 					</div>
@@ -229,6 +256,7 @@ export default function BookPage({ auth, book, category, authors, tags, similar_
 			<ShareDialog url={book.share_url} title="Share book" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
 			<div className="pt-20"></div>
 			<hr />
+			<RatingsSheet bookSlug={book.slug} isOpen={isRatingsSheetOpen} setIsOpen={setIsRatingsSheetOpen} />
 		</>
 	)
 }

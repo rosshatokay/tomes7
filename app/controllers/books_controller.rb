@@ -21,10 +21,11 @@ class BooksController < ApplicationController
   end
 
   def show
-    book = Book.with_attached_cover.includes(:category, authors: :avatar_attachment).friendly.find(params[:id])
+    book = Book.with_attached_cover.includes(:category, ratings: [user: [avatar_attachment: :blob]], authors: [avatar_attachment: :blob]).friendly.find(params[:id])
 
     render inertia: "Books/Show", props: {
              **format_book(book),
+             ratings_snippet: book.ratings.formatted.first(3),
              similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
            }, meta: seo_tags(
              title: book.title,
