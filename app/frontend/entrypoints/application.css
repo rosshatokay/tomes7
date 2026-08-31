@@ -9,7 +9,7 @@
 @plugin '@tailwindcss/forms';
 
 @theme inline {
-	--font-heading: var(--font-sans); 
+	--font-heading: var(--font-sans);
 	--font-sans: 'Inter', sans-serif;
 	--color-sidebar-ring: var(--sidebar-ring);
 	--color-sidebar-border: var(--sidebar-border);
@@ -164,6 +164,10 @@
 		@apply flex items-center justify-center
 	}
 
+	.small-container {
+		@apply max-w-2xl px-5 mx-auto
+	}
+
 	.medium-container {
 		@apply w-full max-w-7xl px-5 mx-auto;
 	}
@@ -171,7 +175,63 @@
 	.large-container {
 		@apply w-full px-6 mx-auto max-w-[1440px]
 	}
+
+	.font-headline {
+		font-family: "Hedvig Letters Serif"
+	}
+
 }
+article {
+	h1 {
+		@apply md:text-[2rem] text-3xl leading-[1.2] mb-2;
+		font-family: "Hedvig Letters Serif";
+		font-weight: 500;
+	}
+
+	h3 {
+		font-size: 1rem;
+		margin-top: 2rem;
+		margin-bottom: .25rem;
+		font-weight: 500;
+	}
+
+	p,
+	li {
+		color: var(--foreground);
+		opacity: .8;
+	}
+
+	p {
+		margin-bottom: 1.5rem;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	li {
+		margin-bottom: .5rem;
+	}
+
+	strong,
+	b {
+		font-weight: 500;
+	}
+
+	ul {
+		list-style-type: disc;
+		padding: .5rem 1rem;
+	}
+
+	hr {
+		margin-bottom: 1.5rem;
+	}
+
+	p:has(+ ol),
+	p:has(+ ul) {
+		margin-bottom: 0;
+	}
+} 
 
 .logo {
 	width: 100%;
@@ -189,6 +249,7 @@
 .logo-full {
 	width: auto;
 	height: 100%;
+
 	svg {
 		width: auto;
 		height: 100%;
@@ -245,10 +306,13 @@
 	aspect-ratio: 1/1.6;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
 	@apply font-medium
 }
 
-.font-headline {
-	font-family: "Hedvig Letters Serif"
+[data-slot="toast-portal"] {
+	position: relative;
+	z-index: 99;
 }

@@ -9,7 +9,7 @@ class Api::V1::BooksController < ApplicationController
       ratings_count: book.ratings_count,
       average_rating: book.average_rating,
       score_frequencies: book.score_frequencies,
-      ratings: ratings * 2,
+      ratings: ratings,
     }
   end
 end

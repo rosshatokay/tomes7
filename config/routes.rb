@@ -23,13 +23,16 @@ Rails.application.routes.draw do
   post "/signup", to: "registrations#create", as: :registration
   delete "logout", to: "sessions#destroy", as: :logout
 
-  scope "/@:username" do
-    get "/", to: "users#show", as: :profile
-  end
+  # scope "/@:username" do
+  #   get "/", to: "users#show", as: :profile
+  # end
 
   resource :session, only: [:create, :destroy]
   resources :users, only: [:show]
   resources :categories, only: [:show]
+
+  resources :ratings, only: [:create]
+
   resources :books, only: [:index, :show] do
     collection do
       post :save
@@ -112,6 +115,11 @@ Rails.application.routes.draw do
 
     root "dashboard#index"
   end
+
+  get "/about", to: "static#about"
+  get "/terms", to: "static#terms"
+  get "/privacy", to: "static#privacy"
+  get "/community-guidelines", to: "static#community_guidelines"
 
   # get "/community", to: "feeds#community"
   get "/library", to: "feeds#library", as: :library

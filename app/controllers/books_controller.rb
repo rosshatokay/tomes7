@@ -10,7 +10,6 @@ class BooksController < ApplicationController
 
     scope = category_tab.present? ? Book.published.where(category_id: category_tab.id) : Book.published.all
     data = scope.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
-    fake_data.map { |f| data << f }
 
     render inertia: "Books/Index", props: {
              categories: categories,
@@ -21,12 +20,18 @@ class BooksController < ApplicationController
   end
 
   def show
-    book = Book.with_attached_cover.includes(:category, ratings: [user: [avatar_attachment: :blob]], authors: [avatar_attachment: :blob]).friendly.find(params[:id])
+    book = Book.with_attached_cover.includes(
+      :category,
+      :readers,
+      ratings: [user: [avatar_attachment: :blob]],
+      authors: [avatar_attachment: :blob],
+    ).friendly.find(params[:id])
 
     render inertia: "Books/Show", props: {
              **format_book(book),
              ratings_snippet: book.ratings.formatted.first(3),
              similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
+             readers: InertiaRails.defer { get_readers(book) },
            }, meta: seo_tags(
              title: book.title,
              description: "Read #{book.title} by #{book.authors.first.full_name} for free, on Tomes.",
@@ -114,44 +119,18 @@ class BooksController < ApplicationController
     }
   end
 
-  def fake_data
-    [
-      {
-        title: "The Republic",
-        cover: "https://ik.imagekit.io/tomes/books/covers/z18sp5x11k9a8qfrrtvlvcshghxv?tr=w-1920,c-at_max",
-        author_names: "Plato",
-        published: true,
-        average_rating: rand(3..5),
-        slug: "/",
-        ratings_count: rand(1..300),
+  def get_readers(book)
+    return unless book.readers_count >= 3
+    readers = book.readers.select(:id, :username).includes(avatar_attachment: :blob).limit(3)
+
+    {
+      total_count: book.readers_count,
+      preview_list: readers.map { |u|
+        {
+          username: u.username,
+          avatar_url: u.get_avatar_url,
+        }
       },
-      {
-        title: "Jane Eyre",
-        cover: "https://ik.imagekit.io/tomes/books/covers/s1hmmvhu9zva5gs54q0sd04cozdj?tr=w-1920,c-at_max",
-        author_names: "Charlotte Brontë",
-        published: true,
-        average_rating: rand(3..5),
-        slug: "/",
-        ratings_count: rand(1..300),
-      },
-      {
-        title: "Meditations",
-        cover: "https://ik.imagekit.io/tomes/books/covers/hanbexxqrd8n4a6uo2yf6im7nfqr?tr=w-1920,c-at_max",
-        author_names: "Marcus Aurelius",
-        published: true,
-        average_rating: rand(3..5),
-        slug: "/",
-        ratings_count: rand(1..300),
-      },
-      {
-        title: "Meditations",
-        cover: "https://ik.imagekit.io/tomes/books/covers/hanbexxqrd8n4a6uo2yf6im7nfqr?tr=w-1920,c-at_max",
-        author_names: "Marcus Aurelius",
-        published: true,
-        average_rating: rand(3..5),
-        slug: "/",
-        ratings_count: rand(1..300),
-      },
-    ]
+    }
   end
 end

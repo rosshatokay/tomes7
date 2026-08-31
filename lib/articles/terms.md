@@ -1,3 +1,9 @@
+# Terms of use
+
+**Last Updated: 11 April, 2026**
+
+---
+
 Welcome to **Tomes**. By using our website and services, you agree to the following terms. Please read them carefully.
 
 ### 1. Acceptance of Terms

@@ -6,17 +6,19 @@ const footerNavLinks = [
 	{
 		label: "Explore",
 		items: [
-			{ label: "Literature", path: "/categories/literature" },
-			{ label: "History", path: "/categories/history" },
-			{ label: "Religion & Philosophy", path: "/categories/religion-philosophy" },
-			{ label: "See all", path: "/categories" },
+			{ label: "Literature", path: "/books?tab=literature" },
+			{ label: "History", path: "/books?tab=history" },
+			{ label: "Religion & Philosophy", path: "/books?tab=religion-philosophy" },
+			{ label: "See all", path: "/books" },
 		]
 	},
 	{
 		label: "Platform",
 		items: [
 			{ label: "About", path: "/about" },
-			{ label: "Feedback", path: "mailto:hey@tomes.club" },
+			{ label: "Terms of use", path: "/terms" },
+			{ label: "Privacy policy", path: "/privacy" },
+			{ label: "Feedback", link: "mailto:hey@tomes.club" },
 			{ label: "Community guidelines", path: "/community-guidelines" },
 		]
 	},
@@ -39,7 +41,8 @@ export const Footer = () => {
 						<div key={group.label} className="flex flex-col gap-1">
 							<h4>{group.label}</h4>
 							{group.items.map(item => (
-								<Link key={item.path} href={item.path} className="text-subtle w-fit hover:text-foreground transition">{item.label}</Link>
+								item.link ? <a key={item.link} className="text-subtle w-fit hover:text-foreground transition" href={item.link}>{item.label}</a> 
+								: <Link key={item.path} href={item.path} className="text-subtle w-fit hover:text-foreground transition">{item.label}</Link>
 							))}
 						</div>
 					))}

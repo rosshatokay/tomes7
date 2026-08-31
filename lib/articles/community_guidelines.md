@@ -1,3 +1,10 @@
+# Community guidelines
+
+**Last Updated: July 30, 2026**
+
+---
+
+
 We’re building a space where the world’s greatest stories live on. Since our library consists of public domain works—books that belong to everyone—we want our community to feel just as open and welcoming.
 
 To keep **Tomes** a great place to read and hang out, we ask that you follow these simple guidelines:

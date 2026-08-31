@@ -8,6 +8,7 @@ import ShareDialog from "@/components/partials/ShareDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { AuthProps } from "@/interfaces/auth"
@@ -15,12 +16,21 @@ import { Book } from "@/interfaces/book"
 import Rating from "@/interfaces/ratings"
 import BaseLayout from "@/layouts/BaseLayout"
 import { cn, createBreadcrumbs, SimpleFormat } from "@/lib/utils"
-import { Deferred, Head, Link, useHttp } from "@inertiajs/react"
-import { ArrowUpRightIcon, GlassesIcon, HeartIcon, MoreHorizontalIcon, ShareIcon } from "lucide-react"
-import { useState } from "react"
+import { Deferred, Link, useHttp } from "@inertiajs/react"
+import { ArrowUpRightIcon, GlassesIcon, HeartIcon, InfoIcon, MoreHorizontalIcon, ShareIcon, StarIcon } from "lucide-react"
+import { Fragment, useState } from "react"
 import strftime from "strftime"
+import ReadersSection, { ReadersSectionSkeleton } from "./partials/ReadersSection"
+import NewReviewDialog from "./partials/NewReviewDialog"
 
-interface BookPageProps {
+export interface BookReaders {
+	total_count: number
+	preview_list: [
+		{ username: string, avatar_url: string }
+	]
+}
+
+export interface BookPageProps {
 	auth: AuthProps
 	book: {
 		id: string
@@ -49,6 +59,7 @@ interface BookPageProps {
 	}]
 	similar_books: Book[]
 	ratings_snippet: Rating[]
+	readers: BookReaders
 }
 
 export default function BookPage({
@@ -58,11 +69,13 @@ export default function BookPage({
 	authors,
 	tags,
 	similar_books,
-	ratings_snippet
+	ratings_snippet,
+	readers
 }: BookPageProps) {
 	const [isRatingsSheetOpen, setIsRatingsSheetOpen] = useState(false)
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const [isSaved, setIsSaved] = useState<boolean>(book.is_saved)
+	const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false)
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: category.name, path: category.permalink },
@@ -112,7 +125,7 @@ export default function BookPage({
 							</h2>
 							<div className="flex gap-1 mt-1">
 								<div className="-ml-2">
-									<Button variant={"ghost"} className={"px-2 text-[15px]"}>
+									<Button variant={"ghost"} className={"px-2 text-[15px]"} onClick={() => setIsRatingsSheetOpen(true)}>
 										<RatingStars rating={book.average_rating} />
 										<span className="text-subtle">({book.ratings_count})</span>
 									</Button>
@@ -143,7 +156,7 @@ export default function BookPage({
 									<span>Share</span>
 								</Button>
 							</div>
-							<div className="mt-6">
+							<div className="mt-4">
 								<div className="text-neutral-700 dark:text-neutral-300 line-clamp-3">{SimpleFormat(book.description)}</div>
 								{book.wiki_url && <p className="text-sm mt-2 text-subtle">Read more at <LinkUnderline href={book.wiki_url} className="text-foreground" target="_blank">Wikipedia</LinkUnderline>.</p>}
 							</div>
@@ -155,24 +168,17 @@ export default function BookPage({
 								</div>
 							)}
 							<div className="mt-8 md:block hidden">
-								<Button size={"lg"} variant={"default"} className={"w-full h-11 text-[15px]"} nativeButton={false} render={<Link href={book.read_path} />}>Read now</Button>
-								<div className="flex items-center mt-3 justify-center gap-2">
-									<div className="flex items-center">
-										<Avatar className={"grayscale border border-2 border-background size-6"}>
-											<AvatarImage src="https://images.unsplash.com/photo-1755311901850-f1412f67219a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfHw0fHx8MA%3D%3D" />
-										</Avatar>
-										<Avatar className={"grayscale border border-2 border-background size-6 -ml-2"}>
-											<AvatarImage src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVyc29ufGVufDB8fDB8fHww" />
-										</Avatar>
-										<Avatar className={"grayscale border border-2 border-background size-6 -ml-2"}>
-											<AvatarImage src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHBlcnNvbnxlbnwwfHwwfHx8MA%3D%3D" />
-										</Avatar>
-									</div>
-									<div className="text-sm text-subtle">+2,412 currently reading</div>
-								</div>
-								{/* <div className="flex justify-center mt-2">
-									<div className="text-sm text-subtle">321 currently reading</div>
-								</div> */}
+								<Button size={"lg"} variant={"default"} className={"w-full h-10 mb-2"} nativeButton={false} render={<Link href={book.read_path} />}><GlassesIcon /> Read now</Button>
+								{auth.user ? (
+									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} onClick={() => setIsReviewDialogOpen(true)}><StarIcon /> Write a review</Button>
+								) : (
+									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} nativeButton={false} render={<Link href={"/login"} />}><StarIcon /> Write a review</Button>
+								)}
+								<Deferred data="readers" fallback={<ReadersSectionSkeleton />}>
+									{readers && (
+										<ReadersSection readers={readers} />
+									)}
+								</Deferred>
 							</div>
 						</section>
 						{bookDetailsKeys?.length > 0 && (
@@ -206,31 +212,50 @@ export default function BookPage({
 						<section>
 							<div className="flex items-center gap-2 mb-2">
 								<h3 className="text-base">Reviews</h3>
-								<div className="text-sm text-subtle">{book.average_rating} out of 5 stars</div>
 							</div>
-							<div className="flex flex-col gap-4">
-								{ratings_snippet?.map((rating, index) => (
-									<div key={index}>
-										<div className="flex items-center gap-3 mb-2">
-											<Avatar>
-												<AvatarImage src={rating.user.avatar_url} />
-												<AvatarFallback>{rating.user.username[0]}</AvatarFallback>
-											</Avatar>
-											<div>
-												<div className="font-normal">{rating.user.username}</div>
-												<div className="flex items-center gap-2">
-													<RatingStars rating={rating.score} />
-													<div className="text-sm text-subtle">{strftime('%b %d, %Y', new Date(rating.created_at))}</div>
+							{ratings_snippet?.length > 0 ? (
+								<Fragment>
+
+									<div className="flex flex-col gap-4">
+										{ratings_snippet?.map((rating, index) => (
+											<div key={index}>
+												<div className="flex items-center gap-3 mb-2">
+													<Avatar>
+														<AvatarImage src={rating.user.avatar_url} />
+														<AvatarFallback>{rating.user.username[0]}</AvatarFallback>
+													</Avatar>
+													<div>
+														<div className="font-normal">{rating.user.username}</div>
+														<div className="flex items-center gap-2">
+															<RatingStars rating={rating.score} />
+															<div className="text-sm text-subtle">{strftime('%b %d, %Y', new Date(rating.created_at))}</div>
+														</div>
+													</div>
 												</div>
+												<p className="line-clamp-3">{rating.body}</p>
 											</div>
-										</div>
-										<p className="line-clamp-3">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
+										))}
 									</div>
-								))}
-							</div>
-							<div className="mt-4">
-								<Button className={"w-full"} variant={"secondary"} size={"lg"} onClick={() => setIsRatingsSheetOpen(true)}>See all reviews</Button>
-							</div>
+									<div className="mt-4">
+										<Button className={"w-full"} variant={"secondary"} size={"lg"} onClick={() => setIsRatingsSheetOpen(true)}>See all reviews</Button>
+									</div>
+								</Fragment>
+							) : (
+								<Empty className="border">
+									<EmptyHeader>
+										<EmptyMedia variant={"icon"}><InfoIcon /></EmptyMedia>
+										<EmptyTitle>No reviews yet</EmptyTitle>
+										<EmptyDescription>This book doesn't have any reviews yet. Be the first!</EmptyDescription>
+									</EmptyHeader>
+									<EmptyContent>
+										{auth.user ? (
+											<Button onClick={() => setIsReviewDialogOpen(true)}>Add review</Button>
+										) : (
+											<Button nativeButton={false} render={<Link href={"/login"} />}>Add review</Button>
+										)}
+									</EmptyContent>
+								</Empty>
+							)}
 						</section>
 					</div>
 				</div>
@@ -257,6 +282,7 @@ export default function BookPage({
 			<div className="pt-20"></div>
 			<hr />
 			<RatingsSheet bookSlug={book.slug} isOpen={isRatingsSheetOpen} setIsOpen={setIsRatingsSheetOpen} />
+			<NewReviewDialog isOpen={isReviewDialogOpen} setIsOpen={setIsReviewDialogOpen} book={book} />
 		</>
 	)
 }

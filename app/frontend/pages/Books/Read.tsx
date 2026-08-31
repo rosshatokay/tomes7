@@ -37,10 +37,10 @@ export default function ReadBookPage({ book }: Props) {
 			label: "Share",
 			onClick: () => setIsShareOpen(true)
 		},
-		{
-			icon: <ALargeSmallIcon />,
-			label: "Display"
-		},
+		// {
+		// 	icon: <ALargeSmallIcon />,
+		// 	label: "Display"
+		// },
 		{
 			icon: <ListIcon />,
 			label: "Table of contents",

@@ -63,7 +63,7 @@ export default function AuthorPage({ author, books }: Props) {
 							<p className="max-w-lg text-center text-subtle line-clamp-3">{author.bio}</p>
 							<div className="flex items-center gap-2 justify-center mt-2">
 								<h3 className="text-[15px] !font-normal">{author.followers_count} <span className="text-subtle/75">{author.followers_count === 1 ? "follower" : "followers"}</span></h3>
-								<span className="size-1 rouned-full bg-foreground/40 inline-flex mx-1"></span>
+								<span className="size-1 rounded-full bg-foreground/40 inline-flex"></span>
 								<h3 className="text-[15px] !font-normal">{author.books_count} <span className="text-subtle/75">{author.books_count === 1 ? "book" : "books"}</span></h3>
 							</div>
 						</div>

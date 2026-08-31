@@ -1,3 +1,9 @@
+# Privacy policy
+
+**Last Updated: 11 April, 2026**
+
+---
+
 At **Tomes**, we believe that reading should be a sanctuary. This Privacy Policy explains how we collect, use, and protect your information when you use our platform.
 
 ### 1. Information We Collect

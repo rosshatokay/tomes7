@@ -9,6 +9,7 @@ import Rating from "@/interfaces/ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import strftime from "strftime";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { SimpleFormat } from "@/lib/utils";
 
 interface Meta {
 	ratingsCount: number
@@ -60,11 +61,11 @@ export default function RatingsSheet({
 			open={isOpen}
 			onOpenChange={open => !open && setIsOpen(false)}
 		>
-			<SheetContent side="bottom">
+			<SheetContent side="bottom" className={"max-h-[90vh] !h-full rounded-t-xl"}>
 				<div className="max-w-2xl w-full mx-auto py-12">
 					<h1 className="text-3xl mb-4">Reviews</h1>
 					{http.processing && (
-						<div className="flex-center w-full"><Spinner className="size-6" /></div>
+						<div className="flex-center w-full py-12"><Spinner className="size-6" /></div>
 					)}
 					{!http.wasSuccessful && !http.processing && (
 						<Empty className="bg-card">
@@ -86,14 +87,14 @@ export default function RatingsSheet({
 									<p className="text-subtle">{data?.ratingsCount} {data?.ratingsCount === 1 ? 'rating' : 'ratings'}</p>
 								</div>
 								<div className="flex flex-col w-full">
-									{Object.keys(data?.scoreFrequencies || {}).map((k) => {
+									{Object.keys(data?.scoreFrequencies || {}).reverse().map((k) => {
 										const percentage = Math.round((data?.scoreFrequencies[parseInt(k)] || 0 / (data?.ratingsCount || 1)) * 100)
 
 										return (
 											<div key={k} className="flex w-full py-px items-center gap-3">
 												<div className="text-xs">{k}</div>
 												<div className="bg-card w-full h-2 rounded-full overflow-hidden">
-													<div className="h-full bg-white rounded-full" style={{ width: `${percentage}%` }}></div>
+													<div className="h-full bg-foreground rounded-full" style={{ width: `${percentage}%` }}></div>
 												</div>
 											</div>
 										)
@@ -114,21 +115,21 @@ export default function RatingsSheet({
 							</Select>
 							<div>
 								{data?.ratings.map(rating => (
-									<div key={rating.id} className="mb-6 border-b pb-6">
-										<div className="flex items-center gap-3 mb-2">
+									<div key={rating.id} className="mb-6 border-b pb-6 flex flex-col gap-4">
+										<div className="flex items-center gap-3">
 											<Avatar>
 												<AvatarImage src={rating.user.avatar_url} />
 												<AvatarFallback>{rating.user.username[0]}</AvatarFallback>
 											</Avatar>
 											<div>
-												<div className="font-normal text-base">{rating.user.username}</div>
+												<div className="font-normal text-base leading-none mb-1">{rating.user.username}</div>
 												<div className="flex items-center gap-2">
 													<RatingStars rating={rating.score} />
 													<div className="text-sm text-subtle">{strftime('%b %d, %Y', new Date(rating.created_at))}</div>
 												</div>
 											</div>
 										</div>
-										<p className="line-clamp-3 text-base">One of the most influential works of contemporary economic literature, where it has left an indelible mark on our society.</p>
+										<div>{SimpleFormat(rating.body)}</div>
 									</div>
 								))}
 							</div>

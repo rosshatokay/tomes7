@@ -31,8 +31,6 @@ export default function LandingPage(props: LandingPageProps) {
 	const activeTab = searchParams.get('tab')
 	const categoryRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
 
-	console.log(searchParams)
-
 	useEffect(() => {
 		// fetch the specific active DOM node from the map
 		const activeNode = activeTab ? categoryRefs.current.get(activeTab) : null
