@@ -2,7 +2,7 @@ import { LogoIcon } from "@/assets/LogoIcon";
 import { Button } from "../ui/button";
 import { GlobeIcon, SearchIcon } from "lucide-react";
 import { Link, usePage } from "@inertiajs/react";
-import { cn } from "@/lib/utils";
+import { cn, useIsMobile } from "@/lib/utils";
 import { AuthProps } from "@/interfaces/auth";
 import { SearchDialog } from "./SearchDialog";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import TopProfileMenu from "./TopProfileMenu";
 
 export default function AppHeader({ user }: AuthProps) {
 	const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
+	const isMobile = useIsMobile()
 	const url = usePage().url.split("?")[0]
 
 	const navLinks = [
@@ -57,7 +58,7 @@ export default function AppHeader({ user }: AuthProps) {
 							<TooltipTrigger delay={0} render={<Button variant={"ghost"} size={"icon"} nativeButton={false} render={<Link href={"/community"} />}><GlobeIcon /></Button>} />
 							<TooltipContent>Community</TooltipContent>
 						</Tooltip> */}
-							<NotificationsPopover />
+							{!isMobile && (<NotificationsPopover />)}
 							<TopProfileMenu user={user} />
 						</div>
 					)}

@@ -40,7 +40,7 @@ export default function MoreOptionsMobileSheet({
 			onClick: () => { }
 		},
 		{
-			icon: <WikipediaIcon size={20} className="!w-5 !h-5" />,
+			icon: <WikipediaIcon fill="var(--foreground)" size={20} className="!w-5 !h-5" />,
 			label: `Read Wikipedia page`,
 			onClick: () => { }
 		},
@@ -50,12 +50,12 @@ export default function MoreOptionsMobileSheet({
 		<Sheet open={isOpen} onOpenChange={open => !open && setIsOpen(false)}>
 			<SheetContent side="bottom" className={"rounded-t-xl p-4 px-0 gap-0"} showCloseButton={false}>
 				<div className="grid grid-cols-3 gap-4 px-2 pb-4">
-					<Link className="flex-center flex-col gap-2 bg-black/5 active:bg-black/10 rounded-lg py-3 transition">
+					<Link className="flex-center flex-col gap-2 bg-black/5 active:bg-black/10 dark:bg-white/5 dark:active:bg-white/10 rounded-lg py-3 transition">
 						<GlassesIcon />
 						Read
 					</Link>
 					<button
-						className={cn("flex-center flex-col gap-2 bg-black/5 active:bg-black/10 rounded-lg py-3 transition", isSaveProcessing && "opacity-60")}
+						className={cn("flex-center flex-col gap-2 bg-black/5 active:bg-black/10 dark:bg-white/5 dark:active:bg-white/10 rounded-lg py-3 transition", isSaveProcessing && "opacity-60")}
 						onClick={handleSavedBtn}
 						disabled={isSaveProcessing}
 					>
@@ -66,7 +66,7 @@ export default function MoreOptionsMobileSheet({
 					</button>
 					<button
 						onClick={() => handleNativeShare({ url: book.share_url })}
-						className="flex-center flex-col gap-2 bg-black/5 active:bg-black/10 rounded-lg py-3 transition">
+						className="flex-center flex-col gap-2 bg-black/5 active:bg-black/10 dark:bg-white/5 dark:active:bg-white/10 rounded-lg py-3 transition">
 						<ShareIcon />
 						Share
 					</button>
@@ -74,7 +74,7 @@ export default function MoreOptionsMobileSheet({
 				<hr />
 				<div className="flex flex-col gap-1 px-2 py-4">
 					{btnOptions.map((btn, index) => (
-						<Button key={index} variant={"ghost"} className={"justify-start text-foreground/75 gap-3 px-4 active:!bg-muted h-11 rounded-lg"} size={"lg"}>
+						<Button key={index} variant={"ghost"} className={"justify-start gap-3 px-4 active:!bg-muted h-11 rounded-lg"} size={"lg"}>
 							{btn.icon}
 							<span className="text-base font-normal">{btn.label}</span>
 						</Button>
