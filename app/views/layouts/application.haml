@@ -131,6 +131,10 @@
 					})
 				}
 
+				function prefersDark() {
+					return prefersDarkTheme?.matches
+				}
+
 				function getTheme() {
 					return isBrowser ? localStorage.getItem('theme') : null
 				}
@@ -140,6 +144,7 @@
 					setTheme,
 					getTheme,
 					setByPreference,
+					prefersDark,
 					onThemeLoaded: (callback) => {
 						if (!isBrowser) return
 						document.addEventListener('themeLoaded', callback)

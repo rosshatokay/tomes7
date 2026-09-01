@@ -77,8 +77,8 @@ export default function ChaptersSheet({ isOpen, setIsOpen, toc, currentChapter, 
 											setHoveredChapterIndex(activeIndex ? activeIndex + 1 : 0 || null)
 										}}
 										className={
-											cn("flex cursor-pointer items-center gap-2 p-2  rounded-md transition hover:bg-black/5 active:bg-black/5",
-												(isActive) ? "bg-black/5" : "")
+											cn("flex cursor-pointer items-center gap-2 p-2  rounded-md transition hover:bg-black/5 active:bg-black/5 dark:hover:bg-white/10 dark:active:bg-white/15",
+												(isActive) ? "bg-black/5 dark:bg-white/10" : "")
 										}
 									>
 										<div className="bg-white/10 w-5 min-w-5 flex-center px-2 text-[11px] text-subtle rounded-sm">{++index}</div>

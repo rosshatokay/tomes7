@@ -13,6 +13,7 @@ import Navigation, { NavItem } from 'epubjs/types/navigation';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
 import ShareDialog from '@/components/partials/ShareDialog';
+import { addCustomFont, addStyleToReader } from './partials/utils';
 
 const epubLightTheme = {
 	body: {
@@ -26,6 +27,21 @@ const epubLightTheme = {
 	},
 	"a:link:hover": {
 		"border-color": "black"
+	}
+}
+
+const epubDarkTheme = {
+	body: {
+		"font-family": "Crimson Text !important",
+		"line-height": "1.35",
+		"background": "transparent"
+	},
+	"a:link": {
+		"color": "white",
+		"border-bottom": "1px solid rgba(255,255,255,.2)",
+	},
+	"a:link:hover": {
+		"border-color": "white"
 	}
 }
 
@@ -54,7 +70,8 @@ export default function ReadBookPage({ book }: Props) {
 		},
 		// {
 		// 	icon: <ALargeSmallIcon />,
-		// 	label: "Display"
+		// 	label: "Display",
+		// 	onClick: () => rendition?.themes.fontSize("125%")
 		// },
 		{
 			icon: <ListIcon />,
@@ -68,16 +85,34 @@ export default function ReadBookPage({ book }: Props) {
 	}, [])
 
 	useEffect(() => {
-		rendition?.on('relocated', (loc: Location) => {
+		const handleRelocated = (loc: Location) => {
 			const href = loc.start.href
 			const match = toc?.find((item: any) => href.includes(item.href.split('#')[0]))
-
 			setCurrChapter(match as any)
-		})
+		}
+
+		const contentHook = (contents: any) => {
+			addStyleToReader(contents)
+			addCustomFont(contents)
+		}
+
+		rendition?.on('relocated', handleRelocated)
+		rendition?.hooks.content.register(contentHook)
 
 		rendition?.themes.register("light", epubLightTheme)
-		rendition?.themes.select("light")
+		rendition?.themes.register("dark", epubDarkTheme)
+		rendition?.themes.fontSize("125%")
 
+		if (window.Theme.getTheme() === "system") {
+			rendition?.themes.select(window.Theme.prefersDark() ? "dark" : "light")
+		} else {
+			rendition?.themes.select(window.Theme.getTheme())
+		}
+
+		return () => {
+			rendition?.hooks.content.deregister(contentHook)
+			rendition?.off('relocated', handleRelocated)
+		}
 	}, [rendition])
 
 	return (
@@ -108,14 +143,16 @@ export default function ReadBookPage({ book }: Props) {
 					))}
 				</div>
 			</div>
-			<div className="bg-background dark:bg-card md:border rounded-lg h-full overflow-hidden">
+			<div className="bg-background md:border rounded-lg h-full overflow-hidden">
 				{isReady ? (
-					<div className="flex flex-col h-full py-12">
+					<div className="flex flex-col h-full md:py-12">
 						<EpubViewer
 							epubOptions={{ allowScriptedContent: true }}
 							url={book.epub_file_path}
 							ref={viewerRef}
-							rendtionChanged={(r) => setRendition(r)}
+							rendtionChanged={(r) => {
+								setRendition(r)
+							}}
 							epubFileOptions={{ openAs: "epub" }}
 							bookChanged={(book) => {
 								book.loaded.navigation.then((toc) => {
