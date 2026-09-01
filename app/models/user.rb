@@ -100,7 +100,7 @@ class User < ApplicationRecord
   end
 
   def maximum_authors_limit
-    if following(Author).count >= MAX_FOLLOWABLE_AUTHORS_COUNT
+    if followees(Author).count >= MAX_FOLLOWABLE_AUTHORS_COUNT
       errors.add(:base, "You cannot follow more than 10 authors.")
     end
   end

@@ -31,8 +31,6 @@ Rails.application.routes.draw do
   resources :users, only: [:show]
   resources :categories, only: [:show]
 
-  resources :ratings, only: [:create]
-
   resources :books, only: [:index, :show] do
     collection do
       post :save
@@ -59,9 +57,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :search, only: [:index]
       resources :notifications, only: [:index]
-      resources :books, only: [] do
+
+      resources :ratings, only: [:create] do
         collection do
-          get :ratings
+          get :show
         end
       end
 

@@ -110,7 +110,7 @@ class BooksController < ApplicationController
       },
       authors: book.authors.map { |a|
         {
-          name: a.full_name,
+          full_name: a.full_name,
           bio: a.bio,
           avatar_url: a.avatar.attached? ? a.avatar.service.url(a.avatar.blob.key, transformation: [{ width: 100 }]) : nil,
           permalink: author_path(a.slug),

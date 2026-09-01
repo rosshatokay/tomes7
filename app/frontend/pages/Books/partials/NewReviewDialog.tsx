@@ -56,7 +56,7 @@ export default function NewReviewDialog({ isOpen, setIsOpen, book }: Props) {
 						<Textarea
 							onChange={(e) => setData("rating.body", e.target.value)}
 							placeholder="Describe the reading experience (optional)"
-							className="!text-base bg-card border-none p-3 min-h-30 max-h-35 scrollbar-thumb-foreground/25" />
+							className="!text-[15px] bg-card border-none p-3 min-h-30 max-h-35 scrollbar-thumb-foreground/25" />
 					</Field>
 					<div className="mx-auto">
 						<Button

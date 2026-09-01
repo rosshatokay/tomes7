@@ -14,6 +14,21 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Switch } from '@/components/ui/switch';
 import ShareDialog from '@/components/partials/ShareDialog';
 
+const epubLightTheme = {
+	body: {
+		"font-family": "Crimson Text !important",
+		"line-height": "1.35",
+		"background": "transparent"
+	},
+	"a:link": {
+		"color": "black",
+		"border-bottom": "1px solid rgba(1,1,1,.1)",
+	},
+	"a:link:hover": {
+		"border-color": "black"
+	}
+}
+
 interface WithEpub extends Book {
 	epub_file_path: string
 }
@@ -60,16 +75,19 @@ export default function ReadBookPage({ book }: Props) {
 			setCurrChapter(match as any)
 		})
 
+		rendition?.themes.register("light", epubLightTheme)
+		rendition?.themes.select("light")
+
 	}, [rendition])
 
 	return (
-		<div className="h-screen w-full flex flex-col bg-black/1 p-2 pt-0">
+		<div className="h-screen bg-background w-full flex flex-col md:bg-black/1 p-2 pt-0">
 			<div className="h-12 min-h-12 flex grid grid-cols-[1fr_2fr_1fr] items-center justify-between px-3 text-sm">
 				<Tooltip>
 					<TooltipTrigger delay={0} render={<Button variant={"ghost"} size={"icon"} onClick={goBack}><ArrowLeftIcon /></Button>} />
 					<TooltipContent>Exit reader</TooltipContent>
 				</Tooltip>
-				<div className="flex items-center gap-3 justify-center">
+				<div className="flex items-center gap-3 justify-center min-w-0">
 					<div className="font-medium truncate">
 						{book.title}
 						{currChapter && <span className="font-normal text-subtle"> • {currChapter.label.trim()}</span>}
@@ -90,7 +108,7 @@ export default function ReadBookPage({ book }: Props) {
 					))}
 				</div>
 			</div>
-			<div className="bg-white dark:bg-card border rounded-lg h-full overflow-hidden">
+			<div className="bg-background dark:bg-card md:border rounded-lg h-full overflow-hidden">
 				{isReady ? (
 					<div className="flex flex-col h-full py-12">
 						<EpubViewer

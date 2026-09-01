@@ -53,9 +53,9 @@ export default function ChaptersSheet({ isOpen, setIsOpen, toc, currentChapter, 
 
 	useEffect(() => {
 		if (!toc || !currentChapter) return
-		setActiveIndex(toc ?.findIndex(n => n.id === currentChapter?.id) || 0)
+		setActiveIndex(toc?.findIndex(n => n.id === currentChapter?.id) || 0)
 	}, [toc, currentChapter])
-	
+
 	return (
 		<Sheet open={isOpen} onOpenChange={open => !open && setIsOpen(false)}>
 			<SheetContent className={"gap-0"}>
@@ -77,7 +77,7 @@ export default function ChaptersSheet({ isOpen, setIsOpen, toc, currentChapter, 
 											setHoveredChapterIndex(activeIndex ? activeIndex + 1 : 0 || null)
 										}}
 										className={
-											cn("flex cursor-pointer items-center gap-2 p-2  rounded-md transition hover:bg-black/5",
+											cn("flex cursor-pointer items-center gap-2 p-2  rounded-md transition hover:bg-black/5 active:bg-black/5",
 												(isActive) ? "bg-black/5" : "")
 										}
 									>

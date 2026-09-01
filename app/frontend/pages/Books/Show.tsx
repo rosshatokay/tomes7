@@ -15,13 +15,15 @@ import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
 import Rating from "@/interfaces/ratings"
 import BaseLayout from "@/layouts/BaseLayout"
-import { cn, createBreadcrumbs, SimpleFormat } from "@/lib/utils"
+import { cn, createBreadcrumbs, SimpleFormat, useIsMobile } from "@/lib/utils"
 import { Deferred, Link, useHttp } from "@inertiajs/react"
 import { ArrowUpRightIcon, GlassesIcon, HeartIcon, InfoIcon, MoreHorizontalIcon, ShareIcon, StarIcon } from "lucide-react"
 import { Fragment, useState } from "react"
 import strftime from "strftime"
 import ReadersSection, { ReadersSectionSkeleton } from "./partials/ReadersSection"
 import NewReviewDialog from "./partials/NewReviewDialog"
+import MoreOptionsMobileSheet from "./partials/MoreOptionsMobileSheet"
+import Author from "@/interfaces/author"
 
 export interface BookReaders {
 	total_count: number
@@ -51,12 +53,7 @@ export interface BookPageProps {
 		name: string
 		permalink: string
 	}
-	authors: [{
-		name: string
-		avatar_url: string
-		bio: string
-		permalink: string
-	}]
+	authors: Author[]
 	similar_books: Book[]
 	ratings_snippet: Rating[]
 	readers: BookReaders
@@ -72,10 +69,13 @@ export default function BookPage({
 	ratings_snippet,
 	readers
 }: BookPageProps) {
+	const isMobile = useIsMobile()
 	const [isRatingsSheetOpen, setIsRatingsSheetOpen] = useState(false)
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const [isSaved, setIsSaved] = useState<boolean>(book.is_saved)
 	const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false)
+	const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false)
+
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: category.name, path: category.permalink },
@@ -98,14 +98,14 @@ export default function BookPage({
 	return (
 		<>
 			<BackBtnHeader>
-				<Button size={"icon-lg"} variant={"secondary"}><MoreHorizontalIcon /></Button>
+				<Button size={"icon-lg"} variant={"secondary"} onClick={() => setIsMoreOptionsOpen(true)}><MoreHorizontalIcon /></Button>
 			</BackBtnHeader>
 			<div className="lg:pt-0 pt-2">
 				<div className="large-container mt-2 mb-4 md:block hidden">
 					{createBreadcrumbs(crumbs)}
 				</div>
 				<div className="lg:grid grid-cols-12 large-container">
-					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-8 w-full lg:sticky top-20 pb-5 flex flex-col gap-2 lg:pr-8 h-110">
+					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-8 w-full lg:sticky top-20 md:pb-5 flex flex-col gap-2 lg:pr-8 h-110">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 							<div className="relative h-full aspect-[4/6]">
 								<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} alt={`${book.title}'s cover`} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
@@ -118,7 +118,7 @@ export default function BookPage({
 							<h2 className="md:text-lg mt-2">
 								{authors.map((author, index) => (
 									<span key={index}>
-										<span className="font-normal"><Link href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.name}</Link></span>
+										<span className="font-normal"><Link href={author.permalink} className="text-subtle hover:text-foreground hover:underline transition">{author.full_name}</Link></span>
 										{index < authors.length - 1 && <span className="text-subtle">, </span>}
 									</span>
 								))}
@@ -200,10 +200,10 @@ export default function BookPage({
 								<div key={index}>
 									<Link href={author.permalink} className="flex items-center gap-3 mb-3 group w-fit">
 										<Avatar>
-											<AvatarImage src={author.avatar_url} alt={author.name}></AvatarImage>
-											<AvatarFallback>{author.name[0]}</AvatarFallback>
+											<AvatarImage src={author.avatar_url} alt={author.full_name}></AvatarImage>
+											<AvatarFallback>{author.full_name[0]}</AvatarFallback>
 										</Avatar>
-										<h3 className="text-base group-hover:text-foreground/80 transition">{author.name}</h3>
+										<h3 className="text-base group-hover:text-foreground/80 transition">{author.full_name}</h3>
 									</Link>
 									<div className="text-base text-neutral-700 dark:text-neutral-300 line-clamp-3">{author.bio}</div>
 								</div>
@@ -283,6 +283,15 @@ export default function BookPage({
 			<hr />
 			<RatingsSheet bookSlug={book.slug} isOpen={isRatingsSheetOpen} setIsOpen={setIsRatingsSheetOpen} />
 			<NewReviewDialog isOpen={isReviewDialogOpen} setIsOpen={setIsReviewDialogOpen} book={book} />
+			{isMobile && <MoreOptionsMobileSheet
+				isOpen={isMoreOptionsOpen}
+				setIsOpen={setIsMoreOptionsOpen} 
+				author={authors[0]}
+				book={book}
+				isSaved={isSaved}
+				isSaveProcessing={saveHttp.processing}
+				handleSavedBtn={handleSaveBtn}
+			/>}
 		</>
 	)
 }

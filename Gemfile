@@ -37,6 +37,7 @@ gem "bootsnap", require: false
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
+  gem "faker"
   gem "ruby-lsp", require: false
   gem "prosopite"
   gem "pg_query"

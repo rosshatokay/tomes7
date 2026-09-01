@@ -168,6 +168,8 @@ GEM
       rexml
     erb (6.0.7)
     erubi (1.13.1)
+    faker (3.8.0)
+      i18n (>= 1.8.11, < 2)
     faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -587,6 +589,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   epub-parser
+  faker
   friendly_id
   groupdate
   haml
@@ -671,6 +674,7 @@ CHECKSUMS
   epub-parser (0.5.0) sha256=a2009d5037408908ffdccf7d39adcad12ca91e296043e30fb86146ead9696e33
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
+  faker (3.8.0) sha256=c147b308df73a90f27a4fc84f18d4c22ef0ad9c2a64b2b61c86fd0ca71753efc
   faraday (2.14.1) sha256=a43cceedc1e39d188f4d2cdd360a8aaa6a11da0c407052e426ba8d3fb42ef61c
   faraday-net_http (3.4.2) sha256=f147758260d3526939bf57ecf911682f94926a3666502e24c69992765875906c
   friendly_id (5.6.0) sha256=28e221cd53fbd21586321164c1c6fd0c9ba8dde13969cb2363679f44726bb0c3
