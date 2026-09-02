@@ -3,12 +3,19 @@ import { TablePagination } from "@/components/partials/TablePagination";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import { PaginationMeta } from "@/interfaces/pagination";
+import { simpleTimeFormat } from "@/lib/utils";
 import { Deferred, Head } from "@inertiajs/react";
-import { ActivitySquareIcon, ListIcon, UserIcon } from "lucide-react";
+import { ActivitySquareIcon, CalendarIcon, ListIcon, UserIcon } from "lucide-react";
 
 interface Activity {
 	id: string
-	title: string
+	action: string
+	subject: string
+	user: {
+		avatar_url: string
+		username: string
+	}
+	created_at: string
 }
 
 interface Props {
@@ -44,15 +51,25 @@ export default function ActivitiesPage({ activities, pagination }: Props) {
 			}
 		},
 		{
-			key: "null",
+			key: "subject",
 			label: {
 				icon: <ActivitySquareIcon size={14} />,
 				text: "Subject"
 			}
-		}
+		},
+		{
+			key: "created_at",
+			label: {
+				icon: <CalendarIcon size={14} />,
+				text: "Created at"
+			},
+			render(row) {
+				return (
+					<div>{simpleTimeFormat(row.created_at, { timeAgoForToday: true })}</div>
+				)
+			},
+		},
 	]
-
-	console.log(activities)
 
 	return (
 		<>

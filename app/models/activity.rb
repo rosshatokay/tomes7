@@ -15,9 +15,9 @@ class Activity < ApplicationRecord
   def format_subject
     case action
     when "followed_an_author"
-      {
-        label: subject.full_name,
-      }
+      subject.full_name
+    when "saved_a_book", "started_reading"
+      subject.title
     end
   end
 end
