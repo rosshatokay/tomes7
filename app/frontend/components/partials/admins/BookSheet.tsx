@@ -73,6 +73,13 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 		transform((latestData) => {
 			const payload: Record<string, any> = { ...latestData.book }
 
+			if (payload.tags?.length > 0) {
+				payload.tag_names = []
+
+				payload.tags.map((tag: any) => payload.tag_names.push(tag.name))
+				delete payload.tags
+			}
+			
 			// if not new file, don't send it as raw file
 			if (!(payload.cover instanceof File)) {
 				delete payload.cover
