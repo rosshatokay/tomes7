@@ -27,11 +27,16 @@ class BooksController < ApplicationController
       authors: [avatar_attachment: :blob],
     ).friendly.find(params[:id])
 
+    progress = if user_signed_in?
+        entry = current_user.user_books.find_by(book: book)
+      end
+
     render inertia: "Books/Show", props: {
              **format_book(book),
              ratings_snippet: book.ratings.formatted.first(3),
              similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
              readers: InertiaRails.defer { get_readers(book) },
+             progress: entry.present? && entry.progress,
            }, meta: seo_tags(
              title: book.title,
              description: "Read #{book.title} by #{book.authors.first.full_name} for free, on Tomes.",
@@ -62,6 +67,7 @@ class BooksController < ApplicationController
 
     if user_signed_in?
       user_book = current_user.user_books.find_or_create_by(book: book)
+      current_position = current_user.user_books.find_by(book: book)&.current_position
 
       if user_book.previously_new_record?
         Activities::Logger.started_reading(user: current_user, book: book)
@@ -72,6 +78,7 @@ class BooksController < ApplicationController
       book: book.to_hash.merge(
         epub_file_path: book.epub.attached? ? rails_public_blob_url(book.epub, disposition: "inline") : nil,
         share_url: book_url(book.slug),
+        current_position: current_position,
       ),
     }
   end

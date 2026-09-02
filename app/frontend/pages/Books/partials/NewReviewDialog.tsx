@@ -43,11 +43,11 @@ export default function NewReviewDialog({ isOpen, setIsOpen, book }: Props) {
 			!open && setIsOpen(false)
 			resetAndClearErrors()
 		}}>
-			<DialogContent className={"!max-w-[32rem] w-full max-h-[80vh] flex flex-col pt-12"}>
-				<div className="flex flex-col items-center gap-6">
+			<DialogContent className={"md:!max-w-[32rem] w-full max-h-[80vh] flex flex-col pt-12"}>
+				<div className="flex md:flex-col items-center gap-6">
 					<div className="w-25 aspect-book shadow-xl rounded-sm bg-card" style={{ background: `url(${book.cover_url}) center / cover` }}></div>
-					<div className="flex-center flex-col gap-2">
-						<h1 className="text-2xl">How would you rate this book?</h1>
+					<div className="md:items-center flex flex-col gap-2 md:text-center">
+						<h1 className="md:text-2xl text-xl leading-[1.2] max-w-[200px] md:max-w-[initial]">How would you rate this book?</h1>
 						<RatingStarsSlider onChange={(score) => setData("rating.score", score)} size={24} />
 					</div>
 				</div>
@@ -58,11 +58,11 @@ export default function NewReviewDialog({ isOpen, setIsOpen, book }: Props) {
 							placeholder="Describe the reading experience (optional)"
 							className="!text-[15px] bg-card border-none p-3 min-h-30 max-h-35 scrollbar-thumb-foreground/25" />
 					</Field>
-					<div className="mx-auto">
+					<div className="md:mx-auto">
 						<Button
 							onClick={handleSubmit}
 							size={"lg"}
-							className={"rounded-full px-4"}
+							className={"rounded-full px-4 md:w-fit w-full"}
 							variant={processing || data.rating.score === 0 ? "secondary" : "default"}
 							disabled={processing || data.rating.score === 0}
 						>

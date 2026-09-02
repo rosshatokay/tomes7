@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetFooter, SheetHeader } from "@/components/ui/s
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
 import Message from "@/interfaces/message";
-import { SimpleFormat } from "@/lib/utils";
+import { SimpleFormat, simpleTimeFormat } from "@/lib/utils";
 import { Deferred, useForm, useHttp } from "@inertiajs/react";
 import { InboxIcon, ListIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
@@ -15,20 +15,6 @@ import strftime from "strftime";
 interface Props {
 	messages_count: number
 	messages: Message[]
-}
-
-function formatMessageTime(message: Message) {
-	const createdAt = new Date(message.created_at);
-	const now = new Date();
-
-	const diffInMilliseconds = +now - +createdAt;
-	const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-
-	if (diffInMilliseconds < twentyFourHoursInMs && diffInMilliseconds >= 0) {
-		return strftime('%R', createdAt); // Outputs: HH:MM
-	} else {
-		return strftime('%b %d', createdAt); // Outputs: Month Name DD
-	}
 }
 
 export default function InboxPage({ messages, messages_count }: Props) {
@@ -58,7 +44,7 @@ export default function InboxPage({ messages, messages_count }: Props) {
 			render: (row) => (
 				<div className="flex justify-between gap-8 min-w-0">
 					<div className="font-medium truncate">{row.content.subject} <span className="text-subtle font-normal">{row.content.body}</span></div>
-					<div className="text-subtle whitespace-nowrap">{formatMessageTime(row as Message)}</div>
+					<div className="text-subtle whitespace-nowrap">{simpleTimeFormat(row.created_at as string)}</div>
 				</div>
 			)
 		}

@@ -73,7 +73,7 @@ export default function BooksPage({ books, books_count, pagination }: PageProps)
 
 	const [activeBookId, setActiveBookId] = useState<string | null>(null)
 	const { setSearchQuery } = adminSearch()
-
+	
 	useEffect(() => {
 		setHeaderContent(
 			<div className="flex items-center gap-2">

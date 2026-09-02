@@ -12,7 +12,7 @@ class RegistrationsController < ApplicationController
     user = User.new(user_params)
 
     if user.save
-      socialize_friends(session[:referrer_id], user)
+      # socialize_friends(session[:referrer_id], user)
       session[:referrer_id] = nil
       start_new_session_for(user)
       flash.inertia[:toast] = { description: "Signed up successfully" }

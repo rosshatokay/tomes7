@@ -3,8 +3,10 @@ import { toast } from "@/components/ui/toast"
 import { Link, router } from "@inertiajs/react"
 import clsx, { type ClassValue } from "clsx"
 import { describe } from "node:test"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
+import strftime from "strftime"
 import { twMerge } from "tailwind-merge"
+import { format } from "timeago.js"
 
 export interface Breadcrumb {
 	icon?: React.ReactNode
@@ -232,5 +234,35 @@ export const goBack = () => {
 	} else {
 		// Fallback: Safely redirect to the app's root path using Inertia
 		router.visit('/');
+	}
+}
+
+type SimpleTimeFormatOptions = {
+	timeAgoForToday?: boolean
+}
+
+export const simpleTimeFormat = (created_at: string, options: SimpleTimeFormatOptions = {}) => {
+	const createdAt = new Date(created_at);
+	const now = new Date();
+	const { timeAgoForToday } = options
+
+	const diffInMilliseconds = +now - +createdAt;
+	const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+
+	if (diffInMilliseconds < twentyFourHoursInMs && diffInMilliseconds >= 0) {
+		return timeAgoForToday ? format(createdAt) : strftime('%R', createdAt); // Outputs: HH:MM
+	} else {
+		return strftime('%b %d', createdAt); // Outputs: Month Name DD
+	}
+}
+
+export const debounce = (callback: Function, delay: number) => {
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+	return (...args: any[]) => {
+		if (timeoutRef.current) clearTimeout(timeoutRef.current)
+		timeoutRef.current = setTimeout(() => {
+			callback(...args)
+		}, delay);
 	}
 }

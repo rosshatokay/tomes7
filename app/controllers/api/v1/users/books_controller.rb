@@ -1,5 +1,5 @@
 class Api::V1::Users::BooksController < ApplicationController
-  allow_unauthenticated_access only: [:update_progress, :readers]
+  allow_unauthenticated_access only: [:readers]
   rate_limit to: 10, within: 5.minutes, only: :save, with: -> { render json: { error: "You're exceeding the rate limit. Slow down." }, status: :unprocessable_entity }
 
   def current_position
@@ -38,7 +38,7 @@ class Api::V1::Users::BooksController < ApplicationController
   def update_progress
     return if !user_signed_in?
 
-    book = Book.find(params[:id])
+    book = Book.friendly.find(params[:id])
     entry = current_user.user_books.find_by(book: book)
 
     if entry.update!(progress_params)

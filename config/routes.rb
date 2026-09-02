@@ -53,14 +53,24 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :ratings, only: [:create]
+
   namespace :api do
     namespace :v1 do
       resources :search, only: [:index]
       resources :notifications, only: [:index]
 
-      resources :ratings, only: [:create] do
+      resources :ratings, only: [] do
         collection do
           get :show
+        end
+      end
+
+      namespace :users do
+        resources :books, only: [] do
+          member do
+            patch "update-progress"
+          end
         end
       end
 

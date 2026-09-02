@@ -1,4 +1,6 @@
+import { useHttp } from "@inertiajs/react";
 import { useEffect } from "react";
+import { Page } from "react-epub-viewer";
 
 const styleStr = `
 	html.light {
@@ -18,7 +20,7 @@ const styleStr = `
 	}
 `
 
-function addStyleToReader(contents: any) {
+export function addStyleToReader(contents: any) {
 	/**
 	 * @type {HTMLDocument}
 	 */
@@ -37,7 +39,7 @@ function addStyleToReader(contents: any) {
 	doc.head.appendChild(style);
 }
 
-function addCustomFont(contents: any) {
+export function addCustomFont(contents: any) {
 	const doc = contents.document;
 	const link = doc.createElement("link");
 
@@ -46,4 +48,21 @@ function addCustomFont(contents: any) {
 	doc.head.appendChild(link);
 }
 
-export { addStyleToReader, addCustomFont }
+
+export function useUpdateBookProgress(bookSlug: string) {
+	// update progress
+	const http = useHttp({ progress: 0, current_position: "" })
+
+	const handleUpdate = ({ progress, current_position }: { current_position: string, progress: number }) => {
+		http.setData({
+			progress: (progress / 100),
+			current_position: current_position
+		})
+		http.patch(`/api/v1/users/books/${bookSlug}/update-progress`)
+	}
+
+	return {
+		processing: http.processing,
+		update: handleUpdate
+	}
+}

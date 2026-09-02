@@ -17,6 +17,7 @@ interface Props {
 	isSaveProcessing: boolean
 	handleSavedBtn: () => void
 	book: BookPageProps['book']
+	setIsReviewDialogOpen: (state: boolean) => void
 }
 
 export default function MoreOptionsMobileSheet({
@@ -26,13 +27,17 @@ export default function MoreOptionsMobileSheet({
 	isSaved,
 	isSaveProcessing,
 	handleSavedBtn,
-	book
+	book,
+	setIsReviewDialogOpen
 }: Props) {
 	const btnOptions = [
 		{
 			icon: <StarIcon className="!size-5" />,
 			label: "Rate this book",
-			onClick: () => { }
+			onClick: () => {
+				setIsOpen(false)
+				setIsReviewDialogOpen(true)
+			}
 		},
 		{
 			icon: <UserIcon className="!size-5" />,
@@ -74,7 +79,13 @@ export default function MoreOptionsMobileSheet({
 				<hr />
 				<div className="flex flex-col gap-1 px-2 py-4">
 					{btnOptions.map((btn, index) => (
-						<Button key={index} variant={"ghost"} className={"justify-start gap-3 px-4 active:!bg-muted h-11 rounded-lg"} size={"lg"}>
+						<Button
+							key={index}
+							variant={"ghost"}
+							className={"justify-start gap-3 px-4 active:!bg-muted h-11 rounded-lg"}
+							size={"lg"}
+							onClick={() => btn.onClick && btn.onClick()}
+						>
 							{btn.icon}
 							<span className="text-base font-normal">{btn.label}</span>
 						</Button>

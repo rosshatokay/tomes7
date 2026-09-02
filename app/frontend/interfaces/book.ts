@@ -10,4 +10,5 @@ export interface Book {
 	average_rating: number
 	share_url: string
 	ratings_count: number
+	slug: string
 }

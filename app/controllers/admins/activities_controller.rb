@@ -15,6 +15,7 @@ class Admins::ActivitiesController < Admins::BaseController
             },
             action: a.action,
             subject: a.format_subject,
+            created_at: a.created_at.localtime,
           }
         }
       },

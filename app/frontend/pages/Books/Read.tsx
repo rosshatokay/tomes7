@@ -3,17 +3,15 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Book } from "@/interfaces/book"
 import ReaderLayout from "@/layouts/ReaderLayout"
-import { ALargeSmallIcon, ArrowLeftIcon, ListIcon, ShareIcon, } from "lucide-react"
+import { ArrowLeftIcon, ListIcon, RefreshCwIcon, ShareIcon, } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
-import { EpubViewer, ViewerRef } from "react-epub-viewer"
+import { EpubViewer, Page, ViewerRef } from "react-epub-viewer"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { goBack } from '@/lib/utils';
+import { debounce, goBack } from '@/lib/utils';
 import ChaptersSheet from '@/components/partials/dialogs/ChaptersSheet';
 import Navigation, { NavItem } from 'epubjs/types/navigation';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Switch } from '@/components/ui/switch';
 import ShareDialog from '@/components/partials/ShareDialog';
-import { addCustomFont, addStyleToReader } from './partials/utils';
+import { addCustomFont, addStyleToReader, useUpdateBookProgress } from './partials/utils';
 
 const epubLightTheme = {
 	body: {
@@ -47,6 +45,10 @@ const epubDarkTheme = {
 
 interface WithEpub extends Book {
 	epub_file_path: string
+	/**
+	 * Current CFI position from db
+	 */
+	current_position?: string // asd
 }
 
 interface Props {
@@ -61,6 +63,7 @@ export default function ReadBookPage({ book }: Props) {
 	const [currChapter, setCurrChapter] = useState<NavItem | null>(null)
 	const [isChaptersOpen, setIsChaptersOpen] = useState(false)
 	const [isShareOpen, setIsShareOpen] = useState(false)
+	const updateBookProgress = useUpdateBookProgress(book.slug)
 
 	const rightSideButtons = [
 		{
@@ -109,11 +112,24 @@ export default function ReadBookPage({ book }: Props) {
 			rendition?.themes.select(window.Theme.getTheme())
 		}
 
+		if (book.current_position) {
+			rendition?.display(book.current_position)
+		}
+
 		return () => {
 			rendition?.hooks.content.deregister(contentHook)
 			rendition?.off('relocated', handleRelocated)
 		}
 	}, [rendition])
+
+	const debouncedPageChange = debounce((page: Page) => {
+		if (!rendition) return
+		const cfi = page.endCfi
+		const percentageFromCfi = rendition?.book.locations.percentageFromCfi(cfi)
+		const progress = Math.ceil(percentageFromCfi * 100)
+
+		updateBookProgress.update({current_position: cfi, progress: progress})
+	}, 700)
 
 	return (
 		<div className="h-screen bg-background w-full flex flex-col md:bg-black/1 p-2 pt-0">
@@ -129,6 +145,7 @@ export default function ReadBookPage({ book }: Props) {
 					</div>
 				</div>
 				<div className="flex gap-1 justify-end">
+					{updateBookProgress.processing ? <Button size={"icon"} variant={"ghost"} className={"animate-pulse"} disabled><RefreshCwIcon /></Button> : ""}
 					{rightSideButtons.map((b, index) => (
 						<Tooltip key={index}>
 							<TooltipTrigger
@@ -143,7 +160,7 @@ export default function ReadBookPage({ book }: Props) {
 					))}
 				</div>
 			</div>
-			<div className="bg-background md:border rounded-lg h-full overflow-hidden">
+			<div className="md:bg-white/80 dark:bg-background md:border rounded-lg h-full overflow-hidden">
 				{isReady ? (
 					<div className="flex flex-col h-full md:py-12">
 						<EpubViewer
@@ -159,6 +176,8 @@ export default function ReadBookPage({ book }: Props) {
 									setToc(toc.toc)
 								})
 							}}
+							location="epubcfi(/6/4!/4/106/1:321)"
+							pageChanged={debouncedPageChange}
 						/>
 					</div>
 				) : (<div className="flex-center h-full"><Spinner className="size-6" /></div>)}

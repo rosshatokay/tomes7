@@ -57,6 +57,7 @@ export interface BookPageProps {
 	similar_books: Book[]
 	ratings_snippet: Rating[]
 	readers: BookReaders
+	progress?: number
 }
 
 export default function BookPage({
@@ -67,7 +68,8 @@ export default function BookPage({
 	tags,
 	similar_books,
 	ratings_snippet,
-	readers
+	readers,
+	progress
 }: BookPageProps) {
 	const isMobile = useIsMobile()
 	const [isRatingsSheetOpen, setIsRatingsSheetOpen] = useState(false)
@@ -168,11 +170,17 @@ export default function BookPage({
 								</div>
 							)}
 							<div className="mt-8 md:block hidden">
-								<Button size={"lg"} variant={"default"} className={"w-full h-10 mb-2"} nativeButton={false} render={<Link href={book.read_path} />}><GlassesIcon /> Read now</Button>
+								<Button size={"lg"} variant={"default"} className={"w-full h-10 mb-2"} nativeButton={false} render={<Link href={book.read_path} />}>
+									{progress ? (
+										<Fragment>Continue reading • {progress * 100}%</Fragment>
+									) : (
+										<Fragment>Read now</Fragment>
+									)}
+								</Button>
 								{auth.user ? (
-									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} onClick={() => setIsReviewDialogOpen(true)}><StarIcon /> Write a review</Button>
+									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} onClick={() => setIsReviewDialogOpen(true)}>Write a review</Button>
 								) : (
-									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} nativeButton={false} render={<Link href={"/login"} />}><StarIcon /> Write a review</Button>
+									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} nativeButton={false} render={<Link href={"/login"} />}>Write a review</Button>
 								)}
 								<Deferred data="readers" fallback={<ReadersSectionSkeleton />}>
 									{readers && (
@@ -285,12 +293,13 @@ export default function BookPage({
 			<NewReviewDialog isOpen={isReviewDialogOpen} setIsOpen={setIsReviewDialogOpen} book={book} />
 			{isMobile && <MoreOptionsMobileSheet
 				isOpen={isMoreOptionsOpen}
-				setIsOpen={setIsMoreOptionsOpen} 
+				setIsOpen={setIsMoreOptionsOpen}
 				author={authors[0]}
 				book={book}
 				isSaved={isSaved}
 				isSaveProcessing={saveHttp.processing}
 				handleSavedBtn={handleSaveBtn}
+				setIsReviewDialogOpen={setIsReviewDialogOpen}
 			/>}
 		</>
 	)
