@@ -6,9 +6,9 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import BaseLayout from "@/layouts/BaseLayout";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function LoginPage() {
+export default function LoginPage({ oauth_path }: { oauth_path: string }) {
 	const { data, setData, post, processing, errors, clearErrors } = useForm({
 		email: "",
 		password: ""
@@ -28,7 +28,7 @@ export default function LoginPage() {
 						<h1 className="text-lg leading-none">Welcome back to Tomes</h1>
 						<p className="text-lg leading-none text-subtle">The greatest books of all time, for free.</p>
 					</div>
-					<Button size={"lg"} variant={"secondary"}>
+					<Button size={"lg"} variant={"secondary"} nativeButton={false} render={<a href={oauth_path} />}>
 						<GoogleIcon />
 						<span>Continue with Google</span>
 					</Button>

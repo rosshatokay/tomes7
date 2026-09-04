@@ -23,9 +23,11 @@ Rails.application.routes.draw do
   post "/signup", to: "registrations#create", as: :registration
   delete "logout", to: "sessions#destroy", as: :logout
 
-  # scope "/@:username" do
-  #   get "/", to: "users#show", as: :profile
-  # end
+  scope "/@:username" do
+    get "/", to: "users#show", as: :profile
+    get "/activity", to: "users#activity"
+    get "/reviews", to: "users#reviews"
+  end
 
   resource :session, only: [:create, :destroy]
   resources :users, only: [:show]
@@ -54,6 +56,7 @@ Rails.application.routes.draw do
   end
 
   resources :ratings, only: [:create]
+  resources :notifications, only: [:index]
 
   namespace :api do
     namespace :v1 do
@@ -70,6 +73,12 @@ Rails.application.routes.draw do
         resources :books, only: [] do
           member do
             patch "update-progress"
+          end
+        end
+
+        resources :follow, only: [] do
+          collection do
+            post :index
           end
         end
       end

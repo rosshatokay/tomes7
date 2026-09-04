@@ -1,6 +1,6 @@
 class Api::V1::NotificationsController < ApplicationController
   def index
-    notifs = current_user.notifications.includes(:notifiable).order(created_at: :desc).last(10)
+    notifs = current_user.notifications.includes(notifiable: [avatar_attachment: :blob]).order(created_at: :desc).last(10)
     data = notifs.map { |n|
       {
         kind: n.kind,

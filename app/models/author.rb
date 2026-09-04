@@ -30,6 +30,10 @@ class Author < ApplicationRecord
     DEFAULT_AVATARS[0]
   end
 
+  def should_generate_new_friendly_id?
+    full_name_changed? || super
+  end
+
   private
 
   def set_avatar_path

@@ -8,12 +8,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useState } from "react"
 import { FacebookIcon, RedditIcon, XIcon } from "@/assets/socials"
 import { toast } from "../ui/toast"
+import Modal from "@/interfaces/modals"
 
-interface ShareDialogProps {
+interface ShareDialogProps extends Modal {
 	title: string
 	url: string
-	isOpen: boolean
-	setIsOpen: (state: boolean) => void
 }
 
 const platforms = [
@@ -21,7 +20,7 @@ const platforms = [
 		icon: <RedditIcon fill="white" size={24} />,
 		bgColor: "bg-[#E55227]",
 		label: "Reddit",
-		shareLink: ""
+		shareLink: "https://www.reddit.com/submit?url="
 	},
 	{
 		icon: <XIcon fill="white" size={24} />,

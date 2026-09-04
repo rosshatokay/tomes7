@@ -1,5 +1,6 @@
 import { WikipediaIcon } from "@/assets/socials"
-import { BookCard } from "@/components/partials/BookCard"
+import { BookCard } from "@/components/partials/cards/BookCard"
+import MainBreadcrumbs from "@/components/partials/MainBreadcrumbs"
 import ShareDialog from "@/components/partials/ShareDialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -9,10 +10,9 @@ import { toast } from "@/components/ui/toast"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import Author from "@/interfaces/author"
 import { Book } from "@/interfaces/book"
-import { createBreadcrumbs } from "@/lib/utils"
 import { useHttp, usePage } from "@inertiajs/react"
 import { BookAlertIcon, MinusIcon, PlusIcon, ShareIcon } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 interface Props {
 	author: Author
@@ -21,9 +21,7 @@ interface Props {
 
 export default function AuthorPage({ author, books }: Props) {
 	const [isFollowing, setIsFollowing] = useState<boolean>(author.is_followed)
-	const [followersCount, setFollowersCount] = useState<number>(author.followers_count)
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
-	const { url } = usePage()
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: "Authors", path: "/authors" },
@@ -49,9 +47,7 @@ export default function AuthorPage({ author, books }: Props) {
 	return (
 		<>
 			<div>
-				<div className="large-container mt-2 mb-4">
-					{createBreadcrumbs(crumbs)}
-				</div>
+				<MainBreadcrumbs breadcrumbs={crumbs} />
 				<div className="large-container">
 					<div className="flex-center flex-col gap-4 pt-6 py-20">
 						<Avatar className={"mb-2 size-16"}>

@@ -1,5 +1,6 @@
-import { BookCard } from "@/components/partials/BookCard"
+import { BookCard } from "@/components/partials/cards/BookCard"
 import BooksSkeletons from "@/components/partials/BookSkeletons"
+import MainHeader from "@/components/partials/MainHeader"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -44,9 +45,23 @@ export default function LandingPage(props: LandingPageProps) {
 		}
 	}, [activeTab])
 
+	const pageTitle = () => {
+		return !auth.user ? (
+			<span className="text-center">Read the greatest books of all time. For free.</span>
+		) : (<span>Books</span>)
+	}
+
 	return (
 		<>
-			<div className={cn("flex-col flex-center", auth.user === null ? "h-[60vh] min-h-[400px]" : "h-[30vh]")}>
+			<MainHeader
+				title={pageTitle()}
+				description={auth.user ? "Access timeless classics" : "Access timeless classics for free"}
+				content={!auth.user && <div className="mt-6">
+					<Button size={"lg"} className={"text-base rounded-full"}>Join for free <ArrowRight /></Button>
+				</div>}
+				className={auth.user === null ? "h-[60vh] min-h-[400px]" : "h-[30vh]"}
+			/>
+			{/* <div className={cn("flex-col flex-center", auth.user === null ? "h-[60vh] min-h-[400px]" : "h-[30vh]")}>
 				<div className="max-w-xl w-full text-center">
 					<h1 className="md:text-5xl text-4xl md:mb-4 mb-2 font-headline">
 						{auth.user === null ?
@@ -65,7 +80,7 @@ export default function LandingPage(props: LandingPageProps) {
 						</div>
 					)}
 				</div>
-			</div>
+			</div> */}
 			<div className="large-container mb-2">
 				<div className="flex gap-6">
 					<div className="scroll-fade-x scrollbar-none overflow-x-auto">

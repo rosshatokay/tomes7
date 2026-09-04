@@ -1,10 +1,10 @@
 import Author from "@/interfaces/author";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "../../ui/avatar";
+import { Button } from "../../ui/button";
 import { Link, useHttp } from "@inertiajs/react";
 import React, { useState } from "react";
-import { toast } from "../ui/toast";
-import { Spinner } from "../ui/spinner";
+import { toast } from "../../ui/toast";
+import { Spinner } from "../../ui/spinner";
 import { MinusIcon, PlusIcon } from "lucide-react";
 
 interface Props {

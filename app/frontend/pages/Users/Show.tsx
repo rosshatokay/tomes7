@@ -1,17 +1,32 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { BookCard } from "@/components/partials/cards/BookCard";
+import ShareDialog from "@/components/partials/ShareDialog";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Book } from "@/interfaces/book";
 import { createBreadcrumbs } from "@/lib/utils";
-import { Head } from "@inertiajs/react";
+import { InfoIcon } from "lucide-react";
+import { useState } from "react";
+import ProfileLayout from "./ProfileLayout";
+import MainBreadcrumbs from "@/components/partials/MainBreadcrumbs";
+import BaseLayout from "@/layouts/BaseLayout";
 
-interface Props {
+export interface ProfileProps {
 	user: {
 		username: string
 		avatar_url: string
 		bio: string
+		is_current: boolean
+		share_url: string
+		is_followed: boolean
+		followers_count: number
+		followings_count: number
 	}
 }
 
-export default function ProfilePage({ user }: Props) {
+interface Props extends ProfileProps {
+	books: Book[]
+}
+
+export default function ProfilePage({ user, books }: Props) {
 	const crumbs = [
 		{ label: "Home", path: "/" },
 		{ label: user.username, path: `/@${user.username}` }
@@ -19,30 +34,29 @@ export default function ProfilePage({ user }: Props) {
 
 	return (
 		<>
-			<Head>
-				<title>{user.username}</title>
-			</Head>
-			<div>
-				<div className="large-container mt-2 mb-4">
-					{createBreadcrumbs(crumbs)}
+			<MainBreadcrumbs breadcrumbs={crumbs} />
+			<ProfileLayout user={user}>
+				<div className="flex flex-col gap-2">
+					{books.length > 0 && books.map(book => (
+						<BookCard book={book} key={book.slug} isMobileForced={true} />
+					))}
+					{books.length === 0 && (
+						<Empty className="border">
+							<EmptyHeader>
+								<EmptyMedia variant={"icon"}><InfoIcon /></EmptyMedia>
+								<EmptyTitle>Nothing here</EmptyTitle>
+								{user.is_current ? (
+									<EmptyDescription>You don't have any books on your bookshelf yet.</EmptyDescription>
+								) : (
+									<EmptyDescription>{user.username} doesn't have any books yet on his bookshelf.</EmptyDescription>
+								)}
+							</EmptyHeader>
+						</Empty>
+					)}
 				</div>
-				<div className="large-container">
-					<div className="pt-6 py-20 max-w-xl mx-auto flex justify-between">
-						<div className="flex gap-4">
-							<Avatar className={"mb-2 size-16"}>
-								<AvatarImage src={user.avatar_url} />
-								<AvatarFallback className={"text-xl"}>{user.username[0]}</AvatarFallback>
-							</Avatar>
-							<div className="mb-2">
-								<h1 className="text-2xl">{user.username}</h1>
-								<p className="text-subtle">@{user.username}</p>
-								{user.bio && <p className="max-w-lg text-center text-subtle line-clamp-3">{user.bio}</p>}
-							</div>
-						</div>
-						<Button className={"rounded-full"}>Follow</Button>
-					</div>
-				</div>
-			</div>
+			</ProfileLayout>
 		</>
 	)
 }
+
+ProfilePage.layout = (page: React.ReactNode) => <BaseLayout hideHeader={true} hideMobileNav={true}>{page}</BaseLayout>

@@ -1,4 +1,6 @@
 class OauthController < ApplicationController
+  allow_unauthenticated_access
+
   def authorize
     google_url = authorize_client.auth_code.authorize_url(
       redirect_uri: callback_oauth_url,
@@ -29,7 +31,7 @@ class OauthController < ApplicationController
 
       if identity.new_record?
         # Find user by email or initialize a new one
-        user = User.find_or_initialize_by(email_address: email_address)
+        user = User.find_or_initialize_by(email: email_address)
 
         # If it's a brand new user record, give them a random password
         if user.new_record?
@@ -53,11 +55,11 @@ class OauthController < ApplicationController
     end
   rescue ActiveRecord::RecordInvalid => e
     logger.error "OAuth Validation Error: #{e.record.errors.full_messages.join(", ")}"
-    flash[:error] = "Authentication failed: #{e.record.errors.full_messages.first}"
+    flash.inertia[:toast] = { description: "Authentication failed: #{e.record.errors.full_messages.first}" }
     redirect_to root_path
   rescue StandardError => e
     logger.error "OAuth Error: #{e.message}"
-    flash[:error] = "An unexpected error occurred."
+    flash.inertia[:toast] = { description: "An unexpected error occurred." }
     redirect_to root_path
   end
 

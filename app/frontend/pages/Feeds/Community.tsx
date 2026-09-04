@@ -1,5 +1,5 @@
 
-import PostCard from "@/components/partials/PostCard";
+import PostCard from "@/components/partials/cards/PostCard";
 import { Button } from "@/components/ui/button";
 import { Post } from "@/interfaces/post";
 import { Head } from "@inertiajs/react";

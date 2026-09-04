@@ -25,7 +25,7 @@ export default function TopProfileMenu({ user }: Props) {
 					<DropdownMenuGroup>
 						{user?.is_admin && <DropdownMenuItem nativeButton={false} render={<Link href={"/admins"} />}><GridIcon /> Dashboard</DropdownMenuItem>}
 						{/* <DropdownMenuItem nativeButton={false} render={<Link href={`/@${user?.username}`} />}><UserIcon /> Profile</DropdownMenuItem> */}
-						<DropdownMenuItem onClick={() => toast.add({description: "Profile pages coming soon"})}><UserIcon /> Profile</DropdownMenuItem>
+						<DropdownMenuItem nativeButton={false} render={<Link href={`/@${user?.username}`} />}><UserIcon /> Profile</DropdownMenuItem>
 						<DropdownMenuItem nativeButton={false} render={<Link href={"/library?tab=saved"} />}><HeartIcon /> Saved</DropdownMenuItem>
 						<DropdownMenuItem onClick={() => setIsReqDialogOpen(true)}><GitPullRequestArrowIcon /> Request a book</DropdownMenuItem>
 						{/* <DropdownMenuItem><MailPlusIcon /> Invite a friend</DropdownMenuItem> */}

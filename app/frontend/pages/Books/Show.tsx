@@ -1,4 +1,4 @@
-import { BookCard } from "@/components/partials/BookCard"
+import { BookCard } from "@/components/partials/cards/BookCard"
 import BooksSkeletons from "@/components/partials/BookSkeletons"
 import { LinkUnderline } from "@/components/partials/LinkUnderline"
 import BackBtnHeader from "@/components/partials/nav/BackBtnHeader"
@@ -24,6 +24,7 @@ import ReadersSection, { ReadersSectionSkeleton } from "./partials/ReadersSectio
 import NewReviewDialog from "./partials/NewReviewDialog"
 import MoreOptionsMobileSheet from "./partials/MoreOptionsMobileSheet"
 import Author from "@/interfaces/author"
+import MainBreadcrumbs from "@/components/partials/MainBreadcrumbs"
 
 export interface BookReaders {
 	total_count: number
@@ -100,12 +101,11 @@ export default function BookPage({
 	return (
 		<>
 			<BackBtnHeader>
+				<Button size={"icon-lg"} variant={"secondary"} onClick={() => setIsShareOpen(true)}><ShareIcon /></Button>
 				<Button size={"icon-lg"} variant={"secondary"} onClick={() => setIsMoreOptionsOpen(true)}><MoreHorizontalIcon /></Button>
 			</BackBtnHeader>
 			<div className="lg:pt-0 pt-2">
-				<div className="large-container mt-2 mb-4 md:block hidden">
-					{createBreadcrumbs(crumbs)}
-				</div>
+				<MainBreadcrumbs breadcrumbs={crumbs} className="md:block hidden" />
 				<div className="lg:grid grid-cols-12 large-container">
 					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-8 w-full lg:sticky top-20 md:pb-5 flex flex-col gap-2 lg:pr-8 h-110">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">

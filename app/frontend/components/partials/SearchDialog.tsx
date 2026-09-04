@@ -1,9 +1,10 @@
-import { SearchIcon } from "lucide-react"
+import { SearchIcon, SearchXIcon } from "lucide-react"
 import { useDebounce } from "@uidotdev/usehooks";
 import { Dialog, DialogContent } from "../ui/dialog"
 import { useEffect, useState } from "react"
 import { Link } from "@inertiajs/react";
 import { Spinner } from "../ui/spinner";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 
 interface SearchDialogProps {
 	isOpen: boolean
@@ -83,7 +84,7 @@ export const SearchDialog = ({ isOpen, setIsOpen }: SearchDialogProps) => {
 	const debouncedQuery = useDebounce(searchQuery, 500)
 
 	useEffect(() => {
-		if (!debouncedQuery.trim()) {
+		if (!debouncedQuery.trim() || debouncedQuery.trim().length < 2) {
 			setResults([])
 			return
 		}
@@ -117,7 +118,7 @@ export const SearchDialog = ({ isOpen, setIsOpen }: SearchDialogProps) => {
 
 	return (
 		<Dialog open={isOpen} onOpenChange={open => handleDialogClose(open)}>
-			<DialogContent showCloseButton={false} className={"p-0 !md:max-w-lg h-[65vh] flex flex-col gap-0"}>
+			<DialogContent showCloseButton={false} className={"p-0 md:!max-w-lg h-[65vh] flex flex-col gap-0"}>
 				<div className="relative h-fit border-b">
 					<SearchIcon size={20} className="absolute top-1/2 -translate-y-1/2 left-4 text-subtle" />
 					<input
@@ -128,13 +129,24 @@ export const SearchDialog = ({ isOpen, setIsOpen }: SearchDialogProps) => {
 					/>
 				</div>
 				{isLoading && <div className="flex-center h-full"><Spinner className="size-8" /></div>}
+				{debouncedQuery.trim().length < 2 && (
+					<Empty>
+						<EmptyHeader>
+							<EmptyMedia variant={"icon"}><SearchIcon /></EmptyMedia>
+							<EmptyTitle>Search all of Tomes</EmptyTitle>
+							<EmptyDescription>Find books, authors, and genres.</EmptyDescription>
+						</EmptyHeader>
+					</Empty>
+				)}
 				{!isLoading && results === null && (
 					<div className="text-sm text-subtle text-center p-6">
+						<SearchXIcon className="size-6 mx-auto mb-3" />
 						<div>No results found.</div>
 						<div>Try a different keyword.</div>
 					</div> 
 				)}
 				{!isLoading && results && results.length > 0 && <div className="p-2 h-fit">
+					<div className="text-sm text-subtle px-2 mb-1">Results</div>
 					{results?.map((result: SearchResult, index) => (
 						<SearchResultItem key={index} data={result} onClick={() => setIsOpen(false)} />
 					))}

@@ -1,4 +1,5 @@
-import AuthorCard from "@/components/partials/AuthorCard";
+import AuthorCard from "@/components/partials/cards/AuthorCard";
+import MainHeader from "@/components/partials/MainHeader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { AuthProps } from "@/interfaces/auth";
@@ -12,10 +13,7 @@ interface PageProps {
 export default function AuthorsPage({ authors }: PageProps) {
 	return (
 		<>
-			<div className="large-container flex-center flex-col h-[30vh] min-h-50 text-center">
-				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2 font-headline">Authors</h1>
-				<p className="text-subtle">Discover the authors behind the greatest works</p>
-			</div>
+			<MainHeader title="Authors" description="Discover the authors behind the greatest works" />
 			<div className="large-container pb-6">
 				<div className="grid 2xl:grid-cols-5 md:grid-cols-4 gap-2">
 					{authors.map(author => <AuthorCard key={author.permalink} author={author} />)}

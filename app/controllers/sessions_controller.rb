@@ -9,7 +9,9 @@ class SessionsController < ApplicationController
       return
     end
 
-    render inertia: "Auth/Login"
+    render inertia: "Auth/Login", props: {
+      oauth_path: authorize_oauth_path,
+    }
   end
 
   def create
@@ -27,6 +29,7 @@ class SessionsController < ApplicationController
 
   def destroy
     terminate_session
+    flash.inertia[:toast] = { description: "Signed out successfully" }
     redirect_to root_path, status: :see_other
   end
 

@@ -6,10 +6,15 @@ import { cn, useIsMobile } from "@/lib/utils";
 import { AuthProps } from "@/interfaces/auth";
 import { SearchDialog } from "./SearchDialog";
 import { useState } from "react";
-import NotificationsPopover from "./NotificationsPopover";
+// import NotificationsPopover from "./NotificationsPopover";
 import TopProfileMenu from "./TopProfileMenu";
+import NotificationsPopover from "./NotificationsPopover";
 
-export default function AppHeader({ user }: AuthProps) {
+interface Props {
+	user: AuthProps['user']
+}
+
+export default function AppHeader({ user }: Props) {
 	const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
 	const isMobile = useIsMobile()
 	const url = usePage().url.split("?")[0]

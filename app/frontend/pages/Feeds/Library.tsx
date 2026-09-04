@@ -1,4 +1,5 @@
-import { BookCard } from "@/components/partials/BookCard";
+import { BookCard } from "@/components/partials/cards/BookCard";
+import MainHeader from "@/components/partials/MainHeader";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Book } from "@/interfaces/book";
@@ -30,10 +31,7 @@ export default function LibraryPage({ currentTab, books }: LibraryPageProps) {
 
 	return (
 		<>
-			<div className="large-container flex-center flex-col h-[30vh] min-h-50">
-				<h1 className="md:text-5xl text-4xl md:mb-4 mb-2 font-headline">Library</h1>
-				<p className="text-subtle">Your collection of books</p>
-			</div>
+			<MainHeader title="Books" description="Your collection of books" />
 			<div className="large-container">
 				<div className="flex gap-2">
 					{tabs.map(tab => {

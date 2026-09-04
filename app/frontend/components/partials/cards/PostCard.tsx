@@ -1,7 +1,7 @@
 import { RatingStars } from "@/components/partials/RatingStars";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HeartIcon, MessageSquareIcon, MoreHorizontalIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { Post } from "@/interfaces/post";
 import { format } from "timeago.js";
 
