@@ -87,7 +87,7 @@ class Book < ApplicationRecord
     details.delete_if { |key, value| value == "" }
   end
 
-  def to_hash
+  def to_hash(permalink:)
     {
       title: title,
       cover: get_cover_url,
@@ -96,6 +96,7 @@ class Book < ApplicationRecord
       average_rating: average_rating,
       slug: slug,
       ratings_count: ratings_count,
+      permalink: permalink,
     }
   end
 

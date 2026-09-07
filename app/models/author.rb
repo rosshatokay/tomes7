@@ -34,6 +34,19 @@ class Author < ApplicationRecord
     full_name_changed? || super
   end
 
+  def to_hash(permalink:, current_user:)
+    followed_author_ids = current_user ? current_user.followees(Author).pluck(:id) : []
+
+    {
+      full_name: full_name,
+      avatar_url: avatar.attached? ? avatar.service.url(avatar.blob.key, transformation: [{ width: 250, height: 250 }]) : nil,
+      books_count: books_count,
+      permalink: permalink,
+      is_followed: followed_author_ids.include?(id),
+      slug: slug,
+    }
+  end
+
   private
 
   def set_avatar_path
