@@ -14,8 +14,7 @@ import { Deferred, Head, Link, usePage } from "@inertiajs/react"
 import { ArrowRight, InfoIcon, XCircleIcon, XIcon } from "lucide-react"
 import { Fragment, useEffect, useRef } from "react"
 
-interface LandingPageProps {
-	categories: Category[]
+interface CategoryPageProps {
 	books: Book[]
 	auth: AuthProps
 }
@@ -25,29 +24,10 @@ interface LandingPageProps {
 // 	{ label: "Most recent", value: "most-recent" },
 // ]
 
-export default function LandingPage(props: LandingPageProps) {
-	const auth = props.auth
-	const { url } = usePage()
-	const searchParams = new URLSearchParams(url.split("?")[1])
-	const activeTab = searchParams.get('tab')
-	const categoryRefs = useRef<Map<string, HTMLButtonElement>>(new Map())
-
-	useEffect(() => {
-		// fetch the specific active DOM node from the map
-		const activeNode = activeTab ? categoryRefs.current.get(activeTab) : null
-
-		if (activeNode) {
-			activeNode.scrollIntoView({
-				behavior: "smooth",
-				inline: "center", // Recommended for horizontal containers so it centers nicely
-				block: "nearest"
-			})
-		}
-	}, [activeTab])
-
+export default function CategoryPage({ auth, books }: CategoryPageProps) {
 	const pageTitle = () => {
 		return !auth.user ? (
-			<span className="text-center">Read the greatest books of all time. For free.</span>
+			<span className="text-center block max-w-xl">Read the greatest books of all time. For free.</span>
 		) : (<span>Books</span>)
 	}
 
@@ -59,7 +39,7 @@ export default function LandingPage(props: LandingPageProps) {
 				content={!auth.user && <div className="mt-6">
 					<Button size={"lg"} className={"text-base rounded-full"}>Join for free <ArrowRight /></Button>
 				</div>}
-				className={auth.user === null ? "h-[60vh] min-h-[400px]" : "h-[30vh]"}
+				className={auth.user === null ? "h-[50vh] min-h-[400px]" : "h-[30vh]"}
 			/>
 			{/* <div className={cn("flex-col flex-center", auth.user === null ? "h-[60vh] min-h-[400px]" : "h-[30vh]")}>
 				<div className="max-w-xl w-full text-center">
@@ -81,42 +61,7 @@ export default function LandingPage(props: LandingPageProps) {
 					)}
 				</div>
 			</div> */}
-			<div className="large-container mb-2">
-				<div className="flex gap-6">
-					<div className="scroll-fade-x scrollbar-none overflow-x-auto">
-						<div className="flex gap-1 min-w-0">
-							{props.categories.map(cat => {
-								const isActive = activeTab === cat.slug
-
-								return (
-									<Button
-										ref={(el) => {
-											if (el) {
-												categoryRefs.current.set(cat.slug, el)
-											} else {
-												categoryRefs.current.delete(cat.slug)
-											}
-										}}
-										variant={isActive ? "outline" : "secondary"}
-										className={cn("text-[15px] rounded-full", isActive ? "!border-foreground border-2 pr-1.5" : "")}
-										key={cat.slug}
-										nativeButton={false}
-										render={<Link href={isActive ? "/books" : `/books?tab=${cat.slug}`} preserveState={true} />}
-									>
-										<span>{cat.name}</span>
-										{isActive && (
-											<div className="flex-center size-5 bg-foreground rounded-full">
-												<XIcon stroke="var(--background)" className="size-3" />
-											</div>
-										)}
-									</Button>
-								)
-							})}
-						</div>
-					</div>
-				</div>
-			</div>
-			{props.books?.length == 0 && (
+			{books?.length == 0 && (
 				<div className="large-container">
 					<Empty className="border">
 						<EmptyHeader>
@@ -127,9 +72,9 @@ export default function LandingPage(props: LandingPageProps) {
 					</Empty>
 				</div>
 			)}
-			{props.books?.length > 0 && (
+			{books?.length > 0 && (
 				<div className="large-container pb-8 grid 2xl:grid-cols-5 md:grid-cols-4 gap-2 md:mt-0 mt-6">
-					{props.books?.map((book, index) => (
+					{books?.map((book, index) => (
 						<Fragment key={index}><BookCard book={book} /></Fragment>
 					))}
 				</div>

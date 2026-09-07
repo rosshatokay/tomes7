@@ -114,4 +114,4 @@ export default function SignupPage({ google_oauth_path }: { google_oauth_path: s
 	)
 }
 
-SignupPage.layout = (page: React.ReactNode) => <BaseLayout hideHeader={true} hideFooter={true}>{page}</BaseLayout>
+SignupPage.layout = (page: React.ReactNode) => <BaseLayout hideHeaderForced={true} hideFooter={true}>{page}</BaseLayout>

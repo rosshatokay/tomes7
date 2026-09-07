@@ -3,15 +3,16 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Book } from "@/interfaces/book"
 import ReaderLayout from "@/layouts/ReaderLayout"
-import { ArrowLeftIcon, ListIcon, RefreshCwIcon, ShareIcon, } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { ArrowLeftIcon, ChevronsLeftIcon, ChevronsRightIcon, ListIcon, MaximizeIcon, RefreshCwIcon, ShareIcon } from "lucide-react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { EpubViewer, Page, ViewerRef } from "react-epub-viewer"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { debounce, goBack } from '@/lib/utils';
+import { cn, debounce, goBack, useIsMobile } from '@/lib/utils';
 import ChaptersSheet from '@/components/partials/dialogs/ChaptersSheet';
 import Navigation, { NavItem } from 'epubjs/types/navigation';
 import ShareDialog from '@/components/partials/ShareDialog';
 import { addCustomFont, addStyleToReader, useUpdateBookProgress } from './partials/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const epubLightTheme = {
 	body: {
@@ -57,13 +58,18 @@ interface Props {
 
 export default function ReadBookPage({ book }: Props) {
 	const [isReady, setIsReady] = useState(false)
-	const viewerRef = useRef<ViewerRef>(null)
+	const [isBookLoaded, setIsBookLoaded] = useState(false)
+	const [isChaptersOpen, setIsChaptersOpen] = useState(false)
+	const [isShareOpen, setIsShareOpen] = useState(false)
+
 	const [toc, setToc] = useState<Navigation['toc']>()
 	const [rendition, setRendition] = useState<Rendition>()
 	const [currChapter, setCurrChapter] = useState<NavItem | null>(null)
-	const [isChaptersOpen, setIsChaptersOpen] = useState(false)
-	const [isShareOpen, setIsShareOpen] = useState(false)
+	const [page, setPage] = useState<Page | null>()
+
+	const isMobile = useIsMobile()
 	const updateBookProgress = useUpdateBookProgress(book.slug)
+	const viewerRef = useRef<ViewerRef>(null)
 
 	const rightSideButtons = [
 		{
@@ -71,11 +77,6 @@ export default function ReadBookPage({ book }: Props) {
 			label: "Share",
 			onClick: () => setIsShareOpen(true)
 		},
-		// {
-		// 	icon: <ALargeSmallIcon />,
-		// 	label: "Display",
-		// 	onClick: () => rendition?.themes.fontSize("125%")
-		// },
 		{
 			icon: <ListIcon />,
 			label: "Table of contents",
@@ -112,9 +113,35 @@ export default function ReadBookPage({ book }: Props) {
 			rendition?.themes.select(window.Theme.getTheme())
 		}
 
-		if (book.current_position) {
-			rendition?.display(book.current_position)
+		const displayBook = async () => {
+			try {
+				if (book.current_position) {
+					// Sometimes just a tiny delay between a retry is enough
+					await rendition?.display(book.current_position)
+					// Or a second pass once the view settles
+					setTimeout(() => {
+						rendition?.display(book.current_position)
+					}, 100)
+				} else {
+					await rendition?.display()
+				}
+			} catch (error) {
+				console.error("Failed to display initial CFI position:", error)
+				rendition?.display()
+			}
 		}
+
+		rendition?.book.loaded.navigation.then(() => {
+			displayBook()
+
+			setTimeout(() => {
+				setIsBookLoaded(true)
+			}, 300);
+		})
+		// if (rendition?.book.locations.length()) {
+		// 	displayBook()
+		// 	setIsBookLoaded(true)
+		// }
 
 		return () => {
 			rendition?.hooks.content.deregister(contentHook)
@@ -124,11 +151,14 @@ export default function ReadBookPage({ book }: Props) {
 
 	const debouncedPageChange = debounce((page: Page) => {
 		if (!rendition) return
-		const cfi = page.endCfi
+		const cfi = page.startCfi
 		const percentageFromCfi = rendition?.book.locations.percentageFromCfi(cfi)
 		const progress = Math.ceil(percentageFromCfi * 100)
 
-		updateBookProgress.update({current_position: cfi, progress: progress})
+		setPage(page)
+		if (page.currentPage > page.totalPage) return
+
+		updateBookProgress.update({ current_position: cfi, progress: progress })
 	}, 700)
 
 	return (
@@ -162,23 +192,56 @@ export default function ReadBookPage({ book }: Props) {
 			</div>
 			<div className="md:bg-white/80 dark:bg-background md:border rounded-lg h-full overflow-hidden">
 				{isReady ? (
-					<div className="flex flex-col h-full md:py-12">
-						<EpubViewer
-							epubOptions={{ allowScriptedContent: true }}
-							url={book.epub_file_path}
-							ref={viewerRef}
-							rendtionChanged={(r) => {
-								setRendition(r)
-							}}
-							epubFileOptions={{ openAs: "epub" }}
-							bookChanged={(book) => {
-								book.loaded.navigation.then((toc) => {
-									setToc(toc.toc)
-								})
-							}}
-							location="epubcfi(/6/4!/4/106/1:321)"
-							pageChanged={debouncedPageChange}
-						/>
+					<div className="flex flex-col h-full">
+						<div className={cn("h-full md:py-12 p-0 transition", !isBookLoaded && "opacity-0")}>
+							<EpubViewer
+								ref={viewerRef}
+								epubOptions={{ allowScriptedContent: true }}
+								url={book.epub_file_path}
+								rendtionChanged={(r) => {
+									setRendition(r)
+								}}
+								epubFileOptions={{ openAs: "epub" }}
+								bookChanged={(book) => {
+									book.loaded.navigation.then((toc) => {
+										setToc(toc.toc)
+									})
+								}}
+								// location="epubcfi(/6/4!/4/106/1:321)"
+								pageChanged={debouncedPageChange}
+							/>
+						</div>
+						<div className="min-h-12 h-12 flex items-center justify-between px-4 text-sm">
+							<div className="flex items-center gap-2">
+								<Tooltip>
+									<TooltipTrigger render={<Button size={"icon"} variant={"ghost"} onClick={() => viewerRef.current?.prevPage()}><ChevronsLeftIcon /></Button>} />
+									<TooltipContent>Previous page</TooltipContent>
+								</Tooltip>
+								<Tooltip>
+									<TooltipTrigger render={<Button size={"icon"} variant={"ghost"} onClick={() => viewerRef.current?.nextPage()}><ChevronsRightIcon /></Button>} />
+									<TooltipContent>Next page</TooltipContent>
+								</Tooltip>
+								<div className='px-4 flex items-center gap-2'>
+									{page ? (
+										<Fragment>
+											{!isMobile && (<span>Page</span>)} {page?.currentPage}
+											<span className='text-subtle'>/</span>
+											<span className='text-subtle'>{page?.totalPage}</span>
+										</Fragment>
+									) : (
+										<Fragment>
+											<Skeleton className='h-3 w-12 rounded-[3px]'></Skeleton>
+											<span className='text-subtle'>/</span>
+											<Skeleton className='h-3 w-12 rounded-[3px]'></Skeleton>
+										</Fragment>
+									)}
+								</div>
+							</div>
+							<Tooltip>
+								<TooltipTrigger render={<Button size={"icon"} variant={"ghost"}><MaximizeIcon /></Button>} />
+								<TooltipContent>Full screen</TooltipContent>
+							</Tooltip>
+						</div>
 					</div>
 				) : (<div className="flex-center h-full"><Spinner className="size-6" /></div>)}
 			</div>

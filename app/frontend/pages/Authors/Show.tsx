@@ -8,6 +8,7 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "@/components/ui/toast"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { AuthProps } from "@/interfaces/auth"
 import Author from "@/interfaces/author"
 import { Book } from "@/interfaces/book"
 import { useHttp, usePage } from "@inertiajs/react"
@@ -17,9 +18,10 @@ import React, { useState } from "react"
 interface Props {
 	author: Author
 	books: Book[]
+	auth: AuthProps
 }
 
-export default function AuthorPage({ author, books }: Props) {
+export default function AuthorPage({ author, books, auth }: Props) {
 	const [isFollowing, setIsFollowing] = useState<boolean>(author.is_followed)
 	const [isShareOpen, setIsShareOpen] = useState<boolean>(false)
 	const crumbs = [
@@ -30,6 +32,11 @@ export default function AuthorPage({ author, books }: Props) {
 	const followHttp = useHttp({ slug: author.slug })
 
 	const handleFollowBtn = () => {
+		if (!auth.user) {
+			toast.add({ description: "Account required to complete this account" })
+			return
+		}
+
 		followHttp.post(isFollowing ? '/authors/unfollow' : '/authors/follow', {
 			onSuccess: (res: any) => {
 				if (res.success) {

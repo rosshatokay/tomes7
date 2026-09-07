@@ -1,11 +1,12 @@
 import { AuthProps } from "@/interfaces/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { GitPullRequestArrowIcon, GridIcon, HeartIcon, LogOutIcon, MailPlusIcon, UserIcon } from "lucide-react";
+import { GitPullRequestArrowIcon, GridIcon, HeartIcon, LogOutIcon, MailPlusIcon, SettingsIcon, UserIcon } from "lucide-react";
 import { Link, useForm } from "@inertiajs/react";
 import { useState } from "react";
 import RequestBookDialog from "./dialogs/RequestBookDialog";
 import { toast } from "../ui/toast";
+import UserSettingsDialog from "./dialogs/UserSettingsDialog";
 
 interface Props {
 	user: AuthProps['user']
@@ -13,6 +14,7 @@ interface Props {
 
 export default function TopProfileMenu({ user }: Props) {
 	const [isReqDialogOpen, setIsReqDialogOpen] = useState(false)
+	const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
 	return (
 		<>
@@ -32,11 +34,13 @@ export default function TopProfileMenu({ user }: Props) {
 					</DropdownMenuGroup>
 					<DropdownMenuSeparator />
 					<DropdownMenuGroup>
+						<DropdownMenuItem onClick={() => setIsSettingsOpen(true)}><SettingsIcon /> Settings</DropdownMenuItem>
 						<DropdownMenuItem nativeButton={true} render={<Link href={"/logout"} method="delete" as={"button"} className="w-full" />}><LogOutIcon /> Sign out</DropdownMenuItem>
 					</DropdownMenuGroup>
 				</DropdownMenuContent>
 			</DropdownMenu>
 			<RequestBookDialog isOpen={isReqDialogOpen} setIsOpen={setIsReqDialogOpen} />
+			<UserSettingsDialog isOpen={isSettingsOpen} setIsOpen={setIsSettingsOpen} user={user} />
 		</>
 	)
 }

@@ -63,7 +63,7 @@ export default function ChaptersSheet({ isOpen, setIsOpen, toc, currentChapter, 
 					<SheetTitle>Table of contents</SheetTitle>
 				</SheetHeader>
 				<div className="overflow-y-auto">
-					<div className="flex flex-col gap-0.5 px-2">
+					<div className="flex flex-col gap-0.5 px-2 pb-4">
 						{toc?.map((item, index) => {
 							const isActive = item.id === currentChapter?.id
 							// const isHovered = hoveredChapterIndex ? index === (hoveredChapterIndex) - 1 : null

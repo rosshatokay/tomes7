@@ -1,8 +1,9 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { toast } from "@/components/ui/toast"
+import { Category } from "@/interfaces/category"
 import { Link, router } from "@inertiajs/react"
 import clsx, { type ClassValue } from "clsx"
-import { describe } from "node:test"
+import { FeatherIcon, HeartPulseIcon, LandmarkIcon, MicroscopeIcon, OmegaIcon, PaletteIcon, UsersRoundIcon, VolleyballIcon } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react"
 import strftime from "strftime"
 import { twMerge } from "tailwind-merge"
@@ -264,5 +265,26 @@ export const debounce = (callback: Function, delay: number) => {
 		timeoutRef.current = setTimeout(() => {
 			callback(...args)
 		}, delay);
+	}
+}
+
+export const getCategoryIcon = (categorySlug: Category['slug']) => {
+	switch (categorySlug) {
+		case "literature":
+			return <FeatherIcon />
+		case "history":
+			return <LandmarkIcon />
+		case "arts-culture":
+			return <PaletteIcon />
+		case "religion-philosophy":
+			return <OmegaIcon />
+		case "science-technology":
+			return <MicroscopeIcon />
+		case "social-sciences-society":
+			return <UsersRoundIcon />
+		case "lifestyle-hobbies":
+			return <VolleyballIcon />
+		case "health-medicine":
+			return <HeartPulseIcon />
 	}
 }

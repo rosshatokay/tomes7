@@ -20,13 +20,9 @@ export default function AppHeader({ user }: Props) {
 	const url = usePage().url.split("?")[0]
 
 	const navLinks = [
-		{ label: user ? "Library" : "Books", path: user ? "/library" : "/" },
-		{ label: "Authors", path: "/authors" }
+		{ label: "Home", path: "/" },
+		{ label: "Explore", path: "/explore" }
 	]
-
-	if (user) {
-		navLinks.splice(1, 0, { label: "Books", path: "/books" })
-	}
 
 	return (
 		<div>

@@ -54,15 +54,15 @@ export default function ProfileLayout({ user, children }: Props) {
 			<div className="large-container">
 				<div className="pt-6 py-20 max-w-2xl mx-auto">
 					<div className="flex justify-between">
-						<div className="flex flex-col gap-4">
+						<div className="flex flex-col gap-4 min-w-0">
 							<Avatar className={"size-16"}>
 								<AvatarImage src={user.avatar_url} />
 								<AvatarFallback className={"text-xl"}>{user.username[0]}</AvatarFallback>
 							</Avatar>
 							<div className="mb-2">
 								<h1 className="text-xl">{user.username}</h1>
-								{user.bio && <p className="max-w-lg text-subtle line-clamp-3">{user.bio}</p>}
-								<div className="flex items-center gap-2 justify-center mt-2">
+								{user.bio && <p className="text-subtle line-clamp-2">{user.bio}</p>}
+								<div className="flex items-center gap-2 mt-2">
 									<h3 className="text-[15px] !font-normal">{user.followers_count} <span className="text-subtle/75">{user.followers_count === 1 ? "follower" : "followers"}</span></h3>
 									<span className="size-1 rounded-full bg-foreground/40 inline-flex"></span>
 									<h3 className="text-[15px] !font-normal">{user.followings_count || 0} <span className="text-subtle/75">following</span></h3>

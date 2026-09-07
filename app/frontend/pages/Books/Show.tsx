@@ -101,8 +101,8 @@ export default function BookPage({
 	return (
 		<>
 			<BackBtnHeader>
-				<Button size={"icon-lg"} variant={"secondary"} onClick={() => setIsShareOpen(true)}><ShareIcon /></Button>
-				<Button size={"icon-lg"} variant={"secondary"} onClick={() => setIsMoreOptionsOpen(true)}><MoreHorizontalIcon /></Button>
+				<Button size={"icon-lg"} variant={"ghost"} onClick={() => setIsShareOpen(true)}><ShareIcon /></Button>
+				<Button size={"icon-lg"} variant={"ghost"} onClick={() => setIsMoreOptionsOpen(true)}><MoreHorizontalIcon /></Button>
 			</BackBtnHeader>
 			<div className="lg:pt-0 pt-2">
 				<MainBreadcrumbs breadcrumbs={crumbs} className="md:block hidden" />
@@ -133,7 +133,7 @@ export default function BookPage({
 									</Button>
 								</div>
 								{!auth.user && (
-									<Button nativeButton={false} variant={"ghost"} className={"px-2 text-[15px]"} render={<Link href={"/login"} />}>
+									<Button variant={"ghost"} className={"px-2 text-[15px]"} onClick={() => toast.add({description: "Account required to complete this action"})}>
 										<HeartIcon />
 										Save
 									</Button>
@@ -172,7 +172,7 @@ export default function BookPage({
 							<div className="mt-8 md:block hidden">
 								<Button size={"lg"} variant={"default"} className={"w-full h-10 mb-2"} nativeButton={false} render={<Link href={book.read_path} />}>
 									{progress ? (
-										<Fragment>Continue reading • {progress * 100}%</Fragment>
+										<Fragment>Continue reading • {Math.round(progress * 100)}%</Fragment>
 									) : (
 										<Fragment>Read now</Fragment>
 									)}
@@ -180,7 +180,7 @@ export default function BookPage({
 								{auth.user ? (
 									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} onClick={() => setIsReviewDialogOpen(true)}>Write a review</Button>
 								) : (
-									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} nativeButton={false} render={<Link href={"/login"} />}>Write a review</Button>
+									<Button size={"lg"} variant={"secondary"} className={"w-full h-10"} onClick={() => toast.add({description: "Account required to complete this action"})}>Write a review</Button>
 								)}
 								<Deferred data="readers" fallback={<ReadersSectionSkeleton />}>
 									{readers && (
@@ -259,7 +259,7 @@ export default function BookPage({
 										{auth.user ? (
 											<Button onClick={() => setIsReviewDialogOpen(true)}>Add review</Button>
 										) : (
-											<Button nativeButton={false} render={<Link href={"/login"} />}>Add review</Button>
+											<Button nativeButton={true} onClick={() => toast.add({description: "Account required to complete this action"})}>Add review</Button>
 										)}
 									</EmptyContent>
 								</Empty>

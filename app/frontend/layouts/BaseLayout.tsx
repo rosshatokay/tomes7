@@ -9,8 +9,8 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AuthProps } from "@/interfaces/auth"
 import { cn, useIsMobile } from "@/lib/utils"
 import { Link, usePage } from "@inertiajs/react"
-import { BellIcon, CompassIcon, HeartIcon, HomeIcon, PlusIcon, SearchIcon } from "lucide-react"
-import { Fragment, PropsWithChildren, useEffect, useState } from "react"
+import { BellIcon, CompassIcon, HeartIcon, HomeIcon, LibraryBigIcon, PlusIcon, SearchIcon } from "lucide-react"
+import { createContext, Fragment, PropsWithChildren, useContext, useEffect, useState } from "react"
 
 interface BaseLayoutProps {
 	children: PropsWithChildren['children'],
@@ -29,6 +29,9 @@ export interface FlashProps {
 	}
 }
 
+const ReadyContext = createContext<boolean>(false)
+export const useReady = () => useContext(ReadyContext)
+
 export default function BaseLayout({ children, hideHeader, hideHeaderForced, hideFooter, hideMobileNav }: BaseLayoutProps) {
 	const flash = usePage().flash as FlashProps
 	const isMobile = useIsMobile()
@@ -43,7 +46,7 @@ export default function BaseLayout({ children, hideHeader, hideHeaderForced, hid
 			path: "/library"
 		},
 		{
-			icon: (active: boolean) => <CompassIcon className={cn("!size-6", active ? "text-on-secondary dark:text-background" : "text-white/75")} />,
+			icon: (active: boolean) => <LibraryBigIcon className={cn("!size-6", active ? "text-on-secondary dark:text-background" : "text-white/75")} />,
 			path: "/books"
 		},
 		{
@@ -70,56 +73,52 @@ export default function BaseLayout({ children, hideHeader, hideHeaderForced, hid
 	hideHeader = hideHeaderForced ? hideHeaderForced : (hideHeader && isMobile)
 
 	return (
-		<div>
+		<ReadyContext.Provider value={isReady}>
 			{!isReady && (
-				<div className="w-full h-screen flex-center">
+				<div className="w-full h-screen flex-center z-[99999999999] fixed bg-background">
 					<div className="animate-pulse">
 						<LogoIcon size={32} />
 					</div>
 				</div>
 			)}
-			{isReady && (
-				<div>
-					{!hideHeader && <AppHeader user={auth?.user} />}
-					<main id="main" className="transition">
-						{children}
-					</main>
-					{auth.user && isMobile && !hideMobileNav && (
-						<Fragment>
-							<div className="fixed left-0 right-0 bottom-0 top-auto z-3">
-								<div className="w-full h-full flex-center">
-									<div className="from-background absolute inset-0 w-full bg-gradient-to-t to-transparent"></div>
-									<div className="mb-8 h-15 w-48 min-w-48 max-w-48 rounded-full bg-foreground/50 backdrop-blur-md flex items-center justify-evenly">
-										{mobileNavLinks.map((item, index) => {
-											const isActive = item.path === usePage().url.split("?")[0]
+			<div>
+				{!hideHeader && <AppHeader user={auth?.user} />}
+				<main id="main" className={cn("transition")}>
+					{children}
+				</main>
+				{auth.user && isMobile && !hideMobileNav && (
+					<Fragment>
+						<div className="fixed left-0 right-0 bottom-0 top-auto z-3">
+							<div className="w-full h-full flex-center">
+								<div className="from-background absolute inset-0 w-full bg-gradient-to-t to-transparent"></div>
+								<div className="mb-8 h-15 w-48 min-w-48 max-w-48 rounded-full bg-foreground/50 backdrop-blur-md flex items-center justify-evenly">
+									{mobileNavLinks.map((item, index) => {
+										const isActive = item.path === usePage().url.split("?")[0]
 
-											return (
-												<Button
-													size={"icon-lg"}
-													variant={isActive ? "secondary" : "ghost"}
-													className={cn("rounded-full", isActive && "bg-white")}
-													key={index}
-													nativeButton={item.onClick ? true : false}
-													render={item.onClick ? <button onClick={() => item.onClick()} /> : <Link href={item.path} />}
-												>
-													{item.icon(isActive)}
-												</Button>
-											)
-										})}
-										{/* <Button size={"icon-lg"} variant={"ghost"}><CompassIcon className="!size-6 dark:text-foreground text-white" /></Button>
-									<Button size={"icon-lg"} variant={"ghost"}><BellIcon className="!size-6 dark:text-foreground text-white" /></Button> */}
-									</div>
+										return (
+											<Button
+												size={"icon-lg"}
+												variant={isActive ? "secondary" : "ghost"}
+												className={cn("rounded-full", isActive && "bg-white")}
+												key={index}
+												nativeButton={item.onClick ? true : false}
+												render={item.onClick ? <button onClick={() => item.onClick()} /> : <Link href={item.path} />}
+											>
+												{item.icon(isActive)}
+											</Button>
+										)
+									})}
 								</div>
 							</div>
-							<div className="h-25"></div>
-						</Fragment>
-					)}
-					{!isMobile && !hideFooter && !shouldHideFooter && <Footer />}
-					{isMobile && <NotificationsSheet isOpen={isNotifsOpen} setIsOpen={setIsNotifsOpen} />}
-					<Toaster></Toaster>
-					<TooltipProvider delay={0}></TooltipProvider>
-				</div>
-			)}
-		</div>
+						</div>
+						<div className="h-25"></div>
+					</Fragment>
+				)}
+				{!isMobile && !hideFooter && !shouldHideFooter && <Footer />}
+				{isMobile && <NotificationsSheet isOpen={isNotifsOpen} setIsOpen={setIsNotifsOpen} />}
+				<Toaster></Toaster>
+				<TooltipProvider delay={0}></TooltipProvider>
+			</div>
+		</ReadyContext.Provider>
 	)
 }

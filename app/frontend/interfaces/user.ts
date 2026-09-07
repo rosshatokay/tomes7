@@ -5,4 +5,5 @@ export interface User {
 	is_admin: boolean
 	username: string
 	provider: string
+	bio: string
 }
