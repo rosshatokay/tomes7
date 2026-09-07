@@ -1,7 +1,9 @@
 class Api::V1::NotificationsController < ApplicationController
   def index
-    notifs = current_user.notifications.includes(notifiable: [avatar_attachment: :blob]).order(created_at: :desc).last(10)
+    notifs = current_user.notifications.includes(notifiable: [avatar_attachment: :blob]).order(created_at: :desc).first(10)
     data = notifs.map { |n|
+      n.update(read_at: Time.current)
+
       {
         kind: n.kind,
         created_at: n.created_at.localtime,
@@ -12,8 +14,6 @@ class Api::V1::NotificationsController < ApplicationController
         permalink: n.notifiable.nil? ? nil : get_permalink_based_on_kind(n),
       }
     }
-
-    notifs.map { |n| n.update(read_at: Time.current) }
 
     render json: data
   end

@@ -9,7 +9,7 @@ class BooksController < ApplicationController
     end
 
     scope = category_tab.present? ? Book.published.where(category_id: category_tab.id) : Book.published.all
-    data = scope.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
+    data = scope.map { |b| b.to_hash(permalink: book_path(b.slug)) }
 
     render inertia: "Books/Index", props: {
              categories: categories,
@@ -34,7 +34,7 @@ class BooksController < ApplicationController
     render inertia: "Books/Show", props: {
              **format_book(book),
              ratings_snippet: book.ratings.formatted.first(3),
-             similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) } },
+             similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash(permalink: book_path(b.slug)) } },
              readers: InertiaRails.defer { get_readers(book) },
              progress: entry.present? && entry.progress,
            }, meta: seo_tags(
@@ -75,7 +75,7 @@ class BooksController < ApplicationController
     end
 
     render inertia: "Books/Read", props: {
-      book: book.to_hash.merge(
+      book: book.to_hash(permalink: book_slug(book.slug)).merge(
         epub_file_path: book.epub.attached? ? rails_public_blob_url(book.epub, disposition: "inline") : nil,
         share_url: book_url(book.slug),
         current_position: current_position,
@@ -113,7 +113,7 @@ class BooksController < ApplicationController
       tags: JSON.parse(book.tags.to_json(only: [:name])),
       category: {
         name: book.category.name,
-        permalink: books_path(tab: book.category.slug),
+        permalink: book_path(tab: book.category.slug),
       },
       authors: book.authors.map { |a|
         {

@@ -1,38 +1,8 @@
 class FeedsController < ApplicationController
-  def library
-    available_tabs = ["reading", "following", "saved"]
-    if params[:tab].present? && !available_tabs.include?(params[:tab])
-      redirect_to library_path(tab: "reading")
-      return
-    end
+  allow_unauthenticated_access except: [:my_books]
 
-    current_tab = params[:tab].presence || "reading"
-    saved_books = current_user.likees(Book.includes(:authors, cover_attachment: :blob)).map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
-    currently_reading_books = current_user.currently_reading.map { |b| b.book.to_hash.merge({ permalink: book_path(b.book.slug) }) }
-    following_author_ids = current_user.followees(Author).pluck(:id)
-    following_author_books = Book.joins(:authorships)
-      .where(authorships: { author_id: following_author_ids })
-      .distinct
-      .includes(authors: [:authorships, avatar_attachment: :blob], cover_attachment: :blob)
-      .order(created_at: :desc)
-      .map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) }
-
-    books = case current_tab
-      when "reading"
-        currently_reading_books
-      when "following"
-        following_author_books
-      when "saved"
-        saved_books
-      else
-        currently_reading_books
-      end
-
-    render inertia: "Feeds/Library", props: {
-             books: books,
-           }, meta: seo_tags(
-             title: "Library",
-           )
+  def my_books
+    handle_signed_in_books
   end
 
   def community
@@ -43,23 +13,29 @@ class FeedsController < ApplicationController
 
   private
 
-  def fake_posts
-    results = []
+  def handle_signed_in_books
+    available_tabs = ["reading", "following", "saved"]
+    current_tab = params[:tab].presence || "reading"
 
-    5.times do
-      user = User.includes(avatar_attachment: :blob).all.shuffle.first
-
-      results << {
-        user: {
-          username: user.username,
-          avatar_url: user.get_avatar_url,
-        },
-        post: {
-          content: "A somewhat disappointing follow up after years of waiting. It lacks the naïveté and theatricality of her last two albums, instead opting for a consistently more somber tone that works against the rather simple and at times amateurish lyricism that she hasn’t really changed. While that lyricism previously had a certain charm and strong emotional pull, the production surrounding it here makes the whole thing feel like a bland Elliott Smith/Sun Kil Moon imitation, without the solid writing needed to carry it.",
-        },
-      }
+    if params[:tab].present? && !available_tabs.include?(current_tab)
+      return redirect_to my_books_path(tab: "reading")
     end
 
-    results
+    books = case current_tab
+      when "reading"
+        current_user.currently_reading
+      when "following"
+        current_user.books_by_followed_authors
+      when "saved"
+        current_user.likees(Book).includes(:authors, cover_attachment: :blob)
+      end
+
+    pagy, records = pagy(:countless, books)
+
+    render inertia: "Feeds/MyBooks", props: {
+             books: InertiaRails.scroll(pagy) { records.map { |book| book.to_hash(permalink: book_path(book.slug)) } },
+           }, meta: seo_tags(
+             title: "My books",
+           )
   end
 end

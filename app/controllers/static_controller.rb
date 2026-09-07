@@ -2,6 +2,9 @@ class StaticController < ApplicationController
   allow_unauthenticated_access
 
   def index
+    render inertia: "Static/Index", props: {
+      featured_books: Book.published.order(created_at: :desc).map { |book| book.to_hash(permalink: book_path(book.slug)) },
+    }
   end
 
   def about

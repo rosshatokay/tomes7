@@ -3,19 +3,9 @@ class AuthorsController < ApplicationController
 
   def index
     authors = Author.includes(:books, avatar_attachment: :blob).all
-    followed_author_ids = current_user ? current_user.followees(Author).pluck(:id) : []
 
     render inertia: "Authors/Index", props: {
-             authors: authors.map { |a|
-               {
-                 full_name: a.full_name,
-                 avatar_url: a.avatar.attached? ? a.avatar.service.url(a.avatar.blob.key, transformation: [{ width: 250, height: 250 }]) : nil,
-                 books_count: a.books_count,
-                 permalink: author_path(a.slug),
-                 is_followed: followed_author_ids.include?(a.id),
-                 slug: a.slug,
-               }
-             },
+             authors: authors.map { |a| a.to_hash(permalink: author_path(a.slug), current_user: current_user) },
            }, meta: seo_tags(
              title: user_signed_in? ? "Authors" : "Explore the greatest authors of all time",
              description: "Read the books from the greatest authors of all time. For free.",
@@ -37,7 +27,7 @@ class AuthorsController < ApplicationController
                followers_count: author.followers_count,
                share_url: author_url(author.slug),
              },
-             books: author.books.map { |b| b.to_hash.merge({ permalink: book_path(b.slug) }) },
+             books: author.books.map { |b| b.to_hash(permalink: book_path(b.slug)) },
            }, meta: seo_tags(
              title: author.full_name,
              description: "Read #{author.full_name}'s books. For free.",
