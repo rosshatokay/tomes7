@@ -30,10 +30,24 @@ Rails.application.routes.draw do
   end
 
   resource :session, only: [:create, :destroy]
-  resources :users, only: [:show]
+
+  resources :users, only: [] do
+    collection do
+      patch :update
+    end
+  end
+
+  resources :onboarding, only: [] do
+    collection do
+      get :index
+      patch :update
+    end
+  end
+
+  resources :explore, only: [:index]
   resources :categories, only: [:show]
 
-  resources :books, only: [:index, :show] do
+  resources :books, only: [:show] do
     collection do
       post :save
     end
@@ -139,11 +153,12 @@ Rails.application.routes.draw do
   get "/privacy", to: "static#privacy"
   get "/community-guidelines", to: "static#community_guidelines"
 
+  # get "/explore/books", to: "books#index"
   # get "/community", to: "feeds#community"
-  get "/library", to: "feeds#library", as: :library
 
-  root to: redirect("/library"), constraints: AuthenticatedConstraint.new, as: :authenticated_root
-  root to: redirect("/books")
+  root "feeds#my_books", constraints: AuthenticatedConstraint.new, as: :authenticated_root
+  root "static#index"
+  # root "feeds#my_books"
 
   resource :oauth, only: %i[], controller: "oauth" do
     collection do

@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_many :activities, dependent: :destroy
 
   has_one_attached :avatar, service: :imagekit
-  validates :avatar, content_type: [:png, :jpg, :jpeg, :avif, :webp], size: { less_than: 5.megabytes }
+  validates :avatar, content_type: [:png, :jpg, :jpeg, :avif, :webp], size: { less_than: 1.megabytes }
 
   before_save :set_avatar_path, if: -> { avatar.attached? && avatar.attachment.blob.key.exclude?("/") }
 
@@ -51,11 +51,27 @@ class User < ApplicationRecord
               in: BLACKLISTED_USERNAMES,
               message: "not allowed",
             }
+
   validates :password, presence: true, length: { minimum: 8, message: "has to be at least 8 characters long" }, if: -> { password.present? }, allow_blank: true
   validate :maximum_authors_limit, on: :update
+  validates :bio, length: { maximum: 90 }, allow_blank: true
+
+  before_save :sanitize_bio
 
   def currently_reading
-    user_books.includes(:book).order(updated_at: :desc).where("user_books.progress < 1").references(:book).merge(Book.published)
+    books.with_attached_cover.includes(:authors).joins(:user_books)
+      .where("user_books.progress < 1")
+      .group("books.id")
+      .order(Arel.sql("MAX(user_books.updated_at) DESC"))
+      .merge(Book.published)
+  end
+
+  def books_by_followed_authors
+    Book.joins(:authorships)
+        .where(authorships: { author_id: followees(Author).select(:id) })
+        .distinct
+        .includes(authors: [:authorships, avatar_attachment: :blob], cover_attachment: :blob)
+        .order(created_at: :desc)
   end
 
   def onboarded?
@@ -92,6 +108,11 @@ class User < ApplicationRecord
   end
 
   private
+
+  def sanitize_bio
+    # Removes all HTML tags and unsafe content from the string
+    self.bio = Sanitize.fragment(bio) if bio.present?
+  end
 
   def set_avatar_path
     # We prepend the folder structure to the existing random key

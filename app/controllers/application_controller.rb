@@ -8,15 +8,17 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   helper_method :current_admin
 
+  before_action :check_onboarding
+
   inertia_share auth: -> {
                   {
                     user: current_user&.as_json(
                       only: [
-                        :email, :username, :full_name,
+                        :email, :username, :full_name, :bio,
                       ],
                     )&.merge({
                       id: current_user&.hashid,
-                      avatar_url: current_user&.get_avatar_url,
+                      avatar_url: current_user&.get_avatar_url(size: 64),
                       is_admin: current_user&.admin?,
                     }),
                   }
@@ -30,6 +32,13 @@ class ApplicationController < ActionController::Base
       yield
     ensure
       Prosopite.finish
+    end
+  end
+
+  def check_onboarding
+    # Only redirect if they are logged in and haven't finished onboarding
+    if authenticated? && !current_user.onboarded?
+      redirect_to onboarding_index_path
     end
   end
 
