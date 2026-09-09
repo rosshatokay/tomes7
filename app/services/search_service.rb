@@ -10,7 +10,7 @@ class SearchService
   end
 
   def call
-    results = book_results + author_results + category_results
+    results = book_results + author_results + genre_results
     results.sort_by { |r| -r[:score] }
   end
 
@@ -18,16 +18,16 @@ class SearchService
 
   attr_reader :query
 
-  def category_results
-    Category.where("name ILIKE ?", "%#{query}%").map do |category|
+  def genre_results
+    Genre.where("name ILIKE ?", "%#{query}%").map do |genre|
       {
-        category: {
-          name: category.name,
-          icon: category_emoji(category.slug),
+        genre: {
+          name: genre.name,
+          icon: genre_emoji(genre.slug),
         },
-        permalink: Rails.application.routes.url_helpers.category_path(category.slug),
-        type: "category",
-        score: score_match(category.name),
+        permalink: Rails.application.routes.url_helpers.genre_path(genre.slug),
+        type: "genre",
+        score: score_match(genre.name),
       }
     end
   end

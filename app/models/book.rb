@@ -19,7 +19,7 @@ class Book < ApplicationRecord
   has_one_attached :cover, service: :imagekit
   has_one_attached :epub, service: Rails.env.production? ? :amazon_prod : :amazon_dev
 
-  belongs_to :category
+  belongs_to :genre
 
   accepts_nested_attributes_for :authorships, allow_destroy: true
 
@@ -28,7 +28,7 @@ class Book < ApplicationRecord
   validates :epub, content_type: ["application/epub+zip"], size: { less_than: 100.megabytes }
   validates :authors, presence: true
 
-  scope :published, -> { includes(:category, :authors, cover_attachment: [:blob]).where(published: true) }
+  scope :published, -> { includes(:genre, :authors, cover_attachment: [:blob]).where(published: true) }
 
   before_save :set_cover_path, if: -> { cover.attached? && cover.attachment.blob.key.exclude?("/") }
 
@@ -53,22 +53,31 @@ class Book < ApplicationRecord
     (sum_of_scores.to_f / ratings_count).round(2)
   end
 
-  def similar_books(limit = 8)
+  def similar_books(limit: 8)
     ids = tag_ids
-    return Book.none if ids.empty?
 
-    Book.with_attached_cover
-      .preload(:category, :authors)
+    by_genre = Book.published.where(genre_id: genre_id).where.not(id: id).limit(limit)
+
+    return by_genre if ids.empty?
+
+    by_tags = Book.with_attached_cover
+      .preload(:genre, :authors)
       .joins(:taggings)
-      .where(taggings: { tag_id: ids })
+      .where(taggings: { tag_id: ids }, published: true)
       .where.not(id: id)
       .group(:id)
       .order(Arel.sql("COUNT(*) DESC"))
       .limit(limit)
+
+    by_tags.any? ? by_tags : by_genre
   end
 
   def get_cover_url(size = 500)
-    self.cover.attached? ? self.cover.service.url(self.cover.blob.key, transformation: [{ width: size }]) : nil
+    if self.cover.attached?
+      self.cover.service.url(self.cover.blob.key, transformation: [{ width: size }])
+    else
+      Rails.env.development? && "https://picsum.photos/id/#{id % 200}/1000/1600"
+    end
   end
 
   def should_generate_new_friendly_id?
@@ -87,7 +96,7 @@ class Book < ApplicationRecord
     details.delete_if { |key, value| value == "" }
   end
 
-  def to_hash(permalink:)
+  def to_hash(permalink: nil)
     {
       title: title,
       cover: get_cover_url,

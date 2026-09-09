@@ -21,13 +21,13 @@ interface SearchResult {
 		full_name: string
 		avatar_url: string
 	}
-	category: {
+	genre: {
 		name: string
 		icon: string
 	}
 	score: number
 	permalink: string
-	type: "book" | "category" | "author"
+	type: "book" | "genre" | "author"
 }
 
 interface ResultItemProps {
@@ -63,13 +63,13 @@ const SearchResultItem = ({ data, onClick }: ResultItemProps) => {
 		)
 	}
 
-	if (data.type === 'category') {
+	if (data.type === 'genre') {
 		return (
 			<div className={wrapperClasses} onClick={onClick}>
 				<Link href={data.permalink} className="absolute inset-0 z-1" />
-				<div className="w-9 bg-card aspect-square rounded-md flex-center">{data.category.icon}</div>
+				<div className="w-9 bg-card aspect-square rounded-md flex-center">{data.genre.icon}</div>
 				<div>
-					<h3 className="font-normal">{data.category.name}</h3>
+					<h3 className="font-normal">{data.genre.name}</h3>
 				</div>
 			</div>
 		)

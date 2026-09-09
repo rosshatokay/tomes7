@@ -63,10 +63,10 @@ export default function BooksPage({ books, books_count, pagination }: PageProps)
 			},
 		},
 		{
-			key: "category",
+			key: "genre",
 			label: {
 				icon: <ShapesIcon size={14} />,
-				text: "Category"
+				text: "Genre"
 			},
 		},
 	]

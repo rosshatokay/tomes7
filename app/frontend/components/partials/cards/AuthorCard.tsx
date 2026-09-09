@@ -37,7 +37,7 @@ export default function AuthorCard({ author, auth }: Props) {
 	}
 
 	return (
-		<div className="bg-card rounded-xl md:py-12 p-5 flex md:items-center md:justify-center flex-col gap-4 relative hover:bg-black/5 dark:hover:bg-white/10 transition">
+		<div className="bg-card rounded-xl md:py-12 p-5 flex md:items-center md:justify-center flex-col gap-4 relative hover:bg-black/10 dark:hover:bg-white/10 transition">
 			<Link href={author.permalink} className="absolute inset-0 z-1" />
 			<div className="flex md:flex-col items-center gap-4">
 				<Avatar className={"md:size-16 size-12 md:mx-auto"}>

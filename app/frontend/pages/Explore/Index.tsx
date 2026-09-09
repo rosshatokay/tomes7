@@ -5,26 +5,26 @@ import MainHeader from "@/components/partials/MainHeader";
 import { AuthProps } from "@/interfaces/auth";
 import Author from "@/interfaces/author";
 import { Book } from "@/interfaces/book";
-import { Category } from "@/interfaces/category";
-import { getCategoryIcon } from "@/lib/utils";
+import { Genre } from "@/interfaces/genre";
+import { getGenreIcon } from "@/lib/utils";
 import { Link } from "@inertiajs/react";
 
 interface Props {
-	categories: Category[]
+	genres: Genre[]
 	authors: Author[]
 	recent_books: Book[]
 	auth: AuthProps
 }
 
-export default function ExplorePage({ categories, authors, recent_books, auth }: Props) {
+export default function ExplorePage({ genres, authors, recent_books, auth }: Props) {
 	const sections = [
 		{
-			heading: "By category",
-			items: categories.map(category => (
-				<div className="bg-card flex flex-col rounded-xl gap-12 p-5" key={category.slug}>
-					{/* <Link href={category.} /> */}
-					{getCategoryIcon(category.slug)}
-					<h3 className="mt-auto">{category.name}</h3>
+			heading: "By genre",
+			items: genres.map(genre => (
+				<div className="relative bg-card hover:bg-black/10 dark:hover:bg-white/10 flex flex-col rounded-xl gap-12 p-5" key={genre.slug}>
+					<Link href={genre.permalink} className="absolute inset-0" />
+					{getGenreIcon(genre.slug)}
+					<h3 className="mt-auto">{genre.name}</h3>
 				</div>
 			))
 		},

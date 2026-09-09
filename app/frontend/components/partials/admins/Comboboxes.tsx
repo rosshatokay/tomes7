@@ -15,50 +15,50 @@ type Tag = {
 	name: string
 }
 
-type Category = {
+type Genre = {
 	name: string
 	id: number | null
 }
 
-export function CategoryComboBox({
-	defaultCategory,
+export function GenreComboBox({
+	defaultGenre,
 	onChange,
 	isInvalid = false
 }: {
-	defaultCategory?: Category,
-	onChange?: (category: Category) => void,
+	defaultGenre?: Genre,
+	onChange?: (genre: Genre) => void,
 	isInvalid?: boolean
 }) {
-	const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
-	const [categories, setCategories] = useState<Category[]>([])
+	const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null)
+	const [genres, setGenres] = useState<Genre[]>([])
 	const { get, processing } = useHttp({})
 
 	useEffect(() => {
-		get("/api/v1/admins/categories", {
-			onSuccess: (res: any) => setCategories(res.categories)
+		get("/api/v1/admins/genres", {
+			onSuccess: (res: any) => setGenres(res.genres)
 		})
 	}, [])
 
 	return (
 		<Combobox
-			items={categories}
-			value={selectedCategory || defaultCategory}
+			items={genres}
+			value={selectedGenre || defaultGenre}
 			onValueChange={(value) => {
 				onChange ? onChange(value as any) : undefined
-				setSelectedCategory(value)
+				setSelectedGenre(value)
 			}}
-			itemToStringLabel={(category: Category) => category?.name ?? ""}
-			itemToStringValue={(category: Category) => category ? String(category.id) : ""}
+			itemToStringLabel={(genre: Genre) => genre?.name ?? ""}
+			itemToStringValue={(genre: Genre) => genre ? String(genre.id) : ""}
 		>
-			<ComboboxInput placeholder="Select a category" aria-invalid={isInvalid} />
+			<ComboboxInput placeholder="Select a genre" aria-invalid={isInvalid} />
 			<ComboboxContent>
 				<ComboboxEmpty>
 					{processing ? "Searching..." : "No items found."}
 				</ComboboxEmpty>
 				<ComboboxList>
-					{(category) => (
-						<ComboboxItem key={category.id} value={category}>
-							{category.name}
+					{(genre) => (
+						<ComboboxItem key={genre.id} value={genre}>
+							{genre.name}
 						</ComboboxItem>
 					)}
 				</ComboboxList>

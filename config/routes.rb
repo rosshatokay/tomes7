@@ -45,7 +45,7 @@ Rails.application.routes.draw do
   end
 
   resources :explore, only: [:index]
-  resources :categories, only: [:show]
+  resources :genres, only: [:show]
 
   resources :books, only: [:show] do
     collection do
@@ -98,7 +98,7 @@ Rails.application.routes.draw do
       end
 
       namespace :admins do
-        resources :categories, only: [] do
+        resources :genres, only: [] do
           collection do
             get :index
             get :search

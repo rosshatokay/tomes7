@@ -79,10 +79,10 @@ export default function LandingPage({ featured_books }: Props) {
 					</div>
 				</div>
 			</div>
-			<div className="relative md:h-[800px] overflow-hidden">
+			<div className="relative overflow-hidden">
 				<div className="absolute pointer-events-none w-full h-[600px] z-2 bg-linear-to-t from-[var(--color-background)] to-transparent bottom-0 left-0"></div>
 				<div className="relative pointer-events-none pt-16">
-					<div className="md:w-[calc(100%+((100vw/7)))] w-[calc(100%+((100vw)))] flex md:gap-6 gap-2 absolute left-1/2 -translate-x-1/2">
+					<div className="flex md:gap-6 gap-2 relative left-1/2 -translate-x-1/2 w-[calc(100%_+_(100%_/_7))]">
 						<div className="splash-g-4 flex flex-col gap-6">
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/v0fjqqnzg0mi10g6bwqmws1i3uj1?tr=w-1000:w-3840,c-at_max" />
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/vddj1o01qmjwlrsty8rqqf55ew3o?tr=w-1000:w-3840,c-at_max" />
@@ -112,10 +112,40 @@ export default function LandingPage({ featured_books }: Props) {
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/3nw4f9kykomuo3ii9lfzzkgds1ua?tr=w-1000:w-3840,c-at_max" />
 						</div>
 					</div>
+					{/* <div className="md:w-[calc(100%+((100vw/7)))] w-[calc(100%+((100vw)))] flex md:gap-6 gap-2">
+						<div className="splash-g-4 flex flex-col gap-6">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/v0fjqqnzg0mi10g6bwqmws1i3uj1?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/vddj1o01qmjwlrsty8rqqf55ew3o?tr=w-1000:w-3840,c-at_max" />
+						</div>
+						<div className="splash-g-3 flex flex-col gap-6 md:mt-[48px] mt-2">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/y66id8u2gi9mko65bihfu5pwph8i?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/j2ezfw8rbknolfzq1nsye6q7o3o6?tr=w-1000:w-3840,c-at_max" />
+						</div>
+						<div className="splash-g-2 flex flex-col gap-6 md:mt-[96px] mt-4">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/4i4b6nsr6jkhpywiibwml3hugbcn?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/qy6ic8l4wufmwaj37mf9k1y76u24?tr=w-1000:w-3840,c-at_max" />
+						</div>
+						<div className="splash-g-1 flex flex-col gap-6 md:mt-[144px] mt-6">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/wqojc98crukiw0mjryb0r34t2edz?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/wv482vi7jsexty0abh95ijqt9090?tr=w-1000:w-3840,c-at_max" />
+						</div>
+						<div className="splash-g-2 flex flex-col gap-6 md:mt-[96px] mt-4">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/d5psgyhhve5hghx6qkcdxtvr2vhf?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/hanbexxqrd8n4a6uo2yf6im7nfqr?tr=w-1000:w-3840,c-at_max" />
+						</div>
+						<div className="splash-g-3 flex flex-col gap-6 md:mt-[48px] mt-2">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/l7x59ij1e8ruoczw6dy4rsu6mkcl?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/hr5bjpjc9pl52wajyc15dctnwdnl?tr=w-1000:w-3840,c-at_max" />
+						</div>
+						<div className="splash-g-4 flex flex-col gap-6">
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/i38awsouq23u6hha9wcx3iyjdin0?tr=w-1000:w-3840,c-at_max" />
+							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/3nw4f9kykomuo3ii9lfzzkgds1ua?tr=w-1000:w-3840,c-at_max" />
+						</div>
+					</div> */}
 				</div>
 			</div>
-			<div className="sections flex flex-col gap-50 pt-5">
-				<div className="large-container">
+			<div className="sections flex flex-col gap-50 pt-50">
+				<div className="medium-container max-w-7xl">
 					<div className="text-center mb-12">
 						<h2 className="font-headline text-5xl max-w-2xl mx-auto mb-4">From beloved masterpieces to hidden gems</h2>
 						<p className="text-subtle text-lg max-w-md mx-auto">Explore the works that shaped literature. Available instantly, anywhere.</p>
@@ -128,8 +158,8 @@ export default function LandingPage({ featured_books }: Props) {
 						{featured_books.map(book => <BookCard book={book} />)}
 					</div>
 				</div>
-				<div className="medium-container max-w-6xl">
-					<h2 className="font-headline text-4xl mb-6">Designed for ease of use.</h2>
+				{/* <div className="medium-container max-w-7xl">
+					<h2 className="font-headline text-5xl mb-12">Designed for ease of use.</h2>
 					<div className="grid grid-cols-2 gap-4">
 						<div>
 							<div className="aspect-[1.4] rounded-xl border mb-5 flex-center bg-white overflow-hidden">
@@ -151,6 +181,10 @@ export default function LandingPage({ featured_books }: Props) {
 						</div>
 					</div>
 				</div>
+
+				<div className="medium-container max-w-7xl">
+					<h2 className="font-headline text-5xl mb-12">Feature</h2>
+				</div> */}
 			</div>
 		</div>
 	)

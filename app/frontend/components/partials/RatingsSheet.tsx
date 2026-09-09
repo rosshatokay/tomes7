@@ -129,7 +129,7 @@ export default function RatingsSheet({
 								</div>
 								<div className="flex items-center justify-between text-sm text-subtle my-6">
 									<span>
-										Showing 1 - {data?.ratings.length || 0} of {data?.pagination.total_count || data?.ratingsCount} reviews
+										Showing {data?.ratings.length === 0 ? 0 : page} - {data?.ratings.length || 0} of {data?.pagination.total_count || data?.ratingsCount} reviews
 									</span>
 									{/* <Select items={sortItems}>
 										<SelectTrigger className={"rounded-full"}>

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useForm, useHttp } from "@inertiajs/react"
 import { Fragment, useEffect, useRef, useState } from "react"
-import { AuthorsCombobox, BookTagsComboBox, CategoryComboBox } from "./Comboboxes"
+import { AuthorsCombobox, BookTagsComboBox, GenreComboBox } from "./Comboboxes"
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment"
 import { Spinner } from "@/components/ui/spinner"
 import { FileTextIcon, ImagePlusIcon, LockOpenIcon, TrashIcon, UploadCloudIcon, XIcon } from "lucide-react"
@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 const INITIAL_BOOK_STATE = {
 	id: null as string | null,
 	title: "",
-	category: {
+	genre: {
 		name: "",
 		id: null
 	},
@@ -90,7 +90,7 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 				delete payload.epub
 			}
 
-			payload.category_id = payload.category.id
+			payload.genre_id = payload.genre.id
 
 			return { book: payload }
 		})
@@ -180,7 +180,7 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 					setData("book", {
 						id: res.book.id,
 						title: res.book.title,
-						category: res.book.category,
+						genre: res.book.genre,
 						authors: res.book.authors,
 						description: res.book.description,
 						cover: null,
@@ -267,12 +267,12 @@ export default function BookSheet({ activeBookId, setActiveBookId }: Props) {
 									{errors['book.authors'] && <FieldError>{errors["book.authors"]}</FieldError>}
 								</Field>
 								<Field>
-									<FieldLabel>Category</FieldLabel>
-									<CategoryComboBox isInvalid={!!errors["book.category"]} defaultCategory={data.book.category} onChange={(category) => {
-										setData('book.category', category as any)
-										clearErrors('book.category')
+									<FieldLabel>Genre</FieldLabel>
+									<GenreComboBox isInvalid={!!errors["book.genre"]} defaultGenre={data.book.genre} onChange={(genre) => {
+										setData('book.genre', genre as any)
+										clearErrors('book.genre')
 									}} />
-									{errors['book.category'] && <FieldError>{errors["book.category"]}</FieldError>}
+									{errors['book.genre'] && <FieldError>{errors["book.genre"]}</FieldError>}
 								</Field>
 								<Field>
 									<FieldLabel>Tags</FieldLabel>

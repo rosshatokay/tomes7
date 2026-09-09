@@ -2,7 +2,7 @@ export interface Book {
 	title: string
 	cover: string
 	author_names: string
-	category: string
+	genre: string
 	published?: boolean
 	permalink: string
 	id: string

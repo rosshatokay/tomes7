@@ -1,4 +1,4 @@
-categories = [
+genres = [
   "Literature",
   "History",
   "Arts & Culture",
@@ -10,8 +10,8 @@ categories = [
   "Education & Reference",
 ]
 
-categories.each do |name|
-  Category.find_or_create_by!(name: name)
+genres.each do |name|
+  Genre.find_or_create_by!(name: name)
 end
 
 user = User.find_or_initialize_by(username: "rusty", email: "rosshatokay@gmail.com", role: 1)

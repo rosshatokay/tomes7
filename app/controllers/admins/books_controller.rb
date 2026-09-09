@@ -1,6 +1,6 @@
 class Admins::BooksController < Admins::BaseController
   def index
-    scope = Book.with_attached_cover.includes(:authors, :category)
+    scope = Book.with_attached_cover.includes(:authors, :genre)
 
     if params[:q]
       scope = scope.where("title ILIKE ?", "%#{params[:q]}%")
@@ -15,7 +15,7 @@ class Admins::BooksController < Admins::BaseController
                  book.to_hash.merge({
                    permalink: book_path(book.slug),
                    id: book.hashid,
-                   category: book.category.name,
+                   genre: book.genre.name,
                    readers_count: book.readers_count,
                  })
                }
@@ -29,13 +29,13 @@ class Admins::BooksController < Admins::BaseController
       { label: "Books", path: admins_books_path },
       { label: "New book" },
     ]
-    @categories = Category.order(:name).pluck(:name, :id)
+    @genres = Genre.order(:name).pluck(:name, :id)
     @book = Book.new
   end
 
   def edit
     @book = Book.with_attached_cover.with_attached_epub.includes(tags: []).find(params[:id])
-    @categories = Category.order(:name).pluck(:name, :id)
+    @genres = Genre.order(:name).pluck(:name, :id)
     @breadcrumbs = [
       { label: "Home", path: admins_root_path },
       { label: "Books", path: admins_books_path },
@@ -83,7 +83,7 @@ class Admins::BooksController < Admins::BaseController
     params.require(:book).permit(
       :title,
       :description,
-      :category_id,
+      :genre_id,
       :wiki_url,
       :epub,
       :cover,

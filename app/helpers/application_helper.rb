@@ -58,7 +58,7 @@ module ApplicationHelper
     ]
   end
 
-  def category_emoji(slug)
+  def genre_emoji(slug)
     images = {
       "literature": "📚",
       "history": "📜",

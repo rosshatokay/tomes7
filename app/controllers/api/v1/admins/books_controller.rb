@@ -10,9 +10,9 @@ class Api::V1::Admins::BooksController < Admins::BaseController
       wiki_url: book.wiki_url,
       details: book.details,
       tags: book.tags.select(:id, :name),
-      category: {
-        name: book.category.name,
-        id: book.category.id,
+      genre: {
+        name: book.genre.name,
+        id: book.genre.id,
       },
       authors: book.authors.map { |a|
         {

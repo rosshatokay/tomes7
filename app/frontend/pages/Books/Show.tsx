@@ -50,7 +50,7 @@ export interface BookPageProps {
 		details: Record<string, string>
 	}
 	tags: [{ name: string }]
-	category: {
+	genre: {
 		name: string
 		permalink: string
 	}
@@ -64,7 +64,7 @@ export interface BookPageProps {
 export default function BookPage({
 	auth,
 	book,
-	category,
+	genre,
 	authors,
 	tags,
 	similar_books,
@@ -81,7 +81,7 @@ export default function BookPage({
 
 	const crumbs = [
 		{ label: "Home", path: "/" },
-		{ label: category.name, path: category.permalink },
+		{ label: genre.name, path: genre.permalink },
 		{ label: book.title, path: "" },
 	]
 	const bookDetailsKeys = Object.keys(book.details)
@@ -110,7 +110,7 @@ export default function BookPage({
 					<div className="lg:h-[calc(100vh_-_120px)] lg:max-h-[960px] col-span-8 w-full lg:sticky top-20 md:pb-5 flex flex-col gap-2 lg:pr-8 h-110">
 						<div className="bg-card w-full h-full flex-center rounded-xl py-16 overflow-hidden">
 							<div className="relative h-full aspect-[4/6]">
-								<img className="h-full w-full relative z-1 rounded-[2px]" src={book.cover_url} alt={`${book.title}'s cover`} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
+								<img className="h-full w-full relative z-1 rounded-sm" src={book.cover_url} alt={`${book.title}'s cover`} style={{ boxShadow: "-24px 24px 48px rgba(1,1,1,.5)" }} />
 							</div>
 						</div>
 					</div>

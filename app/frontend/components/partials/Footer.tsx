@@ -26,7 +26,7 @@ const footerNavLinks = [
 
 export const Footer = () => {
 	return (
-		<footer className="large-container flex flex-col gap-8 md:mt-25 mt-12 pb-5">
+		<footer className="large-container flex flex-col gap-8 md:mt-25 mt-12 pb-12">
 			<div className="flex flex-col md:grid grid-cols-12 md:gap-4 gap-8">
 				<div className="flex flex-col h-full w-full col-span-6 md:gap-0 gap-6">
 					<div className="opacity-50">
@@ -48,12 +48,12 @@ export const Footer = () => {
 					))}
 				</div>
 			</div>
-			<div className="relative opacity-50">
+			{/* <div className="relative opacity-50">
 				<div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-[var(--background)] to-transparent from-10% z-1"></div>
 				<div className="logo-screen">
 					<LogoText />
 				</div>
-			</div>
+			</div> */}
 		</footer>
 	)
 }

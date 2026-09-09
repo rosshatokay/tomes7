@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import { toast } from "@/components/ui/toast"
-import { Category } from "@/interfaces/category"
+import { Genre } from "@/interfaces/genre"
 import { Link, router } from "@inertiajs/react"
 import clsx, { type ClassValue } from "clsx"
 import { FeatherIcon, HeartPulseIcon, LandmarkIcon, MicroscopeIcon, OmegaIcon, PaletteIcon, UsersRoundIcon, VolleyballIcon } from "lucide-react"
@@ -268,8 +268,8 @@ export const debounce = (callback: Function, delay: number) => {
 	}
 }
 
-export const getCategoryIcon = (categorySlug: Category['slug']) => {
-	switch (categorySlug) {
+export const getGenreIcon = (genreSlug: Genre['slug']) => {
+	switch (genreSlug) {
 		case "literature":
 			return <FeatherIcon />
 		case "history":

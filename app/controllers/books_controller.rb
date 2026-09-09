@@ -2,17 +2,17 @@ class BooksController < ApplicationController
   allow_unauthenticated_access except: %i[ save ]
 
   def index
-    categories = JSON.parse(Category.all.to_json(only: [:name, :slug]))
+    genres = JSON.parse(Genre.all.to_json(only: [:name, :slug]))
 
     if params[:tab].present?
-      category_tab = Category.find_by(slug: params[:tab])
+      genre_tab = Genre.find_by(slug: params[:tab])
     end
 
-    scope = category_tab.present? ? Book.published.where(category_id: category_tab.id) : Book.published.all
+    scope = genre_tab.present? ? Book.published.where(genre_id: genre_tab.id) : Book.published.all
     data = scope.map { |b| b.to_hash(permalink: book_path(b.slug)) }
 
     render inertia: "Books/Index", props: {
-             categories: categories,
+             genres: genres,
              books: data,
            }, meta: [
              { title: user_signed_in? ? "Books" : "Read the greatest books of all time. For free." },
@@ -21,7 +21,7 @@ class BooksController < ApplicationController
 
   def show
     book = Book.with_attached_cover.includes(
-      :category,
+      :genre,
       :readers,
       ratings: [user: [avatar_attachment: :blob]],
       authors: [avatar_attachment: :blob],
@@ -34,7 +34,7 @@ class BooksController < ApplicationController
     render inertia: "Books/Show", props: {
              **format_book(book),
              ratings_snippet: book.ratings.formatted.first(3),
-             similar_books: InertiaRails.defer { book.similar_books(4).map { |b| b.to_hash(permalink: book_path(b.slug)) } },
+             similar_books: InertiaRails.defer { book.similar_books(limit: 4).map { |b| b.to_hash(permalink: book_path(b.slug)) } },
              readers: InertiaRails.defer { get_readers(book) },
              progress: entry.present? && entry.progress,
            }, meta: seo_tags(
@@ -111,9 +111,9 @@ class BooksController < ApplicationController
         details: book.get_details,
       },
       tags: JSON.parse(book.tags.to_json(only: [:name])),
-      category: {
-        name: book.category.name,
-        permalink: book_path(tab: book.category.slug),
+      genre: {
+        name: book.genre.name,
+        permalink: book_path(tab: book.genre.slug),
       },
       authors: book.authors.map { |a|
         {

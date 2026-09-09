@@ -8,7 +8,7 @@ class Admins::AuthorsController < Admins::BaseController
       scope = scope.where("full_name ILIKE ?", "%#{params[:q]}%")
     end
 
-    @pagy, authors = pagy(scope, limit: 5)
+    @pagy, authors = pagy(scope, limit: 15)
 
     render inertia: "Admin/Authors", props: {
       authors_count: authors.count,
@@ -47,11 +47,13 @@ class Admins::AuthorsController < Admins::BaseController
     @author = Author.build(author_params)
 
     if @author.save
-      flash[:success] = "Author created"
+      flash.inertia[:toast] = { description: "Author created" }
       redirect_to admins_authors_path
     else
-      flash[:error] = "Something went wrong"
-      render :new
+      flash.inertia[:toast] = { description: "Something went wrong" }
+      redirect_to admins_authors_path, inertia: {
+                                         errors: inertia_errors_for(@author),
+                                       }
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_25_194038) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_09_145123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -82,7 +82,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_25_194038) do
     t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "category_id", null: false
+    t.bigint "genre_id", null: false
     t.string "wiki_url"
     t.jsonb "toc"
     t.integer "ratings_count", default: 0
@@ -90,17 +90,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_25_194038) do
     t.boolean "published", default: false
     t.integer "readers_count", default: 0
     t.jsonb "details", default: {}, null: false
-    t.index ["category_id"], name: "index_books_on_category_id"
+    t.index ["genre_id"], name: "index_books_on_genre_id"
     t.index ["slug"], name: "index_books_on_slug_unique", unique: true
     t.index ["title"], name: "index_books_on_title", opclass: :gin_trgm_ops, using: :gin
-  end
-
-  create_table "categories", force: :cascade do |t|
-    t.string "name"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
   create_table "feedbacks", force: :cascade do |t|
@@ -121,6 +113,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_25_194038) do
     t.datetime "created_at", precision: nil
     t.index ["followable_id", "followable_type"], name: "fk_followables"
     t.index ["follower_id", "follower_type"], name: "fk_follows"
+  end
+
+  create_table "genres", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_genres_on_slug", unique: true
   end
 
   create_table "identities", force: :cascade do |t|
@@ -248,7 +248,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_25_194038) do
   add_foreign_key "activities", "users"
   add_foreign_key "authorships", "authors"
   add_foreign_key "authorships", "books"
-  add_foreign_key "books", "categories"
+  add_foreign_key "books", "genres"
   add_foreign_key "feedbacks", "users"
   add_foreign_key "identities", "users"
   add_foreign_key "notifications", "users"

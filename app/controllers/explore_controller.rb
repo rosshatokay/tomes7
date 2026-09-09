@@ -2,7 +2,8 @@ class ExploreController < ApplicationController
   allow_unauthenticated_access
 
   def index
-    categories = JSON.parse(Category.all.to_json(only: [:name, :slug]))
+    genres = Genre.all.map { |c| c.format(permalink: genre_path(c.slug)) }
+
     authors = Author.with_attached_avatar
       .where("books_count > 0")
       .order(books_count: :desc)
@@ -12,7 +13,7 @@ class ExploreController < ApplicationController
     recent_books = Book.published.order(created_at: :desc).map { |b| b.to_hash(permalink: book_path(b.slug)) }
 
     render inertia: "Explore/Index", props: {
-             categories: categories,
+             genres: genres,
              authors: authors,
              recent_books: recent_books,
            }, meta: seo_tags(
