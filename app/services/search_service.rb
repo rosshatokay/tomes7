@@ -37,7 +37,7 @@ class SearchService
       {
         book: {
           title: book.title,
-          cover_url: book.cover.attached? ? book.cover.service.url(book.cover.blob.key, transformation: [{ width: 100 }]) : nil,
+          cover_url: book.get_cover_url(100),
           author_names: book.author_names,
         },
         type: "book",
@@ -52,7 +52,7 @@ class SearchService
       {
         author: {
           full_name: author.full_name,
-          avatar_url: author.avatar.attached? ? author.avatar.service.url(author.avatar.blob.key, transformation: [{ width: 100 }]) : nil,
+          avatar_url: author.get_avatar_url(size: 100),
         },
         type: "author",
         score: score_match(author.full_name),

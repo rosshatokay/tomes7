@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { Link } from "@inertiajs/react";
 import { Spinner } from "../ui/spinner";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface SearchDialogProps {
 	isOpen: boolean
@@ -42,10 +43,10 @@ const SearchResultItem = ({ data, onClick }: ResultItemProps) => {
 		return (
 			<div className={wrapperClasses} onClick={onClick}>
 				<Link href={data.permalink} className="absolute inset-0 z-1" />
-				<img className="aspect-book h-12 rounded-[3px] bg-card" src={data.book.cover_url} />
-				<div>
-					<h3 className="font-normal">{data.book.title}</h3>
-					<p className="text-subtle text-sm">{data.book.author_names}</p>
+				<img className="aspect-book w-9 rounded-[3px] bg-card" src={data.book.cover_url} />
+				<div className="min-w-0">
+					<h3 className="font-normal truncate">{data.book.title}</h3>
+					<p className="text-subtle text-sm truncate">{data.book.author_names}</p>
 				</div>
 			</div>
 		)
@@ -55,9 +56,12 @@ const SearchResultItem = ({ data, onClick }: ResultItemProps) => {
 		return (
 			<div className={wrapperClasses} onClick={onClick}>
 				<Link href={data.permalink} className="absolute inset-0 z-1" />
-				<img className="aspect-square w-9 rounded-[2px] rounded-full object-cover" src={data.author.avatar_url} />
-				<div>
-					<h3 className="font-normal">{data.author.full_name}</h3>
+				<Avatar className={"!size-9"}>
+					<AvatarImage src={data.author.avatar_url} />
+					<AvatarFallback>{data.author.full_name[0]}</AvatarFallback>
+				</Avatar>
+				<div className="min-w-0">
+					<h3 className="font-normal truncate">{data.author.full_name}</h3>
 				</div>
 			</div>
 		)
@@ -68,8 +72,8 @@ const SearchResultItem = ({ data, onClick }: ResultItemProps) => {
 			<div className={wrapperClasses} onClick={onClick}>
 				<Link href={data.permalink} className="absolute inset-0 z-1" />
 				<div className="w-9 bg-card aspect-square rounded-md flex-center">{data.genre.icon}</div>
-				<div>
-					<h3 className="font-normal">{data.genre.name}</h3>
+				<div className="min-w-0">
+					<h3 className="font-normal truncate">{data.genre.name}</h3>
 				</div>
 			</div>
 		)
@@ -129,7 +133,7 @@ export const SearchDialog = ({ isOpen, setIsOpen }: SearchDialogProps) => {
 					/>
 				</div>
 				{isLoading && <div className="flex-center h-full"><Spinner className="size-8" /></div>}
-				{debouncedQuery.trim().length < 2 && (
+				{(debouncedQuery.trim().length < 2 || searchQuery.trim().length === 0) && (
 					<Empty>
 						<EmptyHeader>
 							<EmptyMedia variant={"icon"}><SearchIcon /></EmptyMedia>
@@ -138,14 +142,14 @@ export const SearchDialog = ({ isOpen, setIsOpen }: SearchDialogProps) => {
 						</EmptyHeader>
 					</Empty>
 				)}
-				{!isLoading && results === null && (
+				{(!isLoading && results === null && searchQuery.trim().length > 0) && (
 					<div className="text-sm text-subtle text-center p-6">
 						<SearchXIcon className="size-6 mx-auto mb-3" />
 						<div>No results found.</div>
 						<div>Try a different keyword.</div>
 					</div> 
 				)}
-				{!isLoading && results && results.length > 0 && <div className="p-2 h-fit">
+				{(!isLoading && results && results.length > 0 && searchQuery.trim().length > 0) && <div className="p-2 h-fit overflow-y-auto">
 					<div className="text-sm text-subtle px-2 mb-1">Results</div>
 					{results?.map((result: SearchResult, index) => (
 						<SearchResultItem key={index} data={result} onClick={() => setIsOpen(false)} />

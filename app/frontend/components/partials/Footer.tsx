@@ -6,10 +6,10 @@ const footerNavLinks = [
 	{
 		label: "Explore",
 		items: [
-			{ label: "Literature", path: "/books?tab=literature" },
-			{ label: "History", path: "/books?tab=history" },
-			{ label: "Religion & Philosophy", path: "/books?tab=religion-philosophy" },
-			{ label: "See all", path: "/books" },
+			{ label: "Literature", path: "/genres/literature" },
+			{ label: "History", path: "/genres/history" },
+			{ label: "Religion & Philosophy", path: "/genres/religion-philosophy" },
+			{ label: "See all", path: "/explore" },
 		]
 	},
 	{

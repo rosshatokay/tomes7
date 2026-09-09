@@ -24,7 +24,7 @@ export const BookCard = ({ book, isMobileForced }: BookProps) => {
 			<div className="h-full">
 				<div className={cn("flex flex-col h-full py-3", !isMobile && "py-0")}>
 					<h3 className="truncate">{book.title}</h3>
-					<div className="text-subtle text-sm mt-0.5 mb-2">{book.author_names}</div>
+					<div className="truncate text-subtle text-sm mt-0.5 mb-2">{book.author_names}</div>
 					{/* <div className={cn("flex items-center gap-1 text-sm mt-auto", isMobile ? "mt-auto" : "mt-1")}> */}
 					<div className={cn("flex items-center gap-1 text-sm mt-auto")}>
 						<RatingStars rating={book.average_rating} />
