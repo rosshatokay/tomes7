@@ -21,8 +21,8 @@ export default function LoginPage({ oauth_path }: { oauth_path: string }) {
 
 	return (
 		<>
-			<div className="w-full min-h-svh py-8 flex-center">
-				<div className="max-w-sm w-full flex flex-col gap-6">
+			<div className="w-full min-h-svh py-8 flex md:items-center justify-center">
+				<div className="large-container max-w-md w-full flex flex-col gap-6">
 					<LogoIcon />
 					<div className="flex flex-col gap-2">
 						<h1 className="text-lg leading-none">Welcome back to Tomes</h1>

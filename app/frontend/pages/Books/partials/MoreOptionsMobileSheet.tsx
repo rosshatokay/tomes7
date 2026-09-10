@@ -42,12 +42,14 @@ export default function MoreOptionsMobileSheet({
 		{
 			icon: <UserIcon className="!size-5" />,
 			label: `More from ${author.full_name}`,
-			onClick: () => { }
+			path: author.permalink,
+			pathExternal: false
 		},
 		{
 			icon: <WikipediaIcon fill="var(--foreground)" size={20} className="!w-5 !h-5" />,
 			label: `Read Wikipedia page`,
-			onClick: () => { }
+			path: book.wiki_url,
+			pathExternal: true
 		},
 	]
 
@@ -85,6 +87,8 @@ export default function MoreOptionsMobileSheet({
 							className={"justify-start gap-3 px-4 active:!bg-muted h-11 rounded-lg"}
 							size={"lg"}
 							onClick={() => btn.onClick && btn.onClick()}
+							nativeButton={btn.path ? false : true}
+							render={btn.path ? (btn.pathExternal ? <a href={btn.path} target="_blank" /> : <Link href={btn.path} />) : <button />}
 						>
 							{btn.icon}
 							<span className="text-base font-normal">{btn.label}</span>

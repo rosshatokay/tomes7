@@ -3,11 +3,12 @@ import { Link } from "@inertiajs/react";
 import { ArrowRightIcon } from "lucide-react";
 import gsap from "gsap"
 import { SplitText } from "gsap/all";
-import { useReady } from "@/layouts/BaseLayout";
+import BaseLayout, { useReady } from "@/layouts/BaseLayout";
 import { useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn, useIsMobile } from "@/lib/utils";
 import { Book } from "@/interfaces/book";
 import { BookCard } from "@/components/partials/cards/BookCard";
+import { LinkUnderline } from "@/components/partials/LinkUnderline";
 
 const hideSplitElms = (elm: Element, display: string) => {
 	let wrapper = document.createElement("div")
@@ -59,6 +60,7 @@ interface Props {
 
 export default function LandingPage({ featured_books }: Props) {
 	const isReady = useReady()
+	const isMobile = useIsMobile()
 
 	useEffect(() => {
 		if (isReady) {
@@ -68,13 +70,17 @@ export default function LandingPage({ featured_books }: Props) {
 
 	return (
 		<div className={cn("transition", !isReady && "opacity-0")}>
-			<div className={"large-container pt-25"}>
-				<div className="text-center max-w-2xl mx-auto">
+			<div className={"large-container md:pt-25 pt-20"}>
+				<div className="md:text-center max-w-2xl mx-auto">
 					<div id="splash-text-container">
-						<h1 id="splash-h1" className="font-headline text-6xl mb-4">Read the greatest books of all time. For free.</h1>
-						<p id="splash-p" className="text-lg text-subtle max-w-md mx-auto mb-6 leading-[1.2]">Access timeless classics from the literary masters. In one beautiful reading app.</p>
+						<h1 id="splash-h1" className="font-headline md:text-6xl text-4xl mb-4 leading-none">Read the greatest books of all time. For free.</h1>
+						<p id="splash-p" className="md:text-lg text-subtle max-w-md mx-auto mb-6 leading-[1.2]">Access timeless classics from the literary masters. In one beautiful reading app.</p>
 						<div id="splash-cta">
-							<Button size={"lg"} nativeButton={false} render={<Link href={"/signup"} />}>Join for free <ArrowRightIcon /></Button>
+							<div className="flex md:flex-row flex-col gap-2 md:justify-center">
+								<Button size={"lg"} className={"md:h-12 h-10 px-4 md:text-base rounded-full md:w-fit w-full"} nativeButton={false} render={<Link href={"/signup"} />}>Create a free account</Button>
+								<Button size={"lg"} className={"md:h-12 h-10 px-4 md:text-base rounded-full md:w-fit w-full"} nativeButton={false} render={<Link href={"/explore"} />} variant={"secondary"}>Explore</Button>
+							</div>
+							<p className="text-subtle text-sm mt-4">Already a member? <LinkUnderline className="text-foreground">Sign in</LinkUnderline></p>
 						</div>
 					</div>
 				</div>
@@ -82,12 +88,12 @@ export default function LandingPage({ featured_books }: Props) {
 			<div className="relative overflow-hidden">
 				<div className="absolute pointer-events-none w-full h-[600px] z-2 bg-linear-to-t from-[var(--color-background)] to-transparent bottom-0 left-0"></div>
 				<div className="relative pointer-events-none pt-16">
-					<div className="flex md:gap-6 gap-2 relative left-1/2 -translate-x-1/2 w-[calc(100%_+_(100%_/_7))]">
-						<div className="splash-g-4 flex flex-col gap-6">
+					<div className="flex md:gap-6 gap-2 relative left-1/2 -translate-x-1/2 md:w-[calc(100%_+_(100%_/_7))] w-[calc(100%_+_(100%_/_4))]">
+						<div className="splash-g-4 hidden md:flex flex-col gap-6">
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/v0fjqqnzg0mi10g6bwqmws1i3uj1?tr=w-1000:w-3840,c-at_max" />
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/vddj1o01qmjwlrsty8rqqf55ew3o?tr=w-1000:w-3840,c-at_max" />
 						</div>
-						<div className="splash-g-3 flex flex-col gap-6 md:mt-[48px] mt-2">
+						<div className="splash-g-3 hidden md:flex flex-col gap-6 md:mt-[48px] mt-2">
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/y66id8u2gi9mko65bihfu5pwph8i?tr=w-1000:w-3840,c-at_max" />
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/j2ezfw8rbknolfzq1nsye6q7o3o6?tr=w-1000:w-3840,c-at_max" />
 						</div>
@@ -103,11 +109,11 @@ export default function LandingPage({ featured_books }: Props) {
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/d5psgyhhve5hghx6qkcdxtvr2vhf?tr=w-1000:w-3840,c-at_max" />
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/hanbexxqrd8n4a6uo2yf6im7nfqr?tr=w-1000:w-3840,c-at_max" />
 						</div>
-						<div className="splash-g-3 flex flex-col gap-6 md:mt-[48px] mt-2">
+						<div className="splash-g-3 hidden md:flex flex-col gap-6 md:mt-[48px] mt-2">
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/l7x59ij1e8ruoczw6dy4rsu6mkcl?tr=w-1000:w-3840,c-at_max" />
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/hr5bjpjc9pl52wajyc15dctnwdnl?tr=w-1000:w-3840,c-at_max" />
 						</div>
-						<div className="splash-g-4 flex flex-col gap-6">
+						<div className="splash-g-4 hidden md:flex flex-col gap-6">
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/i38awsouq23u6hha9wcx3iyjdin0?tr=w-1000:w-3840,c-at_max" />
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/3nw4f9kykomuo3ii9lfzzkgds1ua?tr=w-1000:w-3840,c-at_max" />
 						</div>
@@ -144,18 +150,18 @@ export default function LandingPage({ featured_books }: Props) {
 					</div> */}
 				</div>
 			</div>
-			<div className="sections flex flex-col gap-50 pt-50">
+			<div className="sections flex flex-col gap-50 md:pt-50 pt-30 pb-12">
 				<div className="medium-container max-w-7xl">
 					<div className="text-center mb-12">
-						<h2 className="font-headline text-5xl max-w-2xl mx-auto mb-4">From beloved masterpieces to hidden gems</h2>
-						<p className="text-subtle text-lg max-w-md mx-auto">Explore the works that shaped literature. Available instantly, anywhere.</p>
+						<h2 className="font-headline md:text-5xl text-3xl max-w-2xl mx-auto mb-4">From beloved masterpieces to hidden gems</h2>
+						<p className="text-subtle md:text-lg/6.5 max-w-md mx-auto">Explore the works that shaped literature. Available instantly, anywhere.</p>
 					</div>
-					<div className="flex items-center justify-between">
-						<h3 className="text-lg mb-4">Recently added</h3>
+					<div className="flex items-center justify-between mb-4">
+						<h3 className="md:text-lg">Recently added</h3>
 						<Link href={"/explore"} className="text-subtle hover:text-foreground transition">See all</Link>
 					</div>
-					<div className="grid grid-cols-4 gap-2">
-						{featured_books.map(book => <BookCard book={book} />)}
+					<div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2">
+						{featured_books.map(book => <BookCard book={book} key={book.slug} />)}
 					</div>
 				</div>
 				{/* <div className="medium-container max-w-7xl">
@@ -189,3 +195,5 @@ export default function LandingPage({ featured_books }: Props) {
 		</div>
 	)
 }
+
+LandingPage.layout = (page: React.ReactNode) => <BaseLayout forceFooterForMobile={true}>{page}</BaseLayout>

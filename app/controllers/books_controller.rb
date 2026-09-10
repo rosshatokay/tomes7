@@ -75,7 +75,7 @@ class BooksController < ApplicationController
     end
 
     render inertia: "Books/Read", props: {
-      book: book.to_hash(permalink: book_slug(book.slug)).merge(
+      book: book.to_hash(permalink: book_path(book.slug)).merge(
         epub_file_path: book.epub.attached? ? rails_public_blob_url(book.epub, disposition: "inline") : nil,
         share_url: book_url(book.slug),
         current_position: current_position,

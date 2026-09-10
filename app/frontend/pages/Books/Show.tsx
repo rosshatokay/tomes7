@@ -15,9 +15,9 @@ import { AuthProps } from "@/interfaces/auth"
 import { Book } from "@/interfaces/book"
 import Rating from "@/interfaces/ratings"
 import BaseLayout from "@/layouts/BaseLayout"
-import { cn, createBreadcrumbs, SimpleFormat, useIsMobile } from "@/lib/utils"
+import { cn, SimpleFormat, useIsMobile } from "@/lib/utils"
 import { Deferred, Link, useHttp } from "@inertiajs/react"
-import { ArrowUpRightIcon, GlassesIcon, HeartIcon, InfoIcon, MoreHorizontalIcon, ShareIcon, StarIcon } from "lucide-react"
+import { ArrowUpRightIcon, HeartIcon, InfoIcon, MoreHorizontalIcon, ShareIcon } from "lucide-react"
 import { Fragment, useState } from "react"
 import strftime from "strftime"
 import ReadersSection, { ReadersSectionSkeleton } from "./partials/ReadersSection"
@@ -98,6 +98,8 @@ export default function BookPage({
 		}).catch(_ => toast.add({ description: "Something went wrong try again" }))
 	}
 
+	console.log(book.read_path)
+	
 	return (
 		<>
 			<BackBtnHeader>
@@ -116,7 +118,7 @@ export default function BookPage({
 					</div>
 					<div className="pt-6 col-span-4 flex flex-col gap-12 pb-5">
 						<section>
-							<h1 className="md:text-[40px] leading-none text-2xl font-headline">{book.title}</h1>
+							<h1 className="md:text-[40px] md:leading-none text-3xl font-headline leading-[1.2]">{book.title}</h1>
 							<h2 className="md:text-lg mt-2">
 								{authors.map((author, index) => (
 									<span key={index}>
@@ -269,8 +271,8 @@ export default function BookPage({
 				</div>
 				<div className="large-container mt-6">
 					<h3 className="text-xl mb-4">Similar to this book</h3>
-					<Deferred data={"similar_books"} fallback={<BooksSkeletons className="px-0 grid-cols-4" />}>
-						<div className="grid md:grid-cols-4 gap-2">
+					<Deferred data={"similar_books"} fallback={<BooksSkeletons className="px-0 md:grid-cols-4 grid-cols-1" />}>
+						<div className="grid md:grid-cols-4 grid-cols-1 gap-2">
 							{similar_books?.map((book, index) => <BookCard key={index} book={book} />)}
 						</div>
 					</Deferred>

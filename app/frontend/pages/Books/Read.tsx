@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Book } from "@/interfaces/book"
 import ReaderLayout from "@/layouts/ReaderLayout"
-import { ArrowLeftIcon, ChevronsLeftIcon, ChevronsRightIcon, ListIcon, MaximizeIcon, RefreshCwIcon, ShareIcon } from "lucide-react"
+import { ArrowLeftIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, InfoIcon, ListIcon, MaximizeIcon, MinimizeIcon, RefreshCwIcon, ShareIcon } from "lucide-react"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { EpubViewer, Page, ViewerRef } from "react-epub-viewer"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -13,6 +13,8 @@ import Navigation, { NavItem } from 'epubjs/types/navigation';
 import ShareDialog from '@/components/partials/ShareDialog';
 import { addCustomFont, addStyleToReader, useUpdateBookProgress } from './partials/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { AuthProps } from '@/interfaces/auth';
 
 const epubLightTheme = {
 	body: {
@@ -54,13 +56,15 @@ interface WithEpub extends Book {
 
 interface Props {
 	book: WithEpub
+	auth: AuthProps
 }
 
-export default function ReadBookPage({ book }: Props) {
+export default function ReadBookPage({ book, auth }: Props) {
 	const [isReady, setIsReady] = useState(false)
 	const [isBookLoaded, setIsBookLoaded] = useState(false)
 	const [isChaptersOpen, setIsChaptersOpen] = useState(false)
 	const [isShareOpen, setIsShareOpen] = useState(false)
+	const [isFullscreen, setIsFullScreen] = useState(false)
 
 	const [toc, setToc] = useState<Navigation['toc']>()
 	const [rendition, setRendition] = useState<Rendition>()
@@ -138,10 +142,6 @@ export default function ReadBookPage({ book }: Props) {
 				setIsBookLoaded(true)
 			}, 300);
 		})
-		// if (rendition?.book.locations.length()) {
-		// 	displayBook()
-		// 	setIsBookLoaded(true)
-		// }
 
 		return () => {
 			rendition?.hooks.content.deregister(contentHook)
@@ -150,20 +150,22 @@ export default function ReadBookPage({ book }: Props) {
 	}, [rendition])
 
 	const debouncedPageChange = debounce((page: Page) => {
+		if (!book.epub_file_path) return
 		if (!rendition) return
 		const cfi = page.startCfi
 		const percentageFromCfi = rendition?.book.locations.percentageFromCfi(cfi)
 		const progress = Math.ceil(percentageFromCfi * 100)
 
 		setPage(page)
-		if (page.currentPage > page.totalPage) return
+
+		if (page.currentPage > page.totalPage || !auth.user) return
 
 		updateBookProgress.update({ current_position: cfi, progress: progress })
-	}, 700)
+	}, !auth.user ? 0 : 700)
 
 	return (
 		<div className="h-screen bg-background w-full flex flex-col md:bg-black/1 p-2 pt-0">
-			<div className="h-12 min-h-12 flex grid grid-cols-[1fr_2fr_1fr] items-center justify-between px-3 text-sm">
+			<div className={cn("h-12 min-h-12 flex grid grid-cols-[1fr_2fr_1fr] items-center justify-between px-3 text-sm transition", isFullscreen && "opacity-0 pointer-events-none")}>
 				<Tooltip>
 					<TooltipTrigger delay={0} render={<Button variant={"ghost"} size={"icon"} onClick={goBack}><ArrowLeftIcon /></Button>} />
 					<TooltipContent>Exit reader</TooltipContent>
@@ -190,68 +192,93 @@ export default function ReadBookPage({ book }: Props) {
 					))}
 				</div>
 			</div>
-			<div className="md:bg-white/80 dark:bg-background md:border rounded-lg h-full overflow-hidden">
-				{isReady ? (
-					<div className="flex flex-col h-full">
-						<div className={cn("h-full md:py-12 p-0 transition", !isBookLoaded && "opacity-0")}>
-							<EpubViewer
-								ref={viewerRef}
-								epubOptions={{ allowScriptedContent: true }}
-								url={book.epub_file_path}
-								rendtionChanged={(r) => {
-									setRendition(r)
-								}}
-								epubFileOptions={{ openAs: "epub" }}
-								bookChanged={(book) => {
-									book.loaded.navigation.then((toc) => {
-										setToc(toc.toc)
-									})
-								}}
-								// location="epubcfi(/6/4!/4/106/1:321)"
-								pageChanged={debouncedPageChange}
-							/>
+			{!book.epub_file_path && (
+				<Empty>
+					<EmptyHeader className='text-left items-start text-wrap'>
+						<EmptyMedia variant={"icon"}><InfoIcon /></EmptyMedia>
+						<EmptyTitle>This book isn't available right now</EmptyTitle>
+						<div className="text-sm/relaxed text-muted-foreground flex flex-col gap-4">
+							<p>We're having trouble loading this title. This usually happens for one of a few reasons:</p>
+							<ul className='list-disc pl-5'>
+								<li>The book might still be uploading or processing in our system.</li>
+								<li>A temporary server error is preventing the page from loading.</li>
+								<li>The title may have been temporarily removed or updated.</li>
+							</ul>
 						</div>
-						<div className="min-h-12 h-12 flex items-center justify-between px-4 text-sm">
-							<div className="flex items-center gap-2">
-								<Tooltip>
-									<TooltipTrigger render={<Button size={"icon"} variant={"ghost"} onClick={() => viewerRef.current?.prevPage()}><ChevronsLeftIcon /></Button>} />
-									<TooltipContent>Previous page</TooltipContent>
-								</Tooltip>
-								<Tooltip>
-									<TooltipTrigger render={<Button size={"icon"} variant={"ghost"} onClick={() => viewerRef.current?.nextPage()}><ChevronsRightIcon /></Button>} />
-									<TooltipContent>Next page</TooltipContent>
-								</Tooltip>
-								<div className='px-4 flex items-center gap-2'>
-									{page ? (
-										<Fragment>
-											{!isMobile && (<span>Page</span>)} {page?.currentPage}
-											<span className='text-subtle'>/</span>
-											<span className='text-subtle'>{page?.totalPage}</span>
-										</Fragment>
-									) : (
-										<Fragment>
-											<Skeleton className='h-3 w-12 rounded-[3px]'></Skeleton>
-											<span className='text-subtle'>/</span>
-											<Skeleton className='h-3 w-12 rounded-[3px]'></Skeleton>
-										</Fragment>
-									)}
+					</EmptyHeader>
+					<EmptyContent className='items-start'>
+						<Button onClick={() => window.location.reload()}>Refresh</Button>
+					</EmptyContent>
+				</Empty>
+			)}
+			{book.epub_file_path && (
+				<Fragment>
+					<div className="md:bg-white/80 dark:bg-background md:border rounded-lg h-full overflow-hidden">
+						{isReady ? (
+							<div className="flex flex-col h-full">
+								<div className={cn("h-full md:py-12 p-0 transition", !isBookLoaded && "opacity-0")}>
+									<EpubViewer
+										ref={viewerRef}
+										epubOptions={{ allowScriptedContent: true }}
+										url={book.epub_file_path}
+										rendtionChanged={(r) => {
+											setRendition(r)
+										}}
+										epubFileOptions={{ openAs: "epub" }}
+										bookChanged={(book) => {
+											book.loaded.navigation.then((toc) => {
+												setToc(toc.toc)
+											})
+										}}
+										// location="epubcfi(/6/4!/4/106/1:321)"
+										pageChanged={debouncedPageChange}
+									/>
+								</div>
+								<div className="min-h-12 h-12 flex items-center justify-between px-4 text-sm">
+									<div className={cn("flex items-center gap-2 transition", isFullscreen && "opacity-0 pointer-events-none")}>
+										<Tooltip>
+											<TooltipTrigger render={<Button size={"icon"} variant={"ghost"} onClick={() => viewerRef.current?.prevPage()}><ChevronLeftIcon /></Button>} />
+											<TooltipContent>Previous page</TooltipContent>
+										</Tooltip>
+										<Tooltip>
+											<TooltipTrigger render={<Button size={"icon"} variant={"ghost"} onClick={() => viewerRef.current?.nextPage()}><ChevronRightIcon /></Button>} />
+											<TooltipContent>Next page</TooltipContent>
+										</Tooltip>
+										<div className='px-4 flex items-center gap-2'>
+											{page ? (
+												<Fragment>
+													{!isMobile && (<span>Page</span>)} {page?.currentPage}
+													<span className='text-subtle'>/</span>
+													<span className='text-subtle'>{page?.totalPage}</span>
+												</Fragment>
+											) : (
+												<Fragment>
+													<Skeleton className='h-3 w-12 rounded-[3px]'></Skeleton>
+													<span className='text-subtle'>/</span>
+													<Skeleton className='h-3 w-12 rounded-[3px]'></Skeleton>
+												</Fragment>
+											)}
+										</div>
+									</div>
+									<Tooltip>
+										<TooltipTrigger onClick={() => setIsFullScreen(!isFullscreen)} render={<Button size={"icon"} variant={"ghost"}>
+											{isFullscreen ? <MinimizeIcon /> : <MaximizeIcon />}
+										</Button>} />
+										<TooltipContent>Full screen</TooltipContent>
+									</Tooltip>
 								</div>
 							</div>
-							<Tooltip>
-								<TooltipTrigger render={<Button size={"icon"} variant={"ghost"}><MaximizeIcon /></Button>} />
-								<TooltipContent>Full screen</TooltipContent>
-							</Tooltip>
-						</div>
+						) : (<div className="flex-center h-full"><Spinner className="size-6" /></div>)}
 					</div>
-				) : (<div className="flex-center h-full"><Spinner className="size-6" /></div>)}
-			</div>
-			<ChaptersSheet
-				isOpen={isChaptersOpen}
-				setIsOpen={setIsChaptersOpen}
-				toc={toc}
-				currentChapter={currChapter}
-				rendition={rendition}
-			/>
+					<ChaptersSheet
+						isOpen={isChaptersOpen}
+						setIsOpen={setIsChaptersOpen}
+						toc={toc}
+						currentChapter={currChapter}
+						rendition={rendition}
+					/>
+				</Fragment>
+			)}
 			<ShareDialog url={book.share_url} title="Share book" isOpen={isShareOpen} setIsOpen={setIsShareOpen} />
 		</div>
 	)

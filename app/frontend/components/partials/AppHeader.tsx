@@ -5,10 +5,11 @@ import { Link, usePage } from "@inertiajs/react";
 import { cn, useIsMobile } from "@/lib/utils";
 import { AuthProps } from "@/interfaces/auth";
 import { SearchDialog } from "./SearchDialog";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 // import NotificationsPopover from "./NotificationsPopover";
 import TopProfileMenu from "./TopProfileMenu";
 import NotificationsPopover from "./NotificationsPopover";
+import StaticNavSheet from "./nav/StaticNavSheet";
 
 interface Props {
 	user: AuthProps['user']
@@ -64,10 +65,13 @@ export default function AppHeader({ user }: Props) {
 						</div>
 					)}
 					{!user && (
-						<div className="flex gap-1 justify-end">
-							<Button nativeButton={false} render={<Link href={"/login"} />} className={"text-sm rounded-full"}>Log in</Button>
-							<Button nativeButton={false} render={<Link href={"/signup"} />} variant={"outline"} className={"text-sm rounded-full"}>Join for free</Button>
-						</div>
+						<Fragment>
+							{!isMobile ? <div className="md:flex hidden gap-1 justify-end">
+								<Button nativeButton={false} render={<Link href={"/login"} />} className={"text-sm rounded-full"}>Log in</Button>
+								<Button nativeButton={false} render={<Link href={"/signup"} />} variant={"outline"} className={"text-sm rounded-full"}>Join for free</Button>
+							</div> :
+								<StaticNavSheet />}
+						</Fragment>
 					)}
 				</div>
 			</header>

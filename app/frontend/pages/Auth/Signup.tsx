@@ -27,8 +27,8 @@ export default function SignupPage({ google_oauth_path }: { google_oauth_path: s
 			<Head>
 				<title>Sign up for free</title>
 			</Head>
-			<div className="w-full min-h-svh py-8 flex-center">
-				<div className="max-w-sm w-full flex flex-col gap-6">
+			<div className="w-full min-h-svh py-8 flex md:items-center justify-center">
+				<div className="large-container max-w-md w-full flex flex-col gap-6">
 					<LogoIcon />
 					<div className="flex flex-col gap-2">
 						<h1 className="text-lg leading-none">Create a free Tomes account</h1>

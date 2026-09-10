@@ -1,6 +1,7 @@
 import { Logo } from "@/assets/Logo"
 import { LogoText } from "@/assets/LogoText"
 import { Link } from "@inertiajs/react"
+import strftime from "strftime"
 
 const footerNavLinks = [
 	{

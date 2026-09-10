@@ -111,7 +111,7 @@ export default function AuthorPage({ author, books, auth }: Props) {
 						</div>
 					</div>
 					{books?.length > 0 && (
-						<div className="grid grid-cols-4 gap-2">
+						<div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2">
 							{books?.map((book, index) => <BookCard key={index} book={book} />)}
 						</div>
 					)}

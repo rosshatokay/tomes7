@@ -19,6 +19,7 @@ interface BaseLayoutProps {
 	auth?: AuthProps
 	hideMobileNav?: boolean
 	hideHeaderForced?: boolean
+	forceFooterForMobile?: boolean
 }
 
 export interface FlashProps {
@@ -32,7 +33,7 @@ export interface FlashProps {
 const ReadyContext = createContext<boolean>(false)
 export const useReady = () => useContext(ReadyContext)
 
-export default function BaseLayout({ children, hideHeader, hideHeaderForced, hideFooter, hideMobileNav }: BaseLayoutProps) {
+export default function BaseLayout({ children, hideHeader, hideHeaderForced, hideFooter, hideMobileNav, forceFooterForMobile = false }: BaseLayoutProps) {
 	const flash = usePage().flash as FlashProps
 	const isMobile = useIsMobile()
 	const [isReady, setIsReady] = useState(false)
@@ -115,6 +116,7 @@ export default function BaseLayout({ children, hideHeader, hideHeaderForced, hid
 					</Fragment>
 				)}
 				{!isMobile && !hideFooter && !shouldHideFooter && <Footer />}
+				{forceFooterForMobile && isMobile && <Footer />}
 				{isMobile && <NotificationsSheet isOpen={isNotifsOpen} setIsOpen={setIsNotifsOpen} />}
 				<Toaster></Toaster>
 				<TooltipProvider delay={0}></TooltipProvider>

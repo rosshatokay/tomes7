@@ -21,7 +21,7 @@ export const BookCard = ({ book, isMobileForced }: BookProps) => {
 					style={{ boxShadow: "-16px 16px 32px rgba(1,1,1,.2)" }}
 				/>
 			</div>
-			<div className="h-full">
+			<div className="h-full min-w-0">
 				<div className={cn("flex flex-col h-full py-3", !isMobile && "py-0")}>
 					<h3 className="truncate">{book.title}</h3>
 					<div className="truncate text-subtle text-sm mt-0.5 mb-2">{book.author_names}</div>
