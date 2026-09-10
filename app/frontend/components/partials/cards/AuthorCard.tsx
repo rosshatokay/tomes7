@@ -10,7 +10,7 @@ import { AuthProps } from "@/interfaces/auth";
 
 interface Props {
 	author: Author
-	auth: AuthProps
+	auth?: AuthProps
 }
 
 export default function AuthorCard({ author, auth }: Props) {
@@ -18,7 +18,7 @@ export default function AuthorCard({ author, auth }: Props) {
 	const followHttp = useHttp({ slug: author.slug })
 
 	const handleFollowBtn = () => {
-		if (!auth.user) {
+		if (!auth?.user) {
 			toast.add({description: "Account required to complete this account"})
 			return
 		}
@@ -37,7 +37,7 @@ export default function AuthorCard({ author, auth }: Props) {
 	}
 
 	return (
-		<div className="bg-card rounded-xl md:py-12 p-5 flex md:items-center md:justify-center flex-col gap-4 relative hover:bg-black/10 dark:hover:bg-white/10 transition">
+		<div className="bg-card rounded-xl md:py-12 p-5 flex items-center md:justify-center md:flex-col flex-row justify-between gap-4 relative hover:bg-black/10 dark:hover:bg-white/10 transition">
 			<Link href={author.permalink} className="absolute inset-0 z-1" />
 			<div className="flex md:flex-col items-center gap-4">
 				<Avatar className={"md:size-16 size-12 md:mx-auto"}>
@@ -46,7 +46,7 @@ export default function AuthorCard({ author, auth }: Props) {
 				</Avatar>
 				<div className="md:text-center">
 					<h2 className="font-medium">{author.full_name}</h2>
-					<p className="text-subtle text-sm">{author.books_count} {author.books_count === 1 ? "book" : "books"}</p>
+					<p className="text-subtle text-sm">{author.followers_count} {author.followers_count === 1 ? "follower" : "followers"}</p>
 				</div>
 			</div>
 			<Button

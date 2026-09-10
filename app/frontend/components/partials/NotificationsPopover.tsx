@@ -17,7 +17,8 @@ export default function NotificationsPopover() {
 					<TooltipContent>Notifications</TooltipContent>
 				</Tooltip>
 				<PopoverContent align="end" className={"w-90 p-1 gap-1"}>
-					{notifs.content}
+					<p className="text-sm text-subtle p-2 pt-2 pb-0">Notifications</p>
+					{notifs.content}					
 				</PopoverContent>
 			</Popover>
 		</div>

@@ -5,8 +5,10 @@ class StaticController < ApplicationController
     books = Book.published.order(created_at: :desc).limit(8).map { |book| book.to_hash(permalink: book_path(book.slug)) }
 
     render inertia: "Static/Index", props: {
-      featured_books: books,
-    }
+             featured_books: books,
+           }, meta: seo_tags(
+             title: "Read the greatest books of all time. For Free.",
+           )
   end
 
   def about

@@ -2,10 +2,20 @@ class AuthorsController < ApplicationController
   allow_unauthenticated_access except: [:follow, :unfollow]
 
   def index
-    authors = Author.includes(:books, avatar_attachment: :blob).all
+    allowed_sorts = {
+      "recently-added" => { created_at: :desc },
+      "most-followed" => { followers_count: :desc },
+    }
+
+    sort_param = params[:sort]
+    sort_key = allowed_sorts.key?(sort_param) ? sort_param : "recently-added"
+
+    authors = Author.includes(:books, avatar_attachment: :blob).order(allowed_sorts[sort_key])
+    pagy, records = pagy(:countless, authors)
 
     render inertia: "Authors/Index", props: {
-             authors: authors.map { |a| a.to_hash(permalink: author_path(a.slug), current_user: current_user) },
+             authors: InertiaRails.scroll(pagy) { records.map { |a| a.to_hash(permalink: author_path(a.slug), current_user: current_user) } },
+             current_sort: sort_key,
            }, meta: seo_tags(
              title: user_signed_in? ? "Authors" : "Explore the greatest authors of all time",
              description: "Read the books from the greatest authors of all time. For free.",

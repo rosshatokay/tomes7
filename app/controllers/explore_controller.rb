@@ -10,7 +10,7 @@ class ExploreController < ApplicationController
       .first(8)
       .map { |a| a.to_hash(permalink: author_path(a.slug), current_user: current_user) }
 
-    recent_books = Book.published.order(created_at: :desc).map { |b| b.to_hash(permalink: book_path(b.slug)) }
+    recent_books = Book.published.order(created_at: :desc).first(8).map { |b| b.to_hash(permalink: book_path(b.slug)) }
 
     render inertia: "Explore/Index", props: {
              genres: genres,

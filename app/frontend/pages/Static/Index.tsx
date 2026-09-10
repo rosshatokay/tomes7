@@ -5,7 +5,7 @@ import gsap from "gsap"
 import { SplitText } from "gsap/all";
 import BaseLayout, { useReady } from "@/layouts/BaseLayout";
 import { useEffect } from "react";
-import { cn, useIsMobile } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Book } from "@/interfaces/book";
 import { BookCard } from "@/components/partials/cards/BookCard";
 import { LinkUnderline } from "@/components/partials/LinkUnderline";
@@ -60,7 +60,6 @@ interface Props {
 
 export default function LandingPage({ featured_books }: Props) {
 	const isReady = useReady()
-	const isMobile = useIsMobile()
 
 	useEffect(() => {
 		if (isReady) {
@@ -77,8 +76,8 @@ export default function LandingPage({ featured_books }: Props) {
 						<p id="splash-p" className="md:text-lg text-subtle max-w-md mx-auto mb-6 leading-[1.2]">Access timeless classics from the literary masters. In one beautiful reading app.</p>
 						<div id="splash-cta">
 							<div className="flex md:flex-row flex-col gap-2 md:justify-center">
-								<Button size={"lg"} className={"md:h-12 h-10 px-4 md:text-base rounded-full md:w-fit w-full"} nativeButton={false} render={<Link href={"/signup"} />}>Create a free account</Button>
-								<Button size={"lg"} className={"md:h-12 h-10 px-4 md:text-base rounded-full md:w-fit w-full"} nativeButton={false} render={<Link href={"/explore"} />} variant={"secondary"}>Explore</Button>
+								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-base md:w-fit w-full"} nativeButton={false} render={<Link href={"/signup"} />}>Create a free account</Button>
+								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-base md:w-fit w-full"} nativeButton={false} render={<Link href={"/explore"} />} variant={"secondary"}>Explore</Button>
 							</div>
 							<p className="text-subtle text-sm mt-4">Already a member? <LinkUnderline className="text-foreground">Sign in</LinkUnderline></p>
 						</div>
@@ -118,36 +117,6 @@ export default function LandingPage({ featured_books }: Props) {
 							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/3nw4f9kykomuo3ii9lfzzkgds1ua?tr=w-1000:w-3840,c-at_max" />
 						</div>
 					</div>
-					{/* <div className="md:w-[calc(100%+((100vw/7)))] w-[calc(100%+((100vw)))] flex md:gap-6 gap-2">
-						<div className="splash-g-4 flex flex-col gap-6">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/v0fjqqnzg0mi10g6bwqmws1i3uj1?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/vddj1o01qmjwlrsty8rqqf55ew3o?tr=w-1000:w-3840,c-at_max" />
-						</div>
-						<div className="splash-g-3 flex flex-col gap-6 md:mt-[48px] mt-2">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/y66id8u2gi9mko65bihfu5pwph8i?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/j2ezfw8rbknolfzq1nsye6q7o3o6?tr=w-1000:w-3840,c-at_max" />
-						</div>
-						<div className="splash-g-2 flex flex-col gap-6 md:mt-[96px] mt-4">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/4i4b6nsr6jkhpywiibwml3hugbcn?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/qy6ic8l4wufmwaj37mf9k1y76u24?tr=w-1000:w-3840,c-at_max" />
-						</div>
-						<div className="splash-g-1 flex flex-col gap-6 md:mt-[144px] mt-6">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/wqojc98crukiw0mjryb0r34t2edz?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/wv482vi7jsexty0abh95ijqt9090?tr=w-1000:w-3840,c-at_max" />
-						</div>
-						<div className="splash-g-2 flex flex-col gap-6 md:mt-[96px] mt-4">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/d5psgyhhve5hghx6qkcdxtvr2vhf?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/hanbexxqrd8n4a6uo2yf6im7nfqr?tr=w-1000:w-3840,c-at_max" />
-						</div>
-						<div className="splash-g-3 flex flex-col gap-6 md:mt-[48px] mt-2">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/l7x59ij1e8ruoczw6dy4rsu6mkcl?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/hr5bjpjc9pl52wajyc15dctnwdnl?tr=w-1000:w-3840,c-at_max" />
-						</div>
-						<div className="splash-g-4 flex flex-col gap-6">
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/i38awsouq23u6hha9wcx3iyjdin0?tr=w-1000:w-3840,c-at_max" />
-							<img className="md:rounded-lg rounded-md" src="https://ik.imagekit.io/tomes/books/covers/3nw4f9kykomuo3ii9lfzzkgds1ua?tr=w-1000:w-3840,c-at_max" />
-						</div>
-					</div> */}
 				</div>
 			</div>
 			<div className="sections flex flex-col gap-50 md:pt-50 pt-30 pb-12">

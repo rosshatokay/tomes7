@@ -9,7 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AuthProps } from "@/interfaces/auth"
 import { cn, useIsMobile } from "@/lib/utils"
 import { Link, usePage } from "@inertiajs/react"
-import { BellIcon, CompassIcon, HeartIcon, HomeIcon, LibraryBigIcon, PlusIcon, SearchIcon } from "lucide-react"
+import { BellIcon, CompassIcon, HomeIcon } from "lucide-react"
 import { createContext, Fragment, PropsWithChildren, useContext, useEffect, useState } from "react"
 
 interface BaseLayoutProps {
@@ -44,11 +44,11 @@ export default function BaseLayout({ children, hideHeader, hideHeaderForced, hid
 	const mobileNavLinks = [
 		{
 			icon: (active: boolean) => <HomeIcon className={cn("!size-6", active ? "text-on-secondary dark:text-background" : "text-white/75")} />,
-			path: "/library"
+			path: "/"
 		},
 		{
-			icon: (active: boolean) => <LibraryBigIcon className={cn("!size-6", active ? "text-on-secondary dark:text-background" : "text-white/75")} />,
-			path: "/books"
+			icon: (active: boolean) => <CompassIcon className={cn("!size-6", active ? "text-on-secondary dark:text-background" : "text-white/75")} />,
+			path: "/explore"
 		},
 		{
 			icon: (active: boolean) => <BellIcon className={cn("!size-6", active ? "text-on-secondary dark:text-background" : "text-white/75")} />,

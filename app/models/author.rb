@@ -44,6 +44,7 @@ class Author < ApplicationRecord
       permalink: permalink,
       is_followed: followed_author_ids.include?(id),
       slug: slug,
+      followers_count: followers_count,
     }
   end
 

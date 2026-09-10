@@ -53,8 +53,6 @@ export function notificationsProvider({ isOpen, setIsOpen }: Modal) {
 
 	const notificationsContent = (
 		<Fragment>
-			<p className="text-sm text-subtle p-2 pt-2 pb-0">Notifications</p>
-
 			{notifsHttp.processing && <div className="flex-center h-full p-10"><Spinner className="size-6" /></div>}
 			{!notifsHttp.processing && notifications.map((notif, index) => (
 				<div
