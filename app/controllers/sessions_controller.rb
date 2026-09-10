@@ -10,8 +10,11 @@ class SessionsController < ApplicationController
     end
 
     render inertia: "Auth/Login", props: {
-      oauth_path: authorize_oauth_path,
-    }
+             oauth_path: authorize_oauth_path,
+           }, meta: seo_tags(
+             title: "Log in",
+             description: "Welcome back, log in to your Tomes account.",
+           )
   end
 
   def create

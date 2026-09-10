@@ -3,8 +3,11 @@ class RegistrationsController < ApplicationController
 
   def new
     render inertia: "Auth/Signup", props: {
-      google_oauth_path: authorize_oauth_path,
-    }
+             google_oauth_path: authorize_oauth_path,
+           }, meta: seo_tags(
+             title: "Sign up",
+             description: "Welcome to Tomes. Join the reading club for free.",
+           )
   end
 
   def create

@@ -7,7 +7,8 @@ class StaticController < ApplicationController
     render inertia: "Static/Index", props: {
              featured_books: books,
            }, meta: seo_tags(
-             title: "Read the greatest books of all time. For Free.",
+             title: "The greatest books of all time, for free",
+             description: "Tomes is free to join and open to everyone. Sign up today and start reading ebooks.",
            )
   end
 

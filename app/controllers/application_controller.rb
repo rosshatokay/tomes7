@@ -95,10 +95,8 @@ class ApplicationController < ActionController::Base
       arr << { name: "twitter:description", content: description }
     end
 
-    if image.present?
-      arr << { property: "og:image", content: image }
-      arr << { name: "twitter:image", content: image }
-    end
+    arr << { property: "og:image", content: image || "/splash.jpg" }
+    arr << { name: "twitter:image", content: image || "/splash.jpg" }
 
     arr << { name: "twitter:card", content: "summary" }
     [

@@ -6,7 +6,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import BaseLayout from "@/layouts/BaseLayout"
-import { Head, Link, useForm } from "@inertiajs/react"
+import { Link, useForm } from "@inertiajs/react"
 
 export default function SignupPage({ google_oauth_path }: { google_oauth_path: string }) {
 	const { data, setData, processing, errors, clearErrors, post } = useForm({
@@ -24,9 +24,6 @@ export default function SignupPage({ google_oauth_path }: { google_oauth_path: s
 
 	return (
 		<>
-			<Head>
-				<title>Sign up for free</title>
-			</Head>
 			<div className="w-full min-h-svh py-8 flex md:items-center justify-center">
 				<div className="large-container max-w-md w-full flex flex-col gap-6">
 					<LogoIcon />
@@ -107,7 +104,7 @@ export default function SignupPage({ google_oauth_path }: { google_oauth_path: s
 						</FieldGroup>
 					</form>
 					<p className="text-sm text-subtle">Already have an account? <LinkUnderline href="/login" className="text-foreground">Sign in</LinkUnderline></p>
-					<p className="text-sm text-subtle">By signing in or creating an account, you agree to our <LinkUnderline href="/terms">Terms of service</LinkUnderline> and <LinkUnderline href="/privacy">Privacy policy</LinkUnderline>.</p>
+					<p className="text-sm text-subtle">By signing in or creating an account, you agree to our <br /> <LinkUnderline href="/terms">Terms of service</LinkUnderline> and <LinkUnderline href="/privacy">Privacy policy</LinkUnderline>.</p>
 				</div>
 			</div>
 		</>

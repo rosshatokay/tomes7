@@ -76,8 +76,8 @@ export default function LandingPage({ featured_books }: Props) {
 						<p id="splash-p" className="md:text-lg text-subtle max-w-md mx-auto mb-6 leading-[1.2]">Access timeless classics from the literary masters. In one beautiful reading app.</p>
 						<div id="splash-cta">
 							<div className="flex md:flex-row flex-col gap-2 md:justify-center">
-								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-base md:w-fit w-full"} nativeButton={false} render={<Link href={"/signup"} />}>Create a free account</Button>
-								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-base md:w-fit w-full"} nativeButton={false} render={<Link href={"/explore"} />} variant={"secondary"}>Explore</Button>
+								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-[15px] md:w-fit w-full"} nativeButton={false} render={<Link href={"/signup"} />}>Create a free account</Button>
+								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-[15px] md:w-fit w-full"} nativeButton={false} render={<Link href={"/explore"} />} variant={"secondary"}>Explore</Button>
 							</div>
 							<p className="text-subtle text-sm mt-4">Already a member? <LinkUnderline className="text-foreground">Sign in</LinkUnderline></p>
 						</div>

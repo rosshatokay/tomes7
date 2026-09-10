@@ -72,7 +72,7 @@ export default function LoginPage({ oauth_path }: { oauth_path: string }) {
 							</Field>
 							<Button type="submit" disabled={processing} variant={processing ? "secondary" : "default"} className={"h-9 rounded-lg"}>
 								{processing && <Spinner />}
-								Sign in
+								Log in
 							</Button>
 						</FieldGroup>
 					</form>
