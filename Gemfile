@@ -19,6 +19,8 @@ gem "meta-tags"
 gem "epub-parser"
 gem "pagy"
 gem "devise"
+gem "foreman"
+
 gem "imagekitio-rails"
 gem "aws-sdk-s3"
 gem "active_storage_validations"
