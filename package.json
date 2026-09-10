@@ -13,7 +13,7 @@
     "vite-plugin-ruby": "^5.2.0"
   },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build": "vite build && vite build --ssr",
     "check": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json"
   },
   "dependencies": {

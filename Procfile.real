@@ -1,0 +1,2 @@
+web: bundle exec rails server -p $PORT -e ${RAILS_ENV:-production}
+ssr-node: node public/vite-ssr/ssr.mjs
