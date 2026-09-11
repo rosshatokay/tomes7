@@ -79,7 +79,7 @@ export default function LandingPage({ featured_books }: Props) {
 								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-[15px] md:w-fit w-full"} nativeButton={false} render={<Link href={"/signup"} />}>Create a free account</Button>
 								<Button size={"lg"} className={"md:h-11 h-10 px-4 md:text-[15px] md:w-fit w-full"} nativeButton={false} render={<Link href={"/explore"} />} variant={"secondary"}>Explore</Button>
 							</div>
-							<p className="text-subtle text-sm mt-4">Already a member? <LinkUnderline className="text-foreground">Sign in</LinkUnderline></p>
+							<p className="text-subtle text-sm mt-4">Already a member? <LinkUnderline href="/login" className="text-foreground">Log in</LinkUnderline></p>
 						</div>
 					</div>
 				</div>
