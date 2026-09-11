@@ -1,0 +1,26 @@
+:css
+	a, button {
+		background: var(--primary);
+		color: var(--primary-foreground);
+		font-size: 14px;
+		height: 32px;
+		display: flex;
+		width: fit-content;
+		align-items: center;
+		padding: 0 12px;
+		border-radius: 999px;
+		margin: 0 auto;
+		&:hover {
+			opacity: .8
+		}
+	}
+
+.w-full.min-h-svh.flex-center 
+	%div.text-center
+		.w-fit.bg-card.mx-auto.rounded-sm.px-2.py-1.mb-4.text-sm.text-subtle.font-medium= @status
+		%h1.font-headline.text-4xl.mb-4= @heading
+		%p.max-w-sm.mx-auto.text-subtle.mb-4= @description
+		- if @status == 500
+			%button{onclick: "window.location.reload()"} Refresh
+		- else
+			%a(href="/") Go back
